@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* Custom styles for Doctores Honduras */
+
+/* Base styles */
+body {
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #075985;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0369a1;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0284c7;
+  margin-bottom: 0.75rem;
+}
+
+/* Component styles */
+.btn-primary {
+  background-color: #0284c7;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0369a1;
+}
+
+.card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
