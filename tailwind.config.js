@@ -6,7 +6,8 @@ module.exports = {
     './app/assets/stylesheets/**/*.css',
     './app/javascript/**/*.js',
     './app/assets/builds/**/*.js',
-    './app/assets/tailwind/**/*.css'
+    './app/assets/tailwind/**/*.css',
+    './app/components/**/*.{rb,erb}'
   ],
   theme: {
     extend: {

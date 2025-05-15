@@ -1,0 +1,101 @@
+/* Custom color classes for backgrounds */
+.bg-primary-50 { background-color: #f0f9ff !important; }
+.bg-primary-100 { background-color: #e0f2fe !important; }
+.bg-primary-200 { background-color: #bae6fd !important; }
+.bg-primary-300 { background-color: #7dd3fc !important; }
+.bg-primary-400 { background-color: #38bdf8 !important; }
+.bg-primary-500 { background-color: #0ea5e9 !important; }
+.bg-primary-600 { background-color: #0284c7 !important; }
+.bg-primary-700 { background-color: #0369a1 !important; }
+.bg-primary-800 { background-color: #075985 !important; }
+.bg-primary-900 { background-color: #0c4a6e !important; }
+
+.bg-secondary-50 { background-color: #f0fdfa !important; }
+.bg-secondary-100 { background-color: #ccfbf1 !important; }
+.bg-secondary-200 { background-color: #99f6e4 !important; }
+.bg-secondary-300 { background-color: #5eead4 !important; }
+.bg-secondary-400 { background-color: #2dd4bf !important; }
+.bg-secondary-500 { background-color: #14b8a6 !important; }
+.bg-secondary-600 { background-color: #0d9488 !important; }
+.bg-secondary-700 { background-color: #0f766e !important; }
+.bg-secondary-800 { background-color: #115e59 !important; }
+.bg-secondary-900 { background-color: #134e4a !important; }
+
+.bg-accent-50 { background-color: #fff7ed !important; }
+.bg-accent-100 { background-color: #ffedd5 !important; }
+.bg-accent-200 { background-color: #fed7aa !important; }
+.bg-accent-300 { background-color: #fdba74 !important; }
+.bg-accent-400 { background-color: #fb923c !important; }
+.bg-accent-500 { background-color: #f97316 !important; }
+.bg-accent-600 { background-color: #ea580c !important; }
+.bg-accent-700 { background-color: #c2410c !important; }
+.bg-accent-800 { background-color: #9a3412 !important; }
+.bg-accent-900 { background-color: #7c2d12 !important; }
+
+/* Custom color classes for text */
+.text-primary-50 { color: #f0f9ff !important; }
+.text-primary-100 { color: #e0f2fe !important; }
+.text-primary-200 { color: #bae6fd !important; }
+.text-primary-300 { color: #7dd3fc !important; }
+.text-primary-400 { color: #38bdf8 !important; }
+.text-primary-500 { color: #0ea5e9 !important; }
+.text-primary-600 { color: #0284c7 !important; }
+.text-primary-700 { color: #0369a1 !important; }
+.text-primary-800 { color: #075985 !important; }
+.text-primary-900 { color: #0c4a6e !important; }
+
+.text-secondary-50 { color: #f0fdfa !important; }
+.text-secondary-100 { color: #ccfbf1 !important; }
+.text-secondary-200 { color: #99f6e4 !important; }
+.text-secondary-300 { color: #5eead4 !important; }
+.text-secondary-400 { color: #2dd4bf !important; }
+.text-secondary-500 { color: #14b8a6 !important; }
+.text-secondary-600 { color: #0d9488 !important; }
+.text-secondary-700 { color: #0f766e !important; }
+.text-secondary-800 { color: #115e59 !important; }
+.text-secondary-900 { color: #134e4a !important; }
+
+.text-accent-50 { color: #fff7ed !important; }
+.text-accent-100 { color: #ffedd5 !important; }
+.text-accent-200 { color: #fed7aa !important; }
+.text-accent-300 { color: #fdba74 !important; }
+.text-accent-400 { color: #fb923c !important; }
+.text-accent-500 { color: #f97316 !important; }
+.text-accent-600 { color: #ea580c !important; }
+.text-accent-700 { color: #c2410c !important; }
+.text-accent-800 { color: #9a3412 !important; }
+.text-accent-900 { color: #7c2d12 !important; }
+
+/* Custom color classes for borders */
+.border-primary-50 { border-color: #f0f9ff !important; }
+.border-primary-100 { border-color: #e0f2fe !important; }
+.border-primary-200 { border-color: #bae6fd !important; }
+.border-primary-300 { border-color: #7dd3fc !important; }
+.border-primary-400 { border-color: #38bdf8 !important; }
+.border-primary-500 { border-color: #0ea5e9 !important; }
+.border-primary-600 { border-color: #0284c7 !important; }
+.border-primary-700 { border-color: #0369a1 !important; }
+.border-primary-800 { border-color: #075985 !important; }
+.border-primary-900 { border-color: #0c4a6e !important; }
+
+.border-secondary-50 { border-color: #f0fdfa !important; }
+.border-secondary-100 { border-color: #ccfbf1 !important; }
+.border-secondary-200 { border-color: #99f6e4 !important; }
+.border-secondary-300 { border-color: #5eead4 !important; }
+.border-secondary-400 { border-color: #2dd4bf !important; }
+.border-secondary-500 { border-color: #14b8a6 !important; }
+.border-secondary-600 { border-color: #0d9488 !important; }
+.border-secondary-700 { border-color: #0f766e !important; }
+.border-secondary-800 { border-color: #115e59 !important; }
+.border-secondary-900 { border-color: #134e4a !important; }
+
+.border-accent-50 { border-color: #fff7ed !important; }
+.border-accent-100 { border-color: #ffedd5 !important; }
+.border-accent-200 { border-color: #fed7aa !important; }
+.border-accent-300 { border-color: #fdba74 !important; }
+.border-accent-400 { border-color: #fb923c !important; }
+.border-accent-500 { border-color: #f97316 !important; }
+.border-accent-600 { border-color: #ea580c !important; }
+.border-accent-700 { border-color: #c2410c !important; }
+.border-accent-800 { border-color: #9a3412 !important; }
+.border-accent-900 { border-color: #7c2d12 !important; }

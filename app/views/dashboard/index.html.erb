@@ -1,0 +1,24 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6" style="color: #0369a1;">Panel de Control</h1>
+    
+    <div class="rounded-lg p-6 mb-8" style="background-color: #f0f9ff; border: 1px solid #bae6fd;">
+      <h2 class="text-lg font-semibold mb-2" style="color: #075985;">Bienvenido, <%= Current.user.email %></h2>
+      <p class="text-gray-700">Has iniciado sesión correctamente en Doctores Honduras.</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="card">
+        <h3 class="mb-3">Mi Perfil</h3>
+        <p class="text-gray-600 mb-4">Administra tu información personal y preferencias de cuenta.</p>
+        <a href="#" class="py-2 px-4 rounded inline-block text-white" style="background-color: #0284c7;">Editar Perfil</a>
+      </div>
+      
+      <div class="card">
+        <h3 class="mb-3">Mis Citas</h3>
+        <p class="text-gray-600 mb-4">Revisa y administra tus citas médicas programadas.</p>
+        <a href="#" class="py-2 px-4 rounded inline-block text-white" style="background-color: #0284c7;">Ver Citas</a>
+      </div>
+    </div>
+  </div>
+</div>
