@@ -3,34 +3,34 @@ module PaginationHelper
   def pagination_links(page, total_pages, url_params = {})
     return '' if total_pages <= 1
     
-    html = ['<div class="flex items-center">']
+    html = ['<div class="flex items-center space-x-1">']    
     
     # Previous link
     if page > 1
       prev_params = url_params.merge(page: page - 1)
-      html << link_to('&laquo; Anterior'.html_safe, prev_params, class: 'relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent rounded-l-md hover:text-primary-600 hover:border-b-2 hover:border-primary-400 transition-all')
+      html << link_to('&laquo; Anterior'.html_safe, prev_params, class: 'relative inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-full transition-all shadow-sm hover:shadow-md transform hover:scale-105', style: 'background-color: #38bdf8;', onmouseover: "this.style.backgroundColor='#0ea5e9';")
     else
-      html << '<span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-white border border-transparent rounded-l-md cursor-not-allowed">&laquo; Anterior</span>'
+      html << '<span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-transparent rounded-full cursor-not-allowed opacity-70">&laquo; Anterior</span>'
     end
     
     # Page links
     visible_pages(page, total_pages).each do |p|
       if p == :gap
-        html << '<span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-transparent">…</span>'
+        html << '<span class="relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-transparent">…</span>'
       elsif p == page
-        html << "<span class=\"relative inline-flex items-center px-4 py-2 text-sm font-bold text-primary-700 bg-white border-b-2 border-primary-700\">#{p}</span>"
+        html << "<span class=\"relative inline-flex items-center w-8 h-8 justify-center text-sm font-bold text-white rounded-full shadow-md\" style=\"background-color: #38bdf8;\">#{p}</span>"
       else
         page_params = url_params.merge(page: p)
-        html << link_to(p.to_s, page_params, class: 'relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent hover:border-b-2 hover:border-primary-400 hover:text-primary-600 transition-all')
+        html << link_to(p.to_s, page_params, class: 'relative inline-flex items-center w-8 h-8 justify-center text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-full hover:text-white transition-all hover:shadow-sm transform hover:scale-105', onmouseover: "this.style.backgroundColor='#38bdf8'; this.style.color='white';", onmouseout: "this.style.backgroundColor='white'; this.style.color='#4b5563';")
       end
     end
     
     # Next link
     if page < total_pages
       next_params = url_params.merge(page: page + 1)
-      html << link_to('Siguiente &raquo;'.html_safe, next_params, class: 'relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent rounded-r-md hover:text-primary-600 hover:border-b-2 hover:border-primary-400 transition-all')
+      html << link_to('Siguiente &raquo;'.html_safe, next_params, class: 'relative inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-full transition-all shadow-sm hover:shadow-md transform hover:scale-105', style: 'background-color: #38bdf8;', onmouseover: "this.style.backgroundColor='#0ea5e9';")
     else
-      html << '<span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-white border border-transparent rounded-r-md cursor-not-allowed">Siguiente &raquo;</span>'
+      html << '<span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-transparent rounded-full cursor-not-allowed opacity-70">Siguiente &raquo;</span>'
     end
     
     html << '</div>'
