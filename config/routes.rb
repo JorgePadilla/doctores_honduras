@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :doctors, only: [:index, :show]
+  resources :establishments, only: [:index, :show], path: 'hospitales-y-clinicas'
   
   # User registration routes
   get "signup" => "users#new"

@@ -303,13 +303,53 @@ address_templates = {
 # Create establishments
 establishments = []
 
+# Hospital and clinic logo images from Unsplash
+establishment_logos = [
+  "https://images.unsplash.com/photo-1587351021759-3e566b3db4f1?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1516549655669-df668a1d9930?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1587746746177-a8de4a8f3648?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1629909615184-74f495363b67?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1516549655669-df668a1d9930?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+]
+
+# Hospital and clinic building images from Unsplash
+building_images = [
+  "https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1586773860397-64bfab45a1f9?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1512678080530-7760d81faba6?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+]
+
 # First two specific establishments from original seed
 establishments << Establishment.create!(
   name: "Policlínica del Atlántico",
   est_type: "Clínica",
   address: "Barrio el Centro de Tela, frente a Gasolinera UNO",
   phone: "(504) 2448-2109",
-  map_link: "https://maps.google.com/?q=Policlínica+del+Atlántico,+Tela"
+  map_link: "https://maps.google.com/?q=Policlínica+del+Atlántico,+Tela",
+  logo_url: establishment_logos[0],
+  building_image_url: building_images[0]
 )
 
 establishments << Establishment.create!(
@@ -317,8 +357,64 @@ establishments << Establishment.create!(
   est_type: "Clínica",
   address: "Col. Tepeyac, 7mo. piso, clínica 705, Calle Olancho, Tegucigalpa MDC",
   phone: "(504) 2232-0718",
-  map_link: "https://maps.google.com/?q=Clínicas+Millenium,+Tegucigalpa"
+  map_link: "https://maps.google.com/?q=Clínicas+Millenium,+Tegucigalpa",
+  logo_url: establishment_logos[1],
+  building_image_url: building_images[1]
 )
+
+# Create specialties
+puts "Creating specialties..."
+specialties = [
+  "Ortodoncia",
+  "Nutrición",
+  "Pediatría",
+  "Psicología-Podiatría",
+  "Medicina Estética",
+  "Laparoscopía",
+  "Ortopedia y Traumatología",
+  "Ginecología",
+  "Dermatología",
+  "Cardiología",
+  "Oftalmología",
+  "Neurología",
+  "Endocrinología"
+]
+
+specialties.each do |name|
+  Specialty.find_or_create_by!(name: name)
+end
+
+puts "Created #{Specialty.count} specialties"
+
+# Create services
+puts "Creating services..."
+services = [
+  "Farmacia",
+  "Medicina General a recién nacido, niños, adulto y tercera edad",
+  "Extracciones / Restauraciones",
+  "Examen de Citología",
+  "Lesiones que afectan los músculos, huesos y articulaciones",
+  "Ultrasonidos",
+  "Tratamiento Faciales y Corporales",
+  "Trombosis venosa",
+  "Prevención de pie Diabético",
+  "Atención a mujer embarazada",
+  "Radiografías",
+  "Limpiezas dentales",
+  "Control de peso (Obesidad y Desnutrición)",
+  "Enfermedades Pulmonares",
+  "Fracturas en Huesos",
+  "Evaluaciones psicológicas",
+  "Estimulación temprana",
+  "Laboratorio",
+  "Terapia Física y Rehabilitación"
+]
+
+services.each do |name|
+  Service.find_or_create_by!(name: name)
+end
+
+puts "Created #{Service.count} services"
 
 # Create more establishments
 13.times do |i|
@@ -350,9 +446,57 @@ establishments << Establishment.create!(
     est_type: est_data[:type],
     address: "#{address}, #{location}",
     phone: phone,
-    map_link: "https://maps.google.com/?q=#{est_data[:name].gsub(' ', '+')},+#{city.gsub(' ', '+')}"
+    map_link: "https://maps.google.com/?q=#{est_data[:name].gsub(' ', '+')},+#{city.gsub(' ', '+')}",
+    logo_url: establishment_logos[i + 2], # Use the corresponding logo from our array
+    building_image_url: building_images[i + 2] # Use the corresponding building image from our array
   )
 end
+
+# Associate specialties and services with establishments
+puts "Associating specialties and services with establishments..."
+
+# Get all specialties and services
+all_specialties = Specialty.all
+all_services = Service.all
+
+# Associate specialties and services with the first establishment (Policlínica del Atlántico)
+centro_medico_specialties = ["Ortodoncia", "Nutrición", "Pediatría", "Psicología-Podiatría", "Medicina Estética", "Laparoscopía", "Ortopedia y Traumatología"]
+centro_medico_services = ["Farmacia", "Medicina General a recién nacido, niños, adulto y tercera edad", "Extracciones / Restauraciones", "Examen de Citología", "Lesiones que afectan los músculos, huesos y articulaciones", "Ultrasonidos", "Tratamiento Faciales y Corporales", "Trombosis venosa", "Prevención de pie Diabético", "Atención a mujer embarazada", "Radiografías", "Limpiezas dentales", "Control de peso (Obesidad y Desnutrición)", "Enfermedades Pulmonares", "Fracturas en Huesos", "Evaluaciones psicológicas", "Estimulación temprana", "Laboratorio", "Terapia Física y Rehabilitación"]
+
+centro_medico_specialties.each do |specialty_name|
+  specialty = Specialty.find_by(name: specialty_name)
+  if specialty
+    EstablishmentSpecialty.find_or_create_by!(establishment: establishments[0], specialty: specialty)
+  end
+end
+
+centro_medico_services.each do |service_name|
+  service = Service.find_by(name: service_name)
+  if service
+    EstablishmentService.find_or_create_by!(establishment: establishments[0], service: service)
+  end
+end
+
+# For other establishments, assign random specialties and services
+establishments[1..].each do |establishment|
+  # Assign 3-7 random specialties
+  num_specialties = rand(3..7)
+  establishment_specialties = all_specialties.sample(num_specialties)
+  
+  establishment_specialties.each do |specialty|
+    EstablishmentSpecialty.find_or_create_by!(establishment: establishment, specialty: specialty)
+  end
+  
+  # Assign 5-10 random services
+  num_services = rand(5..10)
+  establishment_services = all_services.sample(num_services)
+  
+  establishment_services.each do |service|
+    EstablishmentService.find_or_create_by!(establishment: establishment, service: service)
+  end
+end
+
+puts "Specialties and services associated with establishments"
 
 # Associate doctors with establishments
 puts "Associating doctors with establishments..."
