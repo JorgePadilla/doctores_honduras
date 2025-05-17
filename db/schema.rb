@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_15_092637) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_17_105231) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,7 +43,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_092637) do
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "medical_license"
     t.index ["user_id"], name: "index_doctor_profiles_on_user_id"
+  end
+
+  create_table "establishment_services", force: :cascade do |t|
+    t.bigint "establishment_id", null: false
+    t.bigint "service_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["establishment_id", "service_id"], name: "idx_unique_establishment_service", unique: true
+    t.index ["establishment_id"], name: "index_establishment_services_on_establishment_id"
+    t.index ["service_id"], name: "index_establishment_services_on_service_id"
+  end
+
+  create_table "establishment_specialties", force: :cascade do |t|
+    t.bigint "establishment_id", null: false
+    t.bigint "specialty_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["establishment_id", "specialty_id"], name: "idx_unique_establishment_specialty", unique: true
+    t.index ["establishment_id"], name: "index_establishment_specialties_on_establishment_id"
+    t.index ["specialty_id"], name: "index_establishment_specialties_on_specialty_id"
   end
 
   create_table "establishments", force: :cascade do |t|
@@ -55,6 +76,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_092637) do
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "logo_url"
+    t.string "building_image_url"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.string "sku"
+    t.text "description"
+    t.decimal "price"
+    t.string "category"
+    t.string "image_url"
+    t.bigint "supplier_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["supplier_id"], name: "index_products_on_supplier_id"
   end
 
   create_table "provider_profiles", force: :cascade do |t|
@@ -81,6 +117,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_092637) do
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
   end
 
+  create_table "services", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -88,6 +130,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_092637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "specialties", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -99,6 +147,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_092637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
+  create_table "suppliers", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.string "phone"
+    t.string "email"
+    t.text "description"
+    t.string "logo_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -121,6 +180,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_092637) do
   add_foreign_key "doctor_establishments", "doctor_profiles"
   add_foreign_key "doctor_establishments", "establishments"
   add_foreign_key "doctor_profiles", "users"
+  add_foreign_key "establishment_services", "establishments"
+  add_foreign_key "establishment_services", "services"
+  add_foreign_key "establishment_specialties", "establishments"
+  add_foreign_key "establishment_specialties", "specialties"
+  add_foreign_key "products", "suppliers"
   add_foreign_key "provider_profiles", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "users"
