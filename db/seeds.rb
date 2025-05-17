@@ -1,3 +1,121 @@
+# This file should contain all the record creation needed to seed the database with its default values.
+# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+
+# Create suppliers
+puts "Creating suppliers..."
+
+# Skip if suppliers already exist
+if Supplier.count == 0
+  suppliers = [
+    {
+      name: "Mey-Ko",
+      address: "Col. Ruben Dario, Calle 8, #257",
+      phone: "2234-3504",
+      email: "info@meyko.hn",
+      description: "Equipos médicos y suministros para el cuidado de la salud",
+      logo_url: "https://images.unsplash.com/photo-1516876437184-593fda40c7ce?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1lZGljYWwlMjBzdXBwbGllc3xlbnwwfHwwfHx8MA%3D%3D"
+    },
+    {
+      name: "Medihospital",
+      address: "Blvd. Suyapa, Tegucigalpa",
+      phone: "2239-7800",
+      email: "ventas@medihospital.hn",
+      description: "Distribuidores de equipos médicos y material quirúrgico",
+      logo_url: "https://images.unsplash.com/photo-1587351021759-3e566b3db4f1?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG1lZGljYWwlMjBzdXBwbGllc3xlbnwwfHwwfHx8MA%3D%3D"
+    },
+    {
+      name: "Dimex Medical",
+      address: "Col. Palmira, Ave. República de Panamá",
+      phone: "2216-5950",
+      email: "contacto@dimexmedical.hn",
+      description: "Equipos y suministros médicos de alta calidad",
+      logo_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVkaWNhbCUyMGVxdWlwbWVudHxlbnwwfHwwfHx8MA%3D%3D"
+    },
+    {
+      name: "Droguería Nacional",
+      address: "Col. Las Colinas, Blvd. Francia",
+      phone: "2221-3090",
+      email: "info@dronacional.hn",
+      description: "Distribución de medicamentos y equipos médicos",
+      logo_url: "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHBoYXJtYWN5fGVufDB8fDB8fHww"
+    },
+    {
+      name: "Farinter",
+      address: "Col. Payaquí, Tegucigalpa",
+      phone: "2280-0000",
+      email: "servicioalcliente@farinter.hn",
+      description: "Productos farmacéuticos y equipos médicos",
+      logo_url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhhcm1hY3l8ZW58MHx8MHx8fDA%3D"
+    }
+  ]
+
+  created_suppliers = Supplier.create!(suppliers)
+  puts "Created #{created_suppliers.size} suppliers"
+
+  # Create product categories
+  categories = [
+    "Cuidado del Diabético",
+    "Cuidado en Casa",
+    "Equipo Diagnóstico",
+    "Rehabilitación",
+    "Fisioterapia",
+    "Movilidad",
+    "Terapia para Varices",
+    "Terapia Respiratoria"
+  ]
+
+  # Create products for each supplier
+  puts "Creating products..."
+  
+  created_suppliers.each do |supplier|
+    # Create 15-20 products for each supplier to demonstrate pagination
+    product_count = rand(15..20)
+    
+    product_count.times do |i|
+      category = categories.sample
+      sku = "#{supplier.name[0..2].upcase}-#{category[0..2].upcase}-#{100 + i}"
+      
+      product_name = case category
+      when "Cuidado del Diabético"
+        ["Glucómetro Kit", "Cintas desechables", "Lancetas", "Estuche de viaje para insulina", "Medidor de presión"].sample
+      when "Cuidado en Casa"
+        ["Almohada refrescante", "Toallitas con alcohol", "Termómetro digital", "Tensiómetro automático", "Nebulizador portátil"].sample
+      when "Equipo Diagnóstico"
+        ["Estetoscopio", "Oxímetro de pulso", "Otoscopio", "Báscula digital", "Termómetro infrarrojo"].sample
+      when "Rehabilitación"
+        ["Banda elástica", "Balón terapéutico", "Pesas para tobillos", "Colchoneta de ejercicio", "Rueda para abdominales"].sample
+      when "Fisioterapia"
+        ["TENS portátil", "Compresas frío/calor", "Masajeador eléctrico", "Ultrasonido terapéutico", "Lámpara infrarroja"].sample
+      when "Movilidad"
+        ["Bastón ajustable", "Andador plegable", "Silla de ruedas", "Muletas axilares", "Scooter eléctrico"].sample
+      when "Terapia para Varices"
+        ["Medias de compresión", "Bomba de compresión secuencial", "Vendas elásticas", "Almohada elevadora", "Crema para varices"].sample
+      when "Terapia Respiratoria"
+        ["Inhalador", "Oxímetro", "Aspirador de secreciones", "Concentrador de oxígeno", "Máscara de nebulización"].sample
+      end
+      
+      # Add a suffix to make each product name unique
+      product_name = "#{product_name} - #{supplier.name} #{i+1}"
+      
+      description = "Dispositivo médico de alta calidad para #{category.downcase}. Ideal para uso profesional o doméstico. Fabricado con los más altos estándares de calidad y seguridad."
+      
+      supplier.products.create!(
+        name: product_name,
+        sku: sku,
+        description: description,
+        price: rand(10.0..500.0).round(2),
+        category: category,
+        image_url: "https://source.unsplash.com/random/300x200/?medical,#{category.downcase.gsub(' ', '-')}"
+      )
+    end
+  end
+  
+  total_products = Product.count
+  puts "Created #{total_products} products"
+else
+  puts "Suppliers already exist, skipping seed"
+end
+
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).

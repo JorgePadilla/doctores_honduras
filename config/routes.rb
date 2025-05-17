@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
+  get "products/index"
+  get "products/show"
+  resources :suppliers, path: 'proveedores', only: [:index, :show] do
+    resources :products, only: [:index, :show], path: 'productos'
+  end
   resource :session
   resources :passwords, param: :token
+  resources :doctors, only: [:index, :show]
   
   # User registration routes
   get "signup" => "users#new"
