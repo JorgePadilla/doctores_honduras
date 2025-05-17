@@ -1,0 +1,55 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="flex flex-col md:flex-row">
+      <div class="md:w-1/3 p-6">
+        <% if @doctor.image_url.present? %>
+          <img src="<%= @doctor.image_url %>" alt="<%= @doctor.name %>" class="w-full h-auto rounded-lg object-cover">
+        <% else %>
+          <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+            <span class="text-gray-500">Sin imagen</span>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="md:w-2/3 p-6">
+        <h1 class="text-2xl font-bold text-primary-700 mb-2"><%= @doctor.name %></h1>
+        <p class="text-lg text-gray-600 mb-2">Especialista en <%= @doctor.specialization %></p>
+        <% if @doctor.medical_license.present? %>
+          <p class="text-gray-500 mb-4"><%= @doctor.medical_license %></p>
+        <% end %>
+        
+        <% if @doctor.description.present? %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold text-primary-600 mb-2">Sobre el médico</h2>
+            <p class="text-gray-700"><%= @doctor.description %></p>
+          </div>
+        <% end %>
+        
+        <% if @establishments.any? %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold text-primary-600 mb-2">Consultorios</h2>
+            
+            <% @establishments.each do |establishment| %>
+              <div class="mb-4 border-l-4 border-primary-500 pl-4">
+                <h3 class="text-lg font-medium text-primary-700"><%= establishment.name %></h3>
+                <p class="text-gray-600"><%= establishment.address %></p>
+                <% if establishment.phone.present? %>
+                  <p class="text-gray-600">Tel: <%= establishment.phone %></p>
+                <% end %>
+                <% if establishment.map_link.present? %>
+                  <a href="<%= establishment.map_link %>" target="_blank" class="text-primary-600 hover:text-primary-800 text-sm">Ver en mapa</a>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <div class="mt-6">
+          <a href="/doctors" class="text-primary-600 hover:text-primary-800">
+            &larr; Volver al directorio
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

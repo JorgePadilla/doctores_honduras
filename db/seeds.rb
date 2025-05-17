@@ -1,9 +1,261 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+puts "Creating sample data for doctor profiles..."
+
+# Skip if we already have doctors
+if DoctorProfile.count >= 5
+  puts "#{DoctorProfile.count} doctor profiles already exist. Skipping seed data creation."
+  exit
+end
+
+# Generate a timestamp to make emails unique
+timestamp = Time.now.to_i
+
+# Create sample users for doctors
+puts "Creating sample users and doctor profiles..."
+
+# Sample specializations
+specializations = [
+  "Cardiología",
+  "Dermatología",
+  "Endocrinología",
+  "Gastroenterología",
+  "Ginecología",
+  "Neurología",
+  "Oftalmología",
+  "Oncología",
+  "Ortopedia",
+  "Pediatría",
+  "Psiquiatría",
+  "Urología",
+  "Medicina Interna",
+  "Cirugía General",
+  "Medicina Familiar",
+  "Otorrinolaringología",
+  "Neumología",
+  "Radiología",
+  "Anestesiología",
+  "Manejo del Dolor",
+  "Psicología Clínica"
+]
+
+# Sample locations
+locations = [
+  "Tegucigalpa, MDC",
+  "San Pedro Sula, Cortés",
+  "La Ceiba, Atlántida",
+  "Tela, Atlántida",
+  "Choluteca, Choluteca",
+  "Comayagua, Comayagua",
+  "Siguatepeque, Comayagua",
+  "Juticalpa, Olancho",
+  "Santa Rosa de Copán, Copán",
+  "Puerto Cortés, Cortés"
+]
+
+# Create 20 doctors
+doctors = []
+
+# First two doctors from the original seed
+user1 = User.create!(
+  email: "luis.martinez.#{timestamp}@example.com",
+  password: "password123",
+  password_confirmation: "password123"
+)
+
+doctors << DoctorProfile.create!(
+  user: user1,
+  name: "Dr. Luis Martínez Arita",
+  specialization: "Manejo del Dolor",
+  description: "Especialista en manejo del dolor con más de 10 años de experiencia.",
+  location: "Tela, Atlántida",
+  medical_license: "Medicina General",
+  image_url: "https://randomuser.me/api/portraits/men/75.jpg"
+)
+
+user2 = User.create!(
+  email: "ana.alvarez.#{timestamp}@example.com",
+  password: "password123",
+  password_confirmation: "password123"
+)
+
+doctors << DoctorProfile.create!(
+  user: user2,
+  name: "Licda. Ana Ruth Álvarez",
+  specialization: "Psicología Clínica, Infanto-Juvenil y Terapia Familiar",
+  description: "Especialista en psicología clínica con enfoque en terapia familiar e infanto-juvenil.",
+  location: "Tegucigalpa, MDC",
+  medical_license: "Psicología",
+  image_url: "https://randomuser.me/api/portraits/women/65.jpg"
+)
+
+# Create 18 more doctors
+18.times do |i|
+  # Alternate between male and female doctors
+  gender = i.even? ? "men" : "women"
+  # Use a different image for each doctor
+  image_number = i + 10
+  
+  user = User.create!(
+    email: "doctor#{i+3}.#{timestamp}@example.com",
+    password: "password123",
+    password_confirmation: "password123"
+  )
+  
+  # Generate a random name
+  first_names_male = ["Carlos", "Juan", "Miguel", "José", "Antonio", "Francisco", "Roberto", "David", "Fernando", "Rafael"]
+  first_names_female = ["María", "Ana", "Laura", "Sofía", "Carmen", "Isabel", "Patricia", "Gabriela", "Rosa", "Claudia"]
+  last_names = ["García", "Martínez", "López", "Hernández", "Pérez", "González", "Rodríguez", "Sánchez", "Ramírez", "Torres", "Flores", "Rivera", "Morales", "Reyes", "Cruz"]
+  
+  first_name = gender == "men" ? first_names_male.sample : first_names_female.sample
+  last_name = "#{last_names.sample} #{last_names.sample}"
+  title = gender == "men" ? "Dr." : ["Dra.", "Licda."].sample
+  
+  # Select a random specialization
+  spec = specializations.sample
+  
+  # Create the doctor profile
+  doctors << DoctorProfile.create!(
+    user: user,
+    name: "#{title} #{first_name} #{last_name}",
+    specialization: spec,
+    description: "Especialista en #{spec} con experiencia en atención de pacientes de todas las edades.",
+    location: locations.sample,
+    medical_license: spec,
+    image_url: "https://randomuser.me/api/portraits/#{gender}/#{image_number}.jpg"
+  )
+end
+
+# Create sample establishments
+puts "Creating sample establishments..."
+
+# Sample establishment names and types
+establishment_data = [
+  { name: "Policlínica del Atlántico", type: "Clínica" },
+  { name: "Clínicas Millenium", type: "Clínica" },
+  { name: "Hospital Escuela", type: "Hospital" },
+  { name: "Hospital San Felipe", type: "Hospital" },
+  { name: "Hospital Militar", type: "Hospital" },
+  { name: "Hospital Viera", type: "Hospital" },
+  { name: "Centro Médico Hondureño", type: "Centro Médico" },
+  { name: "Centro Especializado San Jorge", type: "Centro Médico" },
+  { name: "Clínica Médica Cristiana", type: "Clínica" },
+  { name: "Clínica La Salud", type: "Clínica" },
+  { name: "Centro Médico La Paz", type: "Centro Médico" },
+  { name: "Hospital D'Antoni", type: "Hospital" },
+  { name: "Clínica Santa María", type: "Clínica" },
+  { name: "Centro Médico Comayagua", type: "Centro Médico" },
+  { name: "Hospital Regional del Norte", type: "Hospital" }
+]
+
+# Sample addresses by city
+address_templates = {
+  "Tegucigalpa, MDC" => [
+    "Col. Tepeyac, %s piso, clínica %s, Calle Olancho",
+    "Col. Palmira, Calle Principal, Edificio %s",
+    "Col. Kennedy, Blvd. Centroamérica, frente a %s",
+    "Col. Miraflores, Calle %s, Casa #%s",
+    "Blvd. Morazán, Torre %s, %s piso"
+  ],
+  "San Pedro Sula, Cortés" => [
+    "Barrio Río de Piedras, %s Avenida, %s Calle",
+    "Col. Villas del Sol, Blvd. del Sur, Edificio %s",
+    "Barrio Guamilito, Calle %s, Edificio %s",
+    "Col. Universidad, frente a %s",
+    "Barrio El Centro, %s Avenida, %s Calle"
+  ],
+  "La Ceiba, Atlántida" => [
+    "Barrio La Isla, %s Calle, %s Avenida",
+    "Barrio El Centro, frente a %s",
+    "Col. El Naranjal, Calle Principal, Casa #%s",
+    "Barrio Mejía, cerca de %s",
+    "Zona Viva, Edificio %s, Local %s"
+  ],
+  "Tela, Atlántida" => [
+    "Barrio el Centro, frente a Gasolinera UNO",
+    "Barrio Venecia, %s Calle",
+    "Zona Turística, cerca de %s",
+    "Barrio Independencia, Casa #%s",
+    "Calle Principal, Edificio %s, Local %s"
+  ]
+}
+
+# Create establishments
+establishments = []
+
+# First two specific establishments from original seed
+establishments << Establishment.create!(
+  name: "Policlínica del Atlántico",
+  est_type: "Clínica",
+  address: "Barrio el Centro de Tela, frente a Gasolinera UNO",
+  phone: "(504) 2448-2109",
+  map_link: "https://maps.google.com/?q=Policlínica+del+Atlántico,+Tela"
+)
+
+establishments << Establishment.create!(
+  name: "Clínicas Millenium",
+  est_type: "Clínica",
+  address: "Col. Tepeyac, 7mo. piso, clínica 705, Calle Olancho, Tegucigalpa MDC",
+  phone: "(504) 2232-0718",
+  map_link: "https://maps.google.com/?q=Clínicas+Millenium,+Tegucigalpa"
+)
+
+# Create more establishments
+13.times do |i|
+  # Select a random establishment data
+  est_data = establishment_data[i + 2]
+  
+  # Select a random location from our defined locations that have address templates
+  location = address_templates.keys.sample
+  city = location.split(",").first
+  
+  # Generate a random address based on the city
+  address_template = address_templates[location].sample
+  landmarks = ["Banco Atlantida", "Supermercado La Colonia", "Parque Central", "Plaza Miraflores", "Mall Multiplaza", "Universidad Nacional", "Estadio Nacional", "Hotel Marriott", "Catedral", "Mercado", "Gasolinera Uno", "Hospital", "Farmacia Siman", "Escuela Americana", "Centro Comercial"]
+  
+  # Format the address with random numbers and landmarks
+  address = format(address_template, 
+    ["1er", "2do", "3er", "4to", "5to", "6to", "7mo", "8vo", "9no", "10mo"].sample,
+    rand(100..999).to_s,
+    landmarks.sample,
+    ["A", "B", "C", "D", "E", "F", "G", "H"].sample,
+    rand(1..20).to_s)
+  
+  # Generate a random phone number
+  phone = "(504) #{rand(2200..9999)}-#{rand(1000..9999)}"
+  
+  # Create the establishment
+  establishments << Establishment.create!(
+    name: est_data[:name],
+    est_type: est_data[:type],
+    address: "#{address}, #{location}",
+    phone: phone,
+    map_link: "https://maps.google.com/?q=#{est_data[:name].gsub(' ', '+')},+#{city.gsub(' ', '+')}"
+  )
+end
+
+# Associate doctors with establishments
+puts "Associating doctors with establishments..."
+
+# Associate first two doctors with specific establishments
+DoctorEstablishment.create!(doctor_profile: doctors[0], establishment: establishments[0])
+DoctorEstablishment.create!(doctor_profile: doctors[1], establishment: establishments[1])
+
+# Associate the rest of the doctors with random establishments
+# Each doctor will have 1-3 establishments
+doctors[2..].each do |doctor|
+  # Determine how many establishments this doctor will have (1-3)
+  num_establishments = rand(1..3)
+  
+  # Select random establishments for this doctor
+  doctor_establishments = establishments.sample(num_establishments)
+  
+  # Create the associations
+  doctor_establishments.each do |establishment|
+    DoctorEstablishment.create!(doctor_profile: doctor, establishment: establishment)
+  end
+end
+
+puts "Seed data created successfully!"
