@@ -4,13 +4,13 @@
     <p class="text-xl text-gray-600">Encuentra el especialista que necesitas en Honduras</p>
   </header>
 
-  <div class="max-w-4xl mx-auto mb-10">
-    <div class="bg-white rounded-lg shadow-lg p-6">
-      <form action="/doctors" method="get" class="flex flex-col md:flex-row gap-4">
-        <div class="flex-grow">
-          <input type="text" name="q" placeholder="Busca por Nombre, especialidad o clínica" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+  <div class="max-w-4xl mx-auto mb-12">
+    <div class="bg-white rounded-full shadow-md p-2 transition-all hover:shadow-lg">
+      <form action="/doctors" method="get" class="flex items-center">
+        <div class="flex-grow pl-4">
+          <input type="text" name="q" placeholder="Busca por Nombre, especialidad o clínica" class="w-full py-3 px-2 text-gray-700 focus:outline-none" style="background: transparent;">
         </div>
-        <button type="submit" class="py-3 px-6 rounded-lg text-white font-medium" style="background-color: #38bdf8;">
+        <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105" style="background-color: #38bdf8;">
           Buscar
         </button>
       </form>
@@ -19,7 +19,7 @@
 
   <div class="grid md:grid-cols-1 gap-8 max-w-4xl mx-auto">
     <% @doctors.each do |doctor| %>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden border-l-8" style="border-color: #38bdf8;">
+      <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-8 transition-all hover:shadow-lg" style="border-color: #38bdf8;">
         <div class="flex flex-col md:flex-row">
           <div class="md:w-1/4 p-4">
             <% if doctor.image_url.present? %>
@@ -48,7 +48,7 @@
             </div>
             
             <div class="mt-4 text-right">
-              <a href="<%= doctor_path(doctor) %>" class="inline-flex items-center px-5 py-2.5 text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1" style="background-color: #38bdf8; hover:background-color: #0ea5e9;">
+              <a href="<%= doctor_path(doctor) %>" class="inline-flex items-center px-5 py-2.5 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg transform hover:scale-105" style="background-color: #38bdf8;">
                 <span class="text-sm">VER PERFIL COMPLETO</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
