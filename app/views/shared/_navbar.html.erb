@@ -19,14 +19,14 @@
       <!-- Authentication Links -->
       <div class="flex items-center space-x-4">
         <% if Current.user %>
-          <div class="relative group">
-            <button class="flex items-center text-white hover:text-primary-200 transition focus:outline-none">
+          <div class="relative dropdown">
+            <button id="user-menu-button" class="flex items-center text-white hover:text-primary-200 transition focus:outline-none">
               <span><%= Current.user.email %></span>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </button>
-            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+            <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
               <a href="<%= dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Panel de Control</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Mi Perfil</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Configuración</a>
@@ -58,7 +58,10 @@
       <a href="/proveedores" class="block py-2 text-white hover:text-primary-200 transition">Proveedores</a>
       <% if Current.user %>
         <div class="mt-4 pt-4 border-t border-primary-300">
+          <div class="block py-2 text-white font-medium"><%= Current.user.email %></div>
           <a href="<%= dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition">Panel de Control</a>
+          <a href="#" class="block py-2 text-white hover:text-primary-200 transition">Mi Perfil</a>
+          <a href="#" class="block py-2 text-white hover:text-primary-200 transition">Configuración</a>
           <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "block w-full text-left py-2 text-white hover:text-primary-200 transition" %>
         </div>
       <% else %>
@@ -73,11 +76,33 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     
-    mobileMenuButton.addEventListener('click', function() {
-      mobileMenu.classList.toggle('hidden');
-    });
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+    
+    // User dropdown menu toggle
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    
+    if (userMenuButton && userDropdown) {
+      userMenuButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        userDropdown.classList.toggle('hidden');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+          userDropdown.classList.add('hidden');
+        }
+      });
+    }
   });
 </script>
