@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title><%= content_for(:title) || "Doctores Honduras" %></title>
+    <title><%= content_for(:title) || "Doctores Honduras - #{t('navigation.doctors')} #{t('navigation.establishments')}" %></title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<%= content_for(:meta_description) || 'Directorio de médicos y establecimientos de salud en Honduras. Encuentra especialistas, hospitales y clínicas cerca de ti.' %>">
+    <meta name="keywords" content="<%= content_for(:meta_keywords) || 'médicos, doctores, hospitales, clínicas, salud, Honduras, especialistas' %>">
+    <meta name="author" content="Doctores Honduras">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:title" content="<%= content_for(:title) || 'Doctores Honduras' %>">
+    <meta property="og:description" content="<%= content_for(:meta_description) || 'Directorio de médicos y establecimientos de salud en Honduras' %>">
+    <meta property="og:image" content="<%= content_for(:og_image) || asset_path('og-image.jpg') %>">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<%= request.original_url %>">
+    <meta property="twitter:title" content="<%= content_for(:title) || 'Doctores Honduras' %>">
+    <meta property="twitter:description" content="<%= content_for(:meta_description) || 'Directorio de médicos y establecimientos de salud en Honduras' %>">
+    <meta property="twitter:image" content="<%= content_for(:og_image) || asset_path('og-image.jpg') %>">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<%= content_for(:canonical_url) || request.original_url %>">
+    
+    <!-- Alternate language versions -->
+    <link rel="alternate" hreflang="es" href="<%= url_for(locale: :es) %>">
+    <link rel="alternate" hreflang="en" href="<%= url_for(locale: :en) %>">
+    <link rel="alternate" hreflang="x-default" href="<%= url_for(locale: :es) %>">
+    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 

@@ -27,6 +27,15 @@ Rails.application.routes.draw do
   # Dashboard routes for authenticated users
   get "dashboard" => "dashboard#index", as: :dashboard
   
+  # Settings routes
+  get "settings" => "settings#index", as: :settings
+  get "settings/account" => "settings#account", as: :settings_account
+  get "settings/subscription" => "settings#subscription", as: :settings_subscription
+  get "settings/notifications" => "settings#notifications", as: :settings_notifications
+  get "settings/security" => "settings#security", as: :settings_security
+  get "settings/language" => "settings#language", as: :settings_language
+  patch "settings/language" => "settings#update_language"
+  
   # Defines the root path route ("/")
   root "home#index"
 end

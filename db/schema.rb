@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_105231) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_17_220903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,6 +80,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_105231) do
     t.string "building_image_url"
   end
 
+  create_table "notification_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.boolean "email_notifications"
+    t.boolean "marketing_emails"
+    t.boolean "new_features_notifications"
+    t.boolean "security_alerts"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notification_preferences_on_user_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.string "sku"
@@ -138,6 +149,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_105231) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "subscription_plans", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "price"
+    t.string "interval"
+    t.text "features"
+    t.string "stripe_price_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "subscriptions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "plan"
@@ -146,6 +168,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_105231) do
     t.datetime "next_billing_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "subscription_plan_id"
+    t.string "plan_name"
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "cancel_at"
+    t.string "stripe_customer_id"
+    t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
@@ -165,6 +194,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_105231) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "language"
+    t.string "two_factor_secret"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
@@ -184,8 +215,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_105231) do
   add_foreign_key "establishment_services", "services"
   add_foreign_key "establishment_specialties", "establishments"
   add_foreign_key "establishment_specialties", "specialties"
+  add_foreign_key "notification_preferences", "users"
   add_foreign_key "products", "suppliers"
   add_foreign_key "provider_profiles", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "subscriptions", "subscription_plans"
   add_foreign_key "subscriptions", "users"
 end

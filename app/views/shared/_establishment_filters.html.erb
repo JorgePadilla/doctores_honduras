@@ -1,0 +1,42 @@
+<div class="bg-white shadow-md rounded-lg p-4 mb-6">
+  <h3 class="text-lg font-medium text-gray-900 mb-4"><%= t('establishments.filters.title') %></h3>
+  
+  <%= form_with url: establishments_path, method: :get, class: "space-y-4", data: { turbo_frame: "establishments-list", controller: "form" } do |form| %>
+    <% if params[:q].present? %>
+      <%= form.hidden_field :q, value: params[:q] %>
+    <% end %>
+    
+    <div>
+      <label for="specialty_id" class="block text-sm font-medium text-gray-700 mb-1">
+        <%= t('establishments.filters.specialty') %>
+      </label>
+      <%= form.select :specialty_id, 
+                     options_for_select(@all_specialties.map { |s| [s.name, s.id] }, params[:specialty_id]), 
+                     { include_blank: t('establishments.filters.all_specialties') },
+                     class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md",
+                     data: { action: "change->form#submit" } %>
+    </div>
+    
+    <div>
+      <label for="service_id" class="block text-sm font-medium text-gray-700 mb-1">
+        <%= t('establishments.filters.service') %>
+      </label>
+      <%= form.select :service_id, 
+                     options_for_select(@all_services.map { |s| [s.name, s.id] }, params[:service_id]), 
+                     { include_blank: t('establishments.filters.all_services') },
+                     class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md",
+                     data: { action: "change->form#submit" } %>
+    </div>
+    
+    <div class="flex justify-between pt-2">
+      <%= form.submit t('establishments.filters.apply'), 
+                     class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+      
+      <% if params[:specialty_id].present? || params[:service_id].present? %>
+        <%= link_to t('establishments.filters.clear'), 
+                   establishments_path(q: params[:q]), 
+                   class: "inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

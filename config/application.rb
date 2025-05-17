@@ -21,7 +21,11 @@ module DoctoresHonduras
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    config.time_zone = "America/Tegucigalpa"
     # config.eager_load_paths << Rails.root.join("extras")
+    
+    # Set default locale to Spanish
+    config.i18n.default_locale = :es
+    config.i18n.available_locales = [:es, :en]
   end
 end

@@ -1,0 +1,109 @@
+es:
+  hello: "Hola mundo"
+  
+  # Common terms
+  common:
+    search: "Buscar"
+    filter: "Filtrar"
+    view: "Ver"
+    edit: "Editar"
+    delete: "Eliminar"
+    back: "Regresar"
+    save: "Guardar"
+    cancel: "Cancelar"
+    confirm: "Confirmar"
+    loading: "Cargando..."
+    no_results: "No se encontraron resultados"
+    
+  # Navigation
+  navigation:
+    home: "Inicio"
+    doctors: "Doctores"
+    establishments: "Hospitales y Clínicas"
+    suppliers: "Proveedores"
+    products: "Productos"
+    dashboard: "Panel de Control"
+    settings: "Configuración"
+    logout: "Cerrar Sesión"
+    login: "Iniciar Sesión"
+    signup: "Registrarse"
+    
+  # Doctor profiles
+  doctors:
+    title: "Directorio de Médicos"
+    specialization: "Especialización"
+    location: "Ubicación"
+    contact: "Contacto"
+    profile: "Perfil del Doctor"
+    establishments: "Establecimientos donde atiende"
+    no_doctors: "No se encontraron doctores con los criterios de búsqueda"
+    
+  # Establishments
+  establishments:
+    title: "Hospitales y Clínicas"
+    type: "Tipo"
+    address: "Dirección"
+    phone: "Teléfono"
+    services: "Servicios"
+    specialties: "Especialidades"
+    doctors: "Médicos que atienden aquí"
+    no_establishments: "No se encontraron establecimientos con los criterios de búsqueda"
+    filters:
+      title: "Filtrar Resultados"
+      specialty: "Especialidad"
+      service: "Servicio"
+      all_specialties: "Todas las especialidades"
+      all_services: "Todos los servicios"
+      apply: "Aplicar Filtros"
+      clear: "Limpiar Filtros"
+    
+  # User account
+  users:
+    login: "Iniciar Sesión"
+    signup: "Crear Cuenta"
+    email: "Correo Electrónico"
+    password: "Contraseña"
+    password_confirmation: "Confirmar Contraseña"
+    forgot_password: "¿Olvidó su contraseña?"
+    reset_password: "Restablecer Contraseña"
+    
+  # Settings
+  settings:
+    title: "Configuración"
+    account: "Cuenta"
+    subscription: "Suscripción"
+    notifications: "Notificaciones"
+    security: "Seguridad"
+    language: "Idioma"
+    
+  # Subscriptions
+  subscriptions:
+    free: "Gratuito"
+    basic: "Básico"
+    premium: "Premium"
+    current_plan: "Plan Actual"
+    upgrade: "Mejorar Plan"
+    downgrade: "Cambiar a Plan Inferior"
+    
+  # Time and dates
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%d de %B de %Y a las %H:%M"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%d de %B de %Y"
+    day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
+    abbr_day_names: [dom, lun, mar, mié, jue, vie, sáb]
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
+    abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+    
+  # Flash messages
+  flash:
+    success: "Operación completada con éxito"
+    error: "Ha ocurrido un error"
+    login_required: "Debe iniciar sesión para acceder a esta página"
+    unauthorized: "No tiene permisos para acceder a esta página"
