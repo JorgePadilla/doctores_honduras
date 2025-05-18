@@ -201,13 +201,16 @@ user2 = User.create!(
 
 doctors << DoctorProfile.create!(
   user: user2,
-  name: "Licda. Ana Ruth Álvarez",
-  specialization: "Psicología Clínica, Infanto-Juvenil y Terapia Familiar",
-  description: "Especialista en psicología clínica con enfoque en terapia familiar e infanto-juvenil.",
+  name: "Dra. Ana Alvarez Mendoza",
+  specialization: "Psicología Clínica",
+  description: "Psicóloga clínica especializada en terapia cognitivo-conductual.",
   location: "Tegucigalpa, MDC",
-  medical_license: "Psicología",
+  medical_license: "Psicología Clínica",
   image_url: "https://randomuser.me/api/portraits/women/65.jpg"
 )
+
+# Load subscription plans seed
+load File.join(Rails.root, 'db', 'seeds', 'subscription_plans.rb')
 
 # Create 18 more doctors
 18.times do |i|

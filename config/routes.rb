@@ -31,7 +31,11 @@ Rails.application.routes.draw do
   get "settings" => "settings#index", as: :settings
   get "settings/account" => "settings#account", as: :settings_account
   get "settings/subscription" => "settings#subscription", as: :settings_subscription
+  post "settings/subscribe" => "settings#subscribe", as: :settings_subscribe
+  post "settings/process_payment" => "settings#process_payment", as: :settings_process_payment
+  delete "settings/cancel_subscription" => "settings#cancel_subscription", as: :settings_cancel_subscription
   get "settings/notifications" => "settings#notifications", as: :settings_notifications
+  patch "settings/notifications" => "settings#update_notifications"
   get "settings/security" => "settings#security", as: :settings_security
   get "settings/language" => "settings#language", as: :settings_language
   patch "settings/language" => "settings#update_language"

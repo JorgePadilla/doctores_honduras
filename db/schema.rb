@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_220903) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_18_015809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -89,6 +89,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_220903) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_notification_preferences_on_user_id"
+  end
+
+  create_table "payment_histories", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "amount"
+    t.string "status"
+    t.string "payment_method"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_payment_histories_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -216,6 +227,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_220903) do
   add_foreign_key "establishment_specialties", "establishments"
   add_foreign_key "establishment_specialties", "specialties"
   add_foreign_key "notification_preferences", "users"
+  add_foreign_key "payment_histories", "users"
   add_foreign_key "products", "suppliers"
   add_foreign_key "provider_profiles", "users"
   add_foreign_key "sessions", "users"

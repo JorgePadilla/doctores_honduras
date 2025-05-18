@@ -1,0 +1,170 @@
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-primary-700 mb-6">Completar Suscripción</h1>
+  
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Sidebar Navigation -->
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <nav class="space-y-1">
+        <a href="<%= settings_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+          <i class="fas fa-cog mr-2"></i>General
+        </a>
+        <a href="<%= settings_account_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+          <i class="fas fa-user mr-2"></i>Cuenta
+        </a>
+        <a href="<%= settings_subscription_path %>" class="block px-3 py-2 rounded-md bg-primary-100 text-primary-700 font-medium">
+          <i class="fas fa-credit-card mr-2"></i>Suscripción
+        </a>
+        <a href="<%= settings_notifications_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+          <i class="fas fa-bell mr-2"></i>Notificaciones
+        </a>
+        <a href="<%= settings_security_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+          <i class="fas fa-shield-alt mr-2"></i>Seguridad
+        </a>
+        <a href="<%= settings_language_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+          <i class="fas fa-language mr-2"></i>Idioma
+        </a>
+      </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="md:col-span-3 bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold mb-4">Información de Pago</h2>
+      
+      <!-- Plan Summary -->
+      <div class="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
+        <h3 class="text-lg font-medium mb-2 text-blue-800">Resumen de la Suscripción</h3>
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-gray-900 font-medium"><%= @plan.name %></p>
+            <p class="text-gray-600 text-sm">Renovación automática mensual</p>
+          </div>
+          <div class="bg-blue-100 px-4 py-2 rounded-md">
+            <p class="text-xl font-bold text-blue-800">$<%= sprintf('%.2f', @plan.price / 100.0) %>/mes</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Payment Form -->
+      <%= form_with url: settings_process_payment_path(plan_id: @plan.id), method: :post, class: "space-y-6" do |f| %>
+        <!-- Credit Card Information -->
+        <div class="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
+          <h3 class="text-lg font-medium mb-4 flex items-center">
+            <svg class="h-6 w-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+            </svg>
+            Información de Tarjeta
+          </h3>
+          
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <%= f.label :card_number, "Número de Tarjeta", class: "block text-sm font-medium text-gray-700" %>
+              <div class="mt-1">
+                <%= f.text_field :card_number, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md", placeholder: "1234 5678 9012 3456" %>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <%= f.label :expiry, "Fecha de Expiración", class: "block text-sm font-medium text-gray-700" %>
+                <div class="mt-1">
+                  <%= f.text_field :expiry, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md", placeholder: "MM/AA" %>
+                </div>
+              </div>
+              
+              <div>
+                <%= f.label :cvv, "Código de Seguridad (CVV)", class: "block text-sm font-medium text-gray-700" %>
+                <div class="mt-1">
+                  <%= f.text_field :cvv, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md", placeholder: "123" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Billing Information -->
+        <div class="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
+          <h3 class="text-lg font-medium mb-4 flex items-center">
+            <svg class="h-6 w-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            Información de Facturación
+          </h3>
+          
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <%= f.label :name, "Nombre en la Tarjeta", class: "block text-sm font-medium text-gray-700" %>
+              <div class="mt-1">
+                <%= f.text_field :name, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+              </div>
+            </div>
+            
+            <div>
+              <%= f.label :address, "Dirección", class: "block text-sm font-medium text-gray-700" %>
+              <div class="mt-1">
+                <%= f.text_field :address, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <%= f.label :city, "Ciudad", class: "block text-sm font-medium text-gray-700" %>
+                <div class="mt-1">
+                  <%= f.text_field :city, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+                </div>
+              </div>
+              
+              <div>
+                <%= f.label :postal_code, "Código Postal", class: "block text-sm font-medium text-gray-700" %>
+                <div class="mt-1">
+                  <%= f.text_field :postal_code, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Terms and Conditions -->
+        <div class="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <%= f.check_box :terms, class: "focus:ring-primary-500 h-4 w-4 text-blue-600 border-gray-300 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= f.label :terms, class: "font-medium text-gray-700" do %>
+                Acepto los <a href="#" class="text-blue-600 hover:text-blue-500">Términos y Condiciones</a> y la <a href="#" class="text-blue-600 hover:text-blue-500">Política de Privacidad</a>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Submit Button -->
+          <div class="mt-6 flex flex-col sm:flex-row sm:justify-between items-center">
+            <a href="<%= settings_subscription_path %>" class="w-full sm:w-auto mb-3 sm:mb-0 py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 text-center">
+              <span class="flex items-center justify-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Cancelar
+              </span>
+            </a>
+            <%= f.button type: "submit", class: "w-full sm:w-auto py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+              <span class="flex items-center justify-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Completar Pago
+              </span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Secure Payment Notice -->
+      <div class="mt-6 flex items-center justify-center">
+        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+        <p class="text-sm text-gray-500">Pago seguro con encriptación SSL</p>
+      </div>
+    </div>
+  </div>
+</div>
