@@ -1,11 +1,11 @@
-# Set default locale to Spanish
-I18n.default_locale = :es
-
 # Load all locales from config/locales/*.yml
 I18n.load_path += Dir[Rails.root.join('config', 'locales', '*.{rb,yml}')]
 
-# Whitelist available locales
+# Set available locales
 I18n.available_locales = [:es, :en]
+
+# Set default locale to Spanish
+I18n.default_locale = :es
 
 # Set locale from session or default
 Rails.application.config.middleware.use ActionDispatch::Session::CookieStore
