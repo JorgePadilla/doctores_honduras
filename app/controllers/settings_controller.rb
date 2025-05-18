@@ -33,7 +33,15 @@ class SettingsController < ApplicationController
   def update_language
     @user = Current.user
     if @user.update(language_params)
-      redirect_to settings_language_path, notice: "Idioma actualizado correctamente."
+      # Actualizar el idioma en la sesión actual
+      session[:locale] = @user.language.to_sym
+      # Establecer el idioma para la solicitud actual
+      I18n.locale = @user.language.to_sym
+      
+      # Mostrar el mensaje de éxito en el idioma seleccionado
+      success_message = @user.language == 'es' ? "Idioma actualizado correctamente." : "Language updated successfully."
+      
+      redirect_to settings_language_path, notice: success_message
     else
       render :language, status: :unprocessable_entity
     end

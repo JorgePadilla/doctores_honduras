@@ -48,7 +48,7 @@ en:
   navigation:
     home: "Home"
     doctors: "Doctors"
-    establishments: "Hospitals & Clinics"
+    establishments: "Hospitals and Clinics"
     suppliers: "Suppliers"
     products: "Products"
     dashboard: "Dashboard"
@@ -69,7 +69,7 @@ en:
     
   # Establishments
   establishments:
-    title: "Hospitals & Clinics"
+    title: "Hospitals and Clinics"
     type: "Type"
     address: "Address"
     phone: "Phone"
