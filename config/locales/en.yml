@@ -71,6 +71,7 @@ en:
   establishments:
     title: "Hospitals and Clinics"
     type: "Type"
+    view_details: "VIEW DETAILS"
     address: "Address"
     phone: "Phone"
     services: "Services"

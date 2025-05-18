@@ -42,6 +42,7 @@ es:
   establishments:
     title: "Hospitales y Clínicas"
     type: "Tipo"
+    view_details: "VER DETALLE"
     address: "Dirección"
     phone: "Teléfono"
     services: "Servicios"

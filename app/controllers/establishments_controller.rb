@@ -68,6 +68,11 @@ class EstablishmentsController < ApplicationController
   private
 
   def set_establishment
-    @establishment = Establishment.find(params[:id])
+    @establishment = Establishment.includes(:doctor_profiles, :specialties, :services).find_by(id: params[:id])
+    
+    if @establishment.nil?
+      flash[:alert] = "No se encontró el establecimiento solicitado"
+      redirect_to establishments_path
+    end
   end
 end
