@@ -30,12 +30,13 @@
     
     <div class="flex justify-between pt-2">
       <%= form.submit t('establishments.filters.apply'), 
-                     class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+                     class: "inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all hover:shadow-md transform hover:scale-105", 
+                     style: "background-color: #00bfff;" %>
       
       <% if params[:specialty_id].present? || params[:service_id].present? %>
         <%= link_to t('establishments.filters.clear'), 
                    establishments_path(q: params[:q]), 
-                   class: "inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+                   class: "inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
       <% end %>
     </div>
   <% end %>
