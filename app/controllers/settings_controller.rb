@@ -32,14 +32,25 @@ class SettingsController < ApplicationController
   
   def update_language
     @user = Current.user
+    old_language = @user.language
+    
     if @user.update(language_params)
-      # Actualizar el idioma en la sesión actual
-      session[:locale] = @user.language.to_sym
-      # Establecer el idioma para la solicitud actual
-      I18n.locale = @user.language.to_sym
+      new_language = @user.language
+      
+      # Solo actualizar la sesión y el locale si realmente cambió el idioma
+      if old_language != new_language
+        # Actualizar el idioma en la sesión actual
+        session[:locale] = new_language.to_sym
+        # Establecer el idioma para la solicitud actual
+        I18n.locale = new_language.to_sym
+        
+        Rails.logger.info "Language changed from #{old_language} to #{new_language}"
+        Rails.logger.info "Session locale set to: #{session[:locale]}"
+        Rails.logger.info "I18n.locale set to: #{I18n.locale}"
+      end
       
       # Mostrar el mensaje de éxito en el idioma seleccionado
-      success_message = @user.language == 'es' ? "Idioma actualizado correctamente." : "Language updated successfully."
+      success_message = new_language == 'es' ? "Idioma actualizado correctamente." : "Language updated successfully."
       
       redirect_to settings_language_path, notice: success_message
     else
