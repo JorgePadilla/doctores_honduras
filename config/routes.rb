@@ -40,6 +40,12 @@ Rails.application.routes.draw do
   get "settings/language" => "settings#language", as: :settings_language
   patch "settings/language" => "settings#update_language"
   
+  # Stripe routes
+  post "stripe/create_checkout_session" => "stripe#create_checkout_session", as: :stripe_checkout
+  get "stripe/success" => "stripe#success", as: :stripe_success
+  get "stripe/cancel" => "stripe#cancel", as: :stripe_cancel
+  post "stripe/webhook" => "stripe#webhook", as: :stripe_webhook
+  
   # Defines the root path route ("/")
   root "home#index"
 end

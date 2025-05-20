@@ -169,6 +169,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_015809) do
     t.string "stripe_price_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_product_id"
+    t.index ["stripe_price_id"], name: "index_subscription_plans_on_stripe_price_id", unique: true
+    t.index ["stripe_product_id"], name: "index_subscription_plans_on_stripe_product_id", unique: true
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -185,6 +188,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_015809) do
     t.datetime "current_period_end"
     t.datetime "cancel_at"
     t.string "stripe_customer_id"
+    t.index ["stripe_customer_id"], name: "index_subscriptions_on_stripe_customer_id"
+    t.index ["stripe_subscription_id"], name: "index_subscriptions_on_stripe_subscription_id", unique: true
     t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end

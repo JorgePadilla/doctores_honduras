@@ -1,0 +1,7 @@
+<%# This template handles opening the Stripe checkout in a new window %>
+<%= turbo_stream.append "stripe_redirect" do %>
+  <script>
+    // Open Stripe checkout in a new window
+    window.open('<%= @checkout_url %>', '_blank');
+  </script>
+<% end %>
