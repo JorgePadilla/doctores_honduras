@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_18_015809) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_29_055606) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_015809) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_articles_on_author_id"
+  end
+
+  create_table "departments", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_departments_on_name", unique: true
   end
 
   create_table "doctor_establishments", force: :cascade do |t|
@@ -38,12 +45,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_015809) do
     t.string "name"
     t.string "specialization"
     t.text "description"
-    t.string "location"
+    t.string "address"
     t.string "website"
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "medical_license"
+    t.string "city"
+    t.string "state"
+    t.string "subspecialty"
     t.index ["user_id"], name: "index_doctor_profiles_on_user_id"
   end
 

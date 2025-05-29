@@ -72,4 +72,6 @@ Rails.application.configure do
 
   # Allow requests from ngrok
   config.hosts << "9359-38-188-184-8.ngrok-free.app"
+  config.hosts << "a6e4-38-188-184-8.ngrok-free.app"
+  config.hosts << "3ac6-38-188-184-8.ngrok-free.app"
 end

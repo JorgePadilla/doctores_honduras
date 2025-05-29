@@ -22,8 +22,8 @@
       <div class="md:w-2/3 p-6">
         <h1 class="text-2xl font-bold mb-2" style="color: #38bdf8;"><%= @doctor.name %></h1>
         <p class="text-lg text-gray-600 mb-2">Especialista en <%= @doctor.specialization %></p>
-        <% if @doctor.medical_license.present? %>
-          <p class="text-gray-500 mb-4"><%= @doctor.medical_license %></p>
+        <% if @doctor.subspecialty.present? %>
+          <p class="text-lg text-gray-600 mb-4">Subespecialidad: <%= @doctor.subspecialty %></p>
         <% end %>
         
         <% if @doctor.description.present? %>
@@ -49,6 +49,14 @@
                 <% end %>
               </div>
             <% end %>
+          </div>
+        <% else %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Ubicación</h2>
+            <div class="mb-4 border-l-4 pl-4" style="border-color: #38bdf8;">
+              <p class="text-gray-600"><%= @doctor.address %></p>
+              <p class="text-gray-600"><%= @doctor.city %>, <%= @doctor.state %></p>
+            </div>
           </div>
         <% end %>
         

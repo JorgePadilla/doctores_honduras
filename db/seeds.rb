@@ -212,6 +212,9 @@ doctors << DoctorProfile.create!(
 # Load subscription plans seed
 load File.join(Rails.root, 'db', 'seeds', 'subscription_plans.rb')
 
+# Load departments (states) of Honduras
+load File.join(Rails.root, 'db', 'seeds', 'departments.rb')
+
 # Create 18 more doctors
 18.times do |i|
   # Alternate between male and female doctors
@@ -522,5 +525,33 @@ doctors[2..].each do |doctor|
     DoctorEstablishment.create!(doctor_profile: doctor, establishment: establishment)
   end
 end
+
+# Create a doctor without any establishments to demonstrate the address, city, and state fields
+puts "Creating a doctor without establishments..."
+
+# Generate a timestamp for unique email
+timestamp = Time.now.to_i
+
+user = User.create!(
+  email: "doctor.no.establishment.#{timestamp}@example.com",
+  password: "password",
+  password_confirmation: "password"
+)
+
+# Assign the doctor role
+user.add_role :doctor
+
+# Create a doctor profile without establishments
+DoctorProfile.create!(
+  user: user,
+  name: "Dr. Juan Hernández",
+  specialization: "Medicina General",
+  description: "Médico general con experiencia en atención primaria y preventiva.",
+  address: "Colonia Miraflores, Calle Principal, Casa #45",
+  city: "Tegucigalpa",
+  state: "Francisco Morazán",
+  medical_license: "Colegio Médico de Honduras #8976",
+  image_url: "https://randomuser.me/api/portraits/men/42.jpg"
+)
 
 puts "Seed data created successfully!"
