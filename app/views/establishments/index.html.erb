@@ -4,7 +4,7 @@
     <p class="text-xl text-gray-600">Encuentra los mejores centros médicos en Honduras</p>
   </header>
 
-  <div class="max-w-4xl mx-auto mb-8">
+  <div class="max-w-5xl mx-auto mb-8">
     <div class="bg-white rounded-full shadow-md p-2 transition-all hover:shadow-lg">
       <form action="<%= establishments_path %>" method="get" class="flex items-center">
         <div class="flex-grow pl-4">
@@ -17,14 +17,17 @@
     </div>
   </div>
   
-  <div class="max-w-4xl mx-auto mb-8 flex flex-col md:flex-row gap-8">
+  <div class="max-w-5xl mx-auto mb-8 flex flex-col md:flex-row gap-8">
     <!-- Filters sidebar -->
-    <div class="md:w-1/3">
+    <div class="md:w-1/4">
       <%= render 'shared/establishment_filters' %>
     </div>
     
     <!-- Main content -->
-    <div class="md:w-2/3">
+    <div class="md:w-3/4">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-primary-600">Resultados</h2>
+      </div>
       <%= turbo_frame_tag "establishments-list" do %>
       <div class="grid md:grid-cols-1 gap-8">
     <% @establishments.each do |establishment| %>

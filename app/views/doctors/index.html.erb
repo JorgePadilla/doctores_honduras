@@ -4,11 +4,11 @@
     <p class="text-xl text-gray-600">Encuentra el especialista que necesitas en Honduras</p>
   </header>
 
-  <div class="max-w-4xl mx-auto mb-12">
+  <div class="max-w-5xl mx-auto mb-8">
     <div class="bg-white rounded-full shadow-md p-2 transition-all hover:shadow-lg">
       <form action="/doctors" method="get" class="flex items-center">
         <div class="flex-grow pl-4">
-          <input type="text" name="q" placeholder="Busca por nombre, especialidad, ciudad o departamento" class="w-full py-3 px-2 text-gray-700 focus:outline-none" style="background: transparent;">
+          <input type="text" name="q" value="<%= params[:q] %>" placeholder="Busca por nombre, especialidad, ciudad o departamento" class="w-full py-3 px-2 text-gray-700 focus:outline-none" style="background: transparent;">
         </div>
         <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105" style="background-color: #38bdf8;">
           Buscar
@@ -16,8 +16,21 @@
       </form>
     </div>
   </div>
+  
+  <div class="max-w-5xl mx-auto mb-8 flex flex-col md:flex-row gap-8">
+    <!-- Filters sidebar -->
+    <div class="md:w-1/4">
+      <%= render 'shared/doctor_filters' %>
+    </div>
+    
+    <!-- Main content -->
+    <div class="md:w-3/4">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-primary-600">Resultados</h2>
+      </div>
+      <%= turbo_frame_tag "doctors-list" do %>
 
-  <div class="grid md:grid-cols-1 gap-8 max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-1 gap-8">
     <% @doctors.each do |doctor| %>
       <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-8 transition-all hover:shadow-lg" style="border-color: #38bdf8;">
         <div class="flex flex-col md:flex-row">
@@ -71,9 +84,12 @@
     <% if @total_pages > 1 %>
       <div class="mt-10 mb-6 flex justify-center">
         <nav class="shadow-sm rounded-lg" aria-label="Pagination">
-          <%= pagination_links(@page, @total_pages, { q: params[:q] }) %>
+          <%= pagination_links(@page, @total_pages, { q: params[:q], specialty: params[:specialty], service: params[:service] }) %>
         </nav>
       </div>
     <% end %>
+      </div>
+      <% end %>
+    </div>
   </div>
 </div>

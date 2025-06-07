@@ -4,18 +4,23 @@ class DoctorsController < ApplicationController
   def index
     @page = (params[:page] || 1).to_i
     @per_page = 10
-    @total_count = DoctorProfile.count
-    @total_pages = (@total_count.to_f / @per_page).ceil
     
-    # Ensure page is within valid range
-    @page = 1 if @page < 1
-    @page = @total_pages if @page > @total_pages && @total_pages > 0
-    
-    # Calculate offset for pagination
-    offset = (@page - 1) * @per_page
+    # Load all specialties and services for filter dropdowns
+    @specialties = DoctorProfile.order(:specialization).pluck(:specialization).uniq
+    @services = Service.order(:name).pluck(:name).uniq
     
     # Build the base query
-    doctors_query = DoctorProfile.includes(:establishments)
+    doctors_query = DoctorProfile.includes(:establishments, :services)
+    
+    # Apply specialty filter if present
+    if params[:specialty].present? && params[:specialty] != "Todas las especialidades"
+      doctors_query = doctors_query.where("LOWER(doctor_profiles.specialization) LIKE ?", "%#{params[:specialty].downcase}%")
+    end
+    
+    # Apply service filter if present
+    if params[:service].present? && params[:service] != "Todos los servicios"
+      doctors_query = doctors_query.joins(:services).where("LOWER(services.name) = ?", params[:service].downcase)
+    end
     
     # Apply search filter if present
     if params[:q].present?
@@ -45,13 +50,18 @@ class DoctorsController < ApplicationController
       
       # Combine all conditions with AND to ensure all terms match somewhere
       doctors_query = establishment_joins.where(conditions.join(' AND '), *parameters).distinct
-      
-      # Recalculate total pages for filtered results
-      filtered_count = doctors_query.count
-      @total_pages = (filtered_count.to_f / @per_page).ceil
-      @page = 1 if @page > @total_pages && @total_pages > 0
-      offset = (@page - 1) * @per_page
     end
+    
+    # Get total count for pagination
+    @total_count = doctors_query.count
+    @total_pages = (@total_count.to_f / @per_page).ceil
+    
+    # Ensure page is within valid range
+    @page = 1 if @page < 1
+    @page = @total_pages if @page > @total_pages && @total_pages > 0
+    
+    # Calculate offset for pagination
+    offset = (@page - 1) * @per_page
     
     # Apply pagination
     @doctors = doctors_query.limit(@per_page).offset(offset)
@@ -60,5 +70,6 @@ class DoctorsController < ApplicationController
   def show
     @doctor = DoctorProfile.find(params[:id])
     @establishments = @doctor.establishments
+    @services = @doctor.services
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_29_055606) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_07_050138) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -55,6 +55,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_055606) do
     t.string "state"
     t.string "subspecialty"
     t.index ["user_id"], name: "index_doctor_profiles_on_user_id"
+  end
+
+  create_table "doctor_services", force: :cascade do |t|
+    t.bigint "doctor_profile_id", null: false
+    t.bigint "service_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_profile_id", "service_id"], name: "idx_unique_doctor_service", unique: true
+    t.index ["doctor_profile_id"], name: "index_doctor_services_on_doctor_profile_id"
+    t.index ["service_id"], name: "index_doctor_services_on_service_id"
   end
 
   create_table "establishment_services", force: :cascade do |t|
@@ -237,6 +247,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_055606) do
   add_foreign_key "doctor_establishments", "doctor_profiles"
   add_foreign_key "doctor_establishments", "establishments"
   add_foreign_key "doctor_profiles", "users"
+  add_foreign_key "doctor_services", "doctor_profiles"
+  add_foreign_key "doctor_services", "services"
   add_foreign_key "establishment_services", "establishments"
   add_foreign_key "establishment_services", "services"
   add_foreign_key "establishment_specialties", "establishments"

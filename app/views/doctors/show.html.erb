@@ -33,6 +33,17 @@
           </div>
         <% end %>
         
+        <% if @services.any? %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Servicios</h2>
+            <div class="flex flex-wrap gap-2">
+              <% @services.each do |service| %>
+                <span class="inline-block px-3 py-1 text-sm rounded-full text-white" style="background-color: #38bdf8;"><%= service.name %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        
         <% if @establishments.any? %>
           <div class="mb-6">
             <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Consultorios</h2>

@@ -212,6 +212,9 @@ doctors << DoctorProfile.create!(
 # Load subscription plans seed
 load File.join(Rails.root, 'db', 'seeds', 'subscription_plans.rb')
 
+# Load medical services/tags for doctors
+load File.join(Rails.root, 'db', 'seeds', 'services.rb')
+
 # Load departments (states) of Honduras
 load File.join(Rails.root, 'db', 'seeds', 'departments.rb')
 

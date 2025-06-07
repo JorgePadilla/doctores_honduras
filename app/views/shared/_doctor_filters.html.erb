@@ -1,0 +1,43 @@
+<div class="bg-white shadow-md rounded-lg p-4 mb-6">
+  <h3 class="text-lg font-medium text-gray-900 mb-4">Filtrar Resultados</h3>
+  
+  <%= form_with url: doctors_path, method: :get, class: "space-y-4", data: { turbo_frame: "doctors-list", controller: "form" } do |form| %>
+    <% if params[:q].present? %>
+      <%= form.hidden_field :q, value: params[:q] %>
+    <% end %>
+    
+    <div>
+      <label for="specialty" class="block text-sm font-medium text-gray-700 mb-1">
+        Especialidad
+      </label>
+      <%= form.select :specialty, 
+                     options_for_select(@specialties, params[:specialty]), 
+                     { include_blank: "Todas las especialidades" },
+                     class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md",
+                     data: { action: "change->form#submit" } %>
+    </div>
+    
+    <div>
+      <label for="service" class="block text-sm font-medium text-gray-700 mb-1">
+        Servicio
+      </label>
+      <%= form.select :service, 
+                     options_for_select(@services, params[:service]), 
+                     { include_blank: "Todos los servicios" },
+                     class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md",
+                     data: { action: "change->form#submit" } %>
+    </div>
+    
+    <div class="flex justify-between pt-2">
+      <%= form.submit "Aplicar Filtros", 
+                     class: "inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all hover:shadow-md transform hover:scale-105", 
+                     style: "background-color: #38bdf8;" %>
+      
+      <% if params[:specialty].present? || params[:service].present? %>
+        <%= link_to "Limpiar", 
+                   doctors_path(q: params[:q]), 
+                   class: "inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
