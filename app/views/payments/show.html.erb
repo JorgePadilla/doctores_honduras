@@ -1,0 +1,204 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Completar Pago</h1>
+    <p class="text-lg text-gray-600">Complete el pago para activar su suscripción</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 mb-8">
+    <div class="p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+      <h3 class="text-xl font-bold mb-2"><%= @plan.name %></h3>
+      <p class="text-2xl font-bold"><%= @plan.price_in_dollars %> <span class="text-sm font-normal">/ <%= @plan.interval_display %></span></p>
+    </div>
+    
+    <div class="p-6">
+      <div class="mb-6">
+        <h4 class="font-medium text-gray-700 mb-4">Resumen de la suscripción:</h4>
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <div class="flex items-center justify-between py-2 border-b border-gray-200">
+            <span class="text-gray-600">Plan:</span>
+            <span class="font-medium"><%= @plan.name %></span>
+          </div>
+          
+          <div class="flex items-center justify-between py-2 border-b border-gray-200">
+            <span class="text-gray-600">Precio:</span>
+            <span class="font-medium"><%= @plan.price_in_dollars %> / <%= @plan.interval_display %></span>
+          </div>
+          
+          <div class="flex items-center justify-between py-2">
+            <span class="text-gray-600">Método de pago:</span>
+            <span class="font-medium">Tarjeta de crédito/débito</span>
+          </div>
+        </div>
+      </div>
+      
+      <div id="payment-form" class="space-y-4">
+        <div id="payment-element">
+          <!-- Stripe Elements will be inserted here -->
+        </div>
+        
+        <button id="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <div class="spinner hidden" id="spinner"></div>
+          <span id="button-text">Pagar ahora</span>
+        </button>
+        
+        <div id="payment-message" class="hidden"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= content_for :head do %>
+  <script src="https://js.stripe.com/v3/"></script>
+<% end %>
+
+<%= content_for :javascript do %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Stripe
+      const stripe = Stripe('<%= Rails.application.credentials.dig(:stripe, :public_key) %>');
+      const clientSecret = '<%= @client_secret %>';
+      
+      const appearance = {
+        theme: 'stripe',
+        variables: {
+          colorPrimary: '#3b82f6',
+        },
+      };
+      
+      const elements = stripe.elements({ appearance, clientSecret });
+      const paymentElement = elements.create("payment");
+      paymentElement.mount("#payment-element");
+      
+      const form = document.getElementById('payment-form');
+      const submitButton = document.getElementById('submit');
+      const spinner = document.getElementById('spinner');
+      const buttonText = document.getElementById('button-text');
+      const paymentMessage = document.getElementById('payment-message');
+      
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        // Disable the submit button to prevent repeated clicks
+        setLoading(true);
+        
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: '<%= dashboard_path %>',
+          },
+        });
+        
+        if (error) {
+          showMessage(error.message);
+          setLoading(false);
+        }
+        // Stripe.js will handle redirecting the customer
+      });
+      
+      function showMessage(messageText) {
+        paymentMessage.classList.remove("hidden");
+        paymentMessage.textContent = messageText;
+        
+        setTimeout(function() {
+          paymentMessage.classList.add("hidden");
+          paymentMessage.textContent = "";
+        }, 4000);
+      }
+      
+      function setLoading(isLoading) {
+        if (isLoading) {
+          submitButton.disabled = true;
+          spinner.classList.remove("hidden");
+          buttonText.classList.add("hidden");
+        } else {
+          submitButton.disabled = false;
+          spinner.classList.add("hidden");
+          buttonText.classList.remove("hidden");
+        }
+      }
+    });
+  </script>
+  
+  <style>
+    #payment-form .spinner,
+    #payment-form .spinner:before,
+    #payment-form .spinner:after {
+      border-radius: 50%;
+    }
+    #payment-form .spinner {
+      color: #ffffff;
+      font-size: 22px;
+      text-indent: -99999px;
+      margin: 0px auto;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      box-shadow: inset 0 0 0 2px;
+      -webkit-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+    #payment-form .spinner:before,
+    #payment-form .spinner:after {
+      position: absolute;
+      content: "";
+    }
+    #payment-form .spinner:before {
+      width: 10.4px;
+      height: 20.4px;
+      background: #3b82f6;
+      border-radius: 20.4px 0 0 20.4px;
+      top: -0.2px;
+      left: -0.2px;
+      -webkit-transform-origin: 10.4px 10.2px;
+      transform-origin: 10.4px 10.2px;
+      -webkit-animation: loading 2s infinite ease 1.5s;
+      animation: loading 2s infinite ease 1.5s;
+    }
+    #payment-form .spinner:after {
+      width: 10.4px;
+      height: 10.2px;
+      background: #3b82f6;
+      border-radius: 0 10.2px 10.2px 0;
+      top: -0.1px;
+      left: 10.2px;
+      -webkit-transform-origin: 0px 10.2px;
+      transform-origin: 0px 10.2px;
+      -webkit-animation: loading 2s infinite ease;
+      animation: loading 2s infinite ease;
+    }
+    
+    @-webkit-keyframes loading {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes loading {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    
+    #payment-message {
+      color: rgb(105, 115, 134);
+      font-size: 16px;
+      line-height: 20px;
+      padding-top: 12px;
+      text-align: center;
+    }
+    
+    #payment-element {
+      margin-bottom: 24px;
+    }
+  </style>
+<% end %>

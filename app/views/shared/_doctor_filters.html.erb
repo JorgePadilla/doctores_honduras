@@ -1,7 +1,7 @@
 <div class="bg-white shadow-md rounded-lg p-4 mb-6">
   <h3 class="text-lg font-medium text-gray-900 mb-4">Filtrar Resultados</h3>
   
-  <%= form_with url: doctors_path, method: :get, class: "space-y-4", data: { turbo_frame: "doctors-list", controller: "form" } do |form| %>
+  <%= form_with url: doctors_path, method: :get, class: "space-y-4", data: { turbo_frame: "doctors-list", controller: "form", form_target: "filterForm" } do |form| %>
     <% if params[:q].present? %>
       <%= form.hidden_field :q, value: params[:q] %>
     <% end %>
@@ -10,34 +10,63 @@
       <label for="specialty" class="block text-sm font-medium text-gray-700 mb-1">
         Especialidad
       </label>
-      <%= form.select :specialty, 
-                     options_for_select(@specialties, params[:specialty]), 
-                     { include_blank: "Todas las especialidades" },
-                     class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md",
-                     data: { action: "change->form#submit" } %>
+      <div class="relative">
+        <%= form.select :specialty, 
+                      options_for_select(@specialties, params[:specialty]), 
+                      { include_blank: "Todas las especialidades" },
+                      class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md appearance-none",
+                      data: { action: "change->form#submit" } %>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      </div>
     </div>
     
     <div>
       <label for="service" class="block text-sm font-medium text-gray-700 mb-1">
         Servicio
       </label>
-      <%= form.select :service, 
-                     options_for_select(@services, params[:service]), 
-                     { include_blank: "Todos los servicios" },
-                     class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md",
-                     data: { action: "change->form#submit" } %>
+      <div class="relative">
+        <%= form.select :service, 
+                      options_for_select(@services, params[:service]), 
+                      { include_blank: "Todos los servicios" },
+                      class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md appearance-none",
+                      data: { action: "change->form#submit" } %>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      </div>
     </div>
     
     <div class="flex justify-between pt-2">
       <%= form.submit "Aplicar Filtros", 
-                     class: "inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all hover:shadow-md transform hover:scale-105", 
-                     style: "background-color: #38bdf8;" %>
+                    class: "inline-flex justify-center items-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all hover:shadow-md transform hover:scale-105", 
+                    style: "background-color: #38bdf8;",
+                    data: { form_target: "submitButton" } %>
       
       <% if params[:specialty].present? || params[:service].present? %>
-        <%= link_to "Limpiar", 
-                   doctors_path(q: params[:q]), 
-                   class: "inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        <%= link_to doctors_path(q: params[:q]), 
+                   class: "inline-flex justify-center items-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+          <span>Limpiar</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        <% end %>
       <% end %>
+    </div>
+    
+    <div data-form-target="loadingIndicator" class="hidden mt-2 text-center text-sm text-gray-500">
+      <div class="inline-flex items-center">
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Buscando médicos...</span>
+      </div>
     </div>
   <% end %>
 </div>

@@ -108,3 +108,14 @@ es:
     error: "Ha ocurrido un error"
     login_required: "Debe iniciar sesión para acceder a esta página"
     unauthorized: "No tiene permisos para acceder a esta página"
+    
+  # ActiveRecord errors
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "El correo electrónico ya está en uso"
+      messages:
+        taken: "Ya está en uso"

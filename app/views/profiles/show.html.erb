@@ -1,0 +1,78 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <% if @user.doctor_profile %>
+      <!-- Profile exists - show doctor profile -->
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="flex flex-col md:flex-row">
+          <div class="md:w-1/3 p-6">
+            <% if @doctor_profile.image_url.present? %>
+              <img src="<%= @doctor_profile.image_url %>" alt="<%= @doctor_profile.name %>" class="w-full h-auto rounded-lg object-cover">
+            <% else %>
+              <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                <span class="text-gray-500">Sin imagen</span>
+              </div>
+            <% end %>
+
+            <div class="mt-6">
+              <a href="<%= edit_profile_path %>" class="w-full inline-flex justify-center items-center px-4 py-2 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md" style="background-color: #38bdf8;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </svg>
+                Editar Perfil
+              </a>
+            </div>
+          </div>
+
+          <div class="md:w-2/3 p-6">
+            <h1 class="text-2xl font-bold mb-2" style="color: #38bdf8;"><%= @doctor_profile.name %></h1>
+            <p class="text-lg text-gray-600 mb-2">Especialista en <%= @doctor_profile.specialization %></p>
+            <% if @doctor_profile.subspecialty.present? %>
+              <p class="text-lg text-gray-600 mb-4">Subespecialidad: <%= @doctor_profile.subspecialty %></p>
+            <% end %>
+
+            <% if @doctor_profile.description.present? %>
+              <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Sobre el médico</h2>
+                <p class="text-gray-700"><%= @doctor_profile.description %></p>
+              </div>
+            <% end %>
+
+            <div class="mb-6">
+              <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Información de Contacto</h2>
+              <div class="space-y-2">
+                <p class="text-gray-700"><strong>Dirección:</strong> <%= @doctor_profile.address %></p>
+                <p class="text-gray-700"><strong>Ciudad:</strong> <%= @doctor_profile.city %>, <%= @doctor_profile.state %></p>
+                <% if @doctor_profile.website.present? %>
+                  <p class="text-gray-700">
+                    <strong>Sitio web:</strong>
+                    <a href="<%= @doctor_profile.website %>" target="_blank" class="hover:underline" style="color: #38bdf8;"><%= @doctor_profile.website %></a>
+                  </p>
+                <% end %>
+                <% if @doctor_profile.medical_license.present? %>
+                  <p class="text-gray-700"><strong>Licencia médica:</strong> <%= @doctor_profile.medical_license %></p>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- No profile exists - redirect to creation -->
+      <div class="text-center py-12">
+        <div class="max-w-md mx-auto">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">No tienes un perfil creado</h2>
+          <p class="text-gray-600 mb-6">Crea tu perfil de doctor para que los pacientes puedan encontrarte.</p>
+          <a href="<%= new_profile_path %>" class="inline-flex items-center px-6 py-3 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md" style="background-color: #38bdf8;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Crear Perfil
+          </a>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

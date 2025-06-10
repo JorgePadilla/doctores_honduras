@@ -1,0 +1,90 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <div class="text-center mb-10">
+    <div class="inline-flex items-center justify-center p-4 bg-green-100 rounded-full mb-6">
+      <svg class="h-12 w-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">¡Perfil creado exitosamente!</h1>
+    <p class="text-lg text-gray-600">Su perfil ha sido configurado correctamente</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 mb-8 p-6">
+    <div class="space-y-6">
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Resumen de su cuenta</h2>
+        
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <div class="flex items-center justify-between py-2 border-b border-gray-200">
+            <span class="text-gray-600">Plan seleccionado:</span>
+            <span class="font-medium"><%= @plan.name %></span>
+          </div>
+          
+          <div class="flex items-center justify-between py-2 border-b border-gray-200">
+            <span class="text-gray-600">Precio:</span>
+            <span class="font-medium"><%= @plan.price_in_dollars %> / <%= @plan.interval_display %></span>
+          </div>
+          
+          <div class="flex items-center justify-between py-2">
+            <span class="text-gray-600">Tipo de perfil:</span>
+            <span class="font-medium">
+              <% case @profile_type %>
+              <% when 'doctor' %>Doctor
+              <% when 'hospital' %>Hospital
+              <% when 'clinic' %>Clínica
+              <% when 'viewer' %>Solo visualización
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Próximos pasos</h2>
+        
+        <ul class="space-y-3">
+          <li class="flex items-start">
+            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Explore su panel de control para administrar su perfil</span>
+          </li>
+          
+          <% if @profile_type == 'doctor' %>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Agregue sus servicios médicos y horarios de atención</span>
+            </li>
+          <% elsif @profile_type == 'hospital' || @profile_type == 'clinic' %>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Agregue especialidades y servicios disponibles en su <%= @profile_type == 'hospital' ? 'hospital' : 'clínica' %></span>
+            </li>
+          <% elsif @profile_type == 'viewer' %>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Explore perfiles de doctores, hospitales y clínicas</span>
+            </li>
+          <% end %>
+          
+          <li class="flex items-start">
+            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Complete su perfil con información adicional para mejorar su visibilidad</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <%= link_to "Ir al Panel de Control", dashboard_path, class: "py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+  </div>
+</div>

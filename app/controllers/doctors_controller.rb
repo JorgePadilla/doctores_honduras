@@ -41,15 +41,23 @@ class DoctorsController < ApplicationController
       
       # Also search in establishments
       establishment_joins = doctors_query.joins("LEFT JOIN doctor_establishments ON doctor_profiles.id = doctor_establishments.doctor_profile_id LEFT JOIN establishments ON doctor_establishments.establishment_id = establishments.id")
-      
-      # Add establishment name to search
+
+      # Add establishment name to search as an optional condition
+      establishment_conditions = []
+      establishment_parameters = []
+
       terms.each do |term|
-        conditions << "LOWER(establishments.name) LIKE ?"
-        parameters.push(term)
+        establishment_conditions << "LOWER(establishments.name) LIKE ?"
+        establishment_parameters.push(term)
       end
-      
-      # Combine all conditions with AND to ensure all terms match somewhere
-      doctors_query = establishment_joins.where(conditions.join(' AND '), *parameters).distinct
+
+      # Combine all conditions with OR logic instead of AND
+      # This allows doctors to be found even if they don't have establishments
+      all_conditions = conditions + establishment_conditions
+      all_parameters = parameters + establishment_parameters
+
+      # Use OR logic between all conditions
+      doctors_query = establishment_joins.where(all_conditions.join(' OR '), *all_parameters).distinct
     end
     
     # Get total count for pagination

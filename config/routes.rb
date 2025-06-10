@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  get "payments/show"
+  # Onboarding flow routes
+  get 'onboarding/plan_selection', to: 'onboarding#plan_selection', as: :onboarding_plan_selection
+  post 'onboarding/plan_confirmation', to: 'onboarding#plan_confirmation', as: :onboarding_plan_confirmation
+  get 'onboarding/profile_setup', to: 'onboarding#profile_setup', as: :onboarding_profile_setup
+  post 'onboarding/profile_confirmation', to: 'onboarding#profile_confirmation', as: :onboarding_profile_confirmation
+  
+  # Payment route for subscription
+  get 'payment', to: 'payments#show', as: :payment
   get "products/index"
   get "products/show"
   resources :suppliers, path: 'proveedores', only: [:index, :show] do
@@ -46,6 +55,9 @@ Rails.application.routes.draw do
   get "stripe/cancel" => "stripe#cancel", as: :stripe_cancel
   post "stripe/webhook" => "stripe#webhook", as: :stripe_webhook
   
+  # Profile routes
+  resource :profile, only: [:show, :new, :create, :edit, :update]
+
   # Defines the root path route ("/")
   root "home#index"
 end

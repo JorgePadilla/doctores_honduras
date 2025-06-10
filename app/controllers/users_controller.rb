@@ -11,8 +11,12 @@ class UsersController < ApplicationController
     if @user.save
       session = @user.sessions.create!
       cookies.signed.permanent[:session_token] = { value: session.id, httponly: true }
+      
+      # Create notification preferences
+      @user.create_notification_preference if @user.notification_preference.nil?
 
-      redirect_to root_path, notice: "¡Bienvenido! Tu cuenta ha sido creada exitosamente."
+      # Redirect to onboarding flow
+      redirect_to onboarding_plan_selection_path, notice: "¡Bienvenido! Por favor complete la configuración de su cuenta."
     else
       render :new, status: :unprocessable_entity
     end
