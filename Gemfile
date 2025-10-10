@@ -67,4 +67,4 @@ end
 gem "tailwindcss-rails", "~> 4.2"
 
 # Payment processing with Stripe
-gem "stripe", "~> 9.0"
+gem "stripe", "~> 17.0"
