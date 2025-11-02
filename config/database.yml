@@ -85,15 +85,12 @@ production:
 #    database: doctores_honduras_production
 #    username: doctores_honduras
 #    password: <%#= ENV["DOCTORES_HONDURAS_DATABASE_PASSWORD"] %>
-#  cache:
-#    <<: *primary_production
-#    database: doctores_honduras_production_cache
-#    migrations_paths: db/cache_migrate
-#  queue:
-#    <<: *primary_production
-#    database: doctores_honduras_production_queue
-#    migrations_paths: db/queue_migrate
-#  cable:
-#    <<: *primary_production
-#    database: doctores_honduras_production_cable
-#    migrations_paths: db/cable_migrate
+  cache:
+    <<: *primary_production
+    database: doctores_honduras_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: doctores_honduras_production_queue
+    migrations_paths: db/queue_migrate
+
