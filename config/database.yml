@@ -84,8 +84,6 @@ production:
     database: doctores_honduras_production
     username: doctores_honduras
     password: <%= ENV["DOCTORES_HONDURAS_DATABASE_PASSWORD"] %>
-    variables:
-      sslmode: require
   cache:
     <<: *primary_production
     database: doctores_honduras_production_cache

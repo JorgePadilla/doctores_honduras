@@ -15,7 +15,7 @@ module Internationalization
 
   def extract_locale
     locale = nil
-    
+
     # Try to get locale from session first (highest priority)
     if session[:locale].present? && I18n.available_locales.include?(session[:locale].to_sym)
       locale = session[:locale]
@@ -32,15 +32,15 @@ module Internationalization
       session[:locale] = locale
       Rails.logger.debug "Using locale from params: #{locale}"
     # Try to get locale from HTTP Accept-Language header
-    elsif request.env['HTTP_ACCEPT_LANGUAGE'].present?
-      browser_locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
+    elsif request.env["HTTP_ACCEPT_LANGUAGE"].present?
+      browser_locale = request.env["HTTP_ACCEPT_LANGUAGE"].scan(/^[a-z]{2}/).first
       if browser_locale.present? && I18n.available_locales.include?(browser_locale.to_sym)
         locale = browser_locale
         session[:locale] = locale
         Rails.logger.debug "Using locale from browser: #{locale}"
       end
     end
-    
+
     locale || I18n.default_locale
   end
 
