@@ -68,8 +68,8 @@ class ProfilesController < ApplicationController
       :city,
       :state,
       :website,
-      :image_url,
-      :medical_license
+      :medical_license,
+      :image
     )
   end
 end
