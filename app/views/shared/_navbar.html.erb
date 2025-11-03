@@ -27,7 +27,9 @@
               </svg>
             </button>
             <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" style="display: none;">
-              <a href="<%= dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Panel de Control</a>
+              <% if Current.user&.admin? %>
+                <a href="<%= admin_dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100 bg-blue-50 border-l-2 border-blue-500">Panel Admin</a>
+              <% end %>
               <a href="<%= profile_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Mi Perfil</a>
               <a href="<%= settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Configuración</a>
               <div class="border-t border-gray-200"></div>
@@ -59,7 +61,9 @@
       <% if Current.user %>
         <div class="mt-4 pt-4 border-t border-primary-300">
           <div class="block py-2 text-white font-medium"><%= Current.user.email %></div>
-          <a href="<%= dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition">Panel de Control</a>
+          <% if Current.user&.admin? %>
+            <a href="<%= admin_dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition bg-blue-900/20 border-l-2 border-blue-400 pl-2">Panel Admin</a>
+          <% end %>
           <a href="<%= profile_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mi Perfil</a>
           <a href="<%= settings_path %>" class="block py-2 text-white hover:text-primary-200 transition">Configuración</a>
           <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "block w-full text-left py-2 text-white hover:text-primary-200 transition" %>

@@ -16,7 +16,8 @@ class UsersController < ApplicationController
       @user.create_notification_preference if @user.notification_preference.nil?
 
       # Redirect to onboarding flow
-      redirect_to onboarding_plan_selection_path, notice: "¡Bienvenido! Por favor complete la configuración de su cuenta."
+      flash[:success] = "¡Bienvenido! Por favor complete la configuración de su cuenta."
+      redirect_to onboarding_plan_selection_path
     else
       render :new, status: :unprocessable_entity
     end

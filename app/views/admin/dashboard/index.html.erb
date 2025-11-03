@@ -1,0 +1,325 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-gray-900">Panel de Control</h1>
+          <span class="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Admin</span>
+        </div>
+        <div class="text-sm text-gray-500">
+          <%= Current.user.email %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex space-x-8 py-4">
+        <%= link_to "Dashboard", admin_dashboard_path, class: "text-blue-600 border-b-2 border-blue-600 px-1 py-2 text-sm font-medium" %>
+        <%= link_to "Usuarios", admin_users_path, class: "text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 px-1 py-2 text-sm font-medium" %>
+        <%= link_to "Doctores", admin_doctors_path, class: "text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 px-1 py-2 text-sm font-medium" %>
+        <%= link_to "Suscripciones", admin_subscriptions_path, class: "text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 px-1 py-2 text-sm font-medium" %>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Overview Cards -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <!-- Total Users -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Total Usuarios</dt>
+                <dd class="text-lg font-medium text-gray-900"><%= @users_count %></dd>
+                <dt class="text-xs text-gray-500">
+                  <span class="text-green-600">+<%= @new_users_this_week %></span> esta semana
+                </dt>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Doctors -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Total Doctores</dt>
+                <dd class="text-lg font-medium text-gray-900"><%= @doctors_count %></dd>
+                <dt class="text-xs text-gray-500">
+                  <span class="text-green-600">+<%= @new_doctors_this_week %></span> esta semana
+                </dt>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Subscriptions -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Suscripciones Activas</dt>
+                <dd class="text-lg font-medium text-gray-900"><%= @active_subscriptions %></dd>
+                <dt class="text-xs text-gray-500">
+                  Ingreso mensual: $<%= @monthly_revenue %>
+                </dt>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Quality -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Calidad de Perfiles</dt>
+                <dd class="text-lg font-medium text-gray-900"><%= @completion_rate %>%</dd>
+                <dt class="text-xs text-gray-500">
+                  <%= @doctors_with_images %>/<%= @doctors_count %> con imagen
+                </dt>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions and Alerts -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-8">
+      <!-- Quick Actions -->
+      <div class="lg:col-span-2 bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Acciones Rápidas</h3>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 hover:bg-blue-100 transition-colors">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-blue-800">Gestionar Doctores</h4>
+                  <p class="text-xs text-blue-600">Activar/desactivar perfiles</p>
+                </div>
+              </div>
+              <%= link_to "Ir a Doctores", admin_doctors_path, class: "mt-3 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200" %>
+            </div>
+
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 hover:bg-green-100 transition-colors">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-green-800">Ver Usuarios</h4>
+                  <p class="text-xs text-green-600">Gestionar cuentas de usuario</p>
+                </div>
+              </div>
+              <%= link_to "Ir a Usuarios", admin_users_path, class: "mt-3 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200" %>
+            </div>
+
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 hover:bg-purple-100 transition-colors">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z"></path>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-purple-800">Suscripciones</h4>
+                  <p class="text-xs text-purple-600">Ver estado de suscripciones</p>
+                </div>
+              </div>
+              <%= link_to "Ir a Suscripciones", admin_subscriptions_path, class: "mt-3 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-purple-700 bg-purple-100 hover:bg-purple-200" %>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 hover:bg-yellow-100 transition-colors">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-yellow-800">Estadísticas</h4>
+                  <p class="text-xs text-yellow-600">Ver crecimiento y métricas</p>
+                </div>
+              </div>
+              <%= link_to "Ver Estadísticas", admin_dashboard_path, class: "mt-3 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Status -->
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Estado del Sistema</h3>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium text-gray-600">Perfiles Activos</span>
+              <span class="text-sm font-medium text-green-600"><%= @doctors_count - @hidden_profiles %>/<%= @doctors_count %></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full" style="width: <%= ((@doctors_count - @hidden_profiles).to_f / @doctors_count * 100).round %>%"></div>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium text-gray-600">Perfiles Completos</span>
+              <span class="text-sm font-medium text-blue-600"><%= @completion_rate %>%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-blue-500 h-2 rounded-full" style="width: <%= @completion_rate %>%"></div>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium text-gray-600">Suscripciones Activas</span>
+              <span class="text-sm font-medium text-purple-600"><%= @active_subscriptions %></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-purple-500 h-2 rounded-full" style="width: <%= [(@active_subscriptions.to_f / @users_count * 100).round, 100].min %>%"></div>
+            </div>
+          </div>
+
+          <% if @hidden_profiles > 0 || @incomplete_profiles > 0 %>
+            <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div class="flex items-center">
+                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                <div class="ml-2">
+                  <p class="text-sm font-medium text-yellow-800">Acciones Pendientes</p>
+                  <p class="text-xs text-yellow-600">
+                    <% if @hidden_profiles > 0 %><%= @hidden_profiles %> perfiles ocultos<% end %>
+                    <% if @incomplete_profiles > 0 %><% if @hidden_profiles > 0 %> y <% end %><%= @incomplete_profiles %> incompletos<% end %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% else %>
+            <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div class="flex items-center">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="ml-2">
+                  <p class="text-sm font-medium text-green-800">Todo en orden</p>
+                  <p class="text-xs text-green-600">No hay acciones pendientes</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <!-- Recent Users -->
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Usuarios Recientes</h3>
+          <div class="space-y-3">
+            <% @recent_users.each do |user| %>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span class="text-sm font-medium text-gray-700"><%= user.email[0].upcase %></span>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900"><%= user.email %></p>
+                    <p class="text-xs text-gray-500">Registrado: <%= time_ago_in_words(user.created_at) %> atrás</p>
+                  </div>
+                </div>
+                <% if user.admin? %>
+                  <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Admin</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <div class="mt-4">
+            <%= link_to "Ver todos los usuarios", admin_users_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Doctors -->
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Doctores Recientes</h3>
+          <div class="space-y-3">
+            <% @recent_doctors.each do |doctor| %>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <div class="flex items-center">
+                  <% if doctor.image.attached? %>
+                    <%= image_tag doctor.image, class: "w-8 h-8 rounded-full object-cover" %>
+                  <% else %>
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span class="text-sm font-medium text-gray-700"><%= doctor.name[0].upcase %></span>
+                    </div>
+                  <% end %>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900"><%= doctor.name %></p>
+                    <p class="text-xs text-gray-500"><%= doctor.specialization %></p>
+                  </div>
+                </div>
+                <% if doctor.hidden? %>
+                  <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Oculto</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <div class="mt-4">
+            <%= link_to "Ver todos los doctores", admin_doctors_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

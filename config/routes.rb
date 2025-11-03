@@ -58,6 +58,15 @@ Rails.application.routes.draw do
   # Profile routes
   resource :profile, only: [:show, :new, :create, :edit, :update]
 
+  # Admin routes
+  namespace :admin do
+    get 'dashboard', to: 'dashboard#index'
+    get 'users', to: 'dashboard#users'
+    get 'doctors', to: 'dashboard#doctors'
+    get 'subscriptions', to: 'dashboard#subscriptions'
+    post 'doctors/:id/toggle_visibility', to: 'dashboard#toggle_doctor_visibility', as: 'toggle_doctor_visibility'
+  end
+
   # Defines the root path route ("/")
   root "home#index"
 end

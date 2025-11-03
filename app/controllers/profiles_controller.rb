@@ -29,7 +29,8 @@ class ProfilesController < ApplicationController
     @user.update(profile_type: 'doctor') if @user.profile_type.blank?
 
     if @doctor_profile.save
-      redirect_to profile_path, notice: 'Perfil de doctor creado exitosamente.'
+      flash[:success] = 'Perfil de doctor creado exitosamente.'
+      redirect_to profile_path
     else
       flash.now[:alert] = 'Error al crear el perfil. Por favor verifica los campos.'
       render :new, status: :unprocessable_entity
@@ -45,7 +46,8 @@ class ProfilesController < ApplicationController
     @doctor_profile = @user.doctor_profile
 
     if @doctor_profile.update(doctor_profile_params)
-      redirect_to profile_path, notice: 'Perfil actualizado exitosamente.'
+      flash[:success] = 'Perfil actualizado exitosamente.'
+      redirect_to profile_path
     else
       flash.now[:alert] = 'Error al actualizar el perfil. Por favor verifica los campos.'
       render :edit, status: :unprocessable_entity

@@ -128,7 +128,8 @@ class OnboardingController < ApplicationController
     if session[:payment_client_secret].present?
       redirect_to payment_path, notice: "Por favor complete el pago para activar su suscripción."
     else
-      redirect_to dashboard_path, notice: "¡Configuración completada! Bienvenido a su cuenta."
+      flash[:success] = "¡Configuración completada! Bienvenido a su cuenta."
+      redirect_to dashboard_path
     end
   end
   

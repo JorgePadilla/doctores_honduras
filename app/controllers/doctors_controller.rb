@@ -9,8 +9,8 @@ class DoctorsController < ApplicationController
     @specialties = DoctorProfile.order(:specialization).pluck(:specialization).uniq
     @services = Service.order(:name).pluck(:name).uniq
 
-    # Build the base query
-    doctors_query = DoctorProfile.includes(:establishments, :services)
+    # Build the base query - exclude hidden profiles
+    doctors_query = DoctorProfile.includes(:establishments, :services).where(hidden: false)
 
     # Apply specialty filter if present
     if params[:specialty].present? && params[:specialty] != "Todas las especialidades"
@@ -77,6 +77,14 @@ class DoctorsController < ApplicationController
 
   def show
     @doctor = DoctorProfile.find(params[:id])
+
+    # Check if profile is hidden and user is not admin
+    if @doctor.hidden? && !Current.user&.admin?
+      flash[:alert] = "Este perfil no está disponible"
+      redirect_to doctors_path
+      return
+    end
+
     @establishments = @doctor.establishments
     @services = @doctor.services
   end

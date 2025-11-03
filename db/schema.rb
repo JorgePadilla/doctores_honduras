@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_02_193649) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_03_002707) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -82,6 +82,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_02_193649) do
     t.string "city"
     t.string "state"
     t.string "subspecialty"
+    t.boolean "hidden"
     t.index ["user_id"], name: "index_doctor_profiles_on_user_id"
   end
 
@@ -262,6 +263,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_02_193649) do
     t.string "two_factor_secret"
     t.string "profile_type"
     t.boolean "onboarding_completed"
+    t.boolean "admin"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

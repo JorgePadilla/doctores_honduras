@@ -79,7 +79,8 @@ class StripeController < ApplicationController
     subscription.current_period_end = 1.month.from_now
 
     if subscription.save
-      redirect_to settings_subscription_path, notice: "¡Gracias por tu suscripción al #{@plan.name}!"
+      flash[:success] = "¡Gracias por tu suscripción al #{@plan.name}!"
+      redirect_to settings_subscription_path
     else
       redirect_to settings_subscription_path, alert: "No se pudo procesar tu suscripción. Por favor, contacta a soporte."
     end

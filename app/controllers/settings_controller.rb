@@ -52,7 +52,8 @@ class SettingsController < ApplicationController
       # Mostrar el mensaje de éxito en el idioma seleccionado
       success_message = new_language == "es" ? "Idioma actualizado correctamente." : "Language updated successfully."
 
-      redirect_to settings_language_path, notice: success_message
+      flash[:success] = success_message
+      redirect_to settings_language_path
     else
       render :language, status: :unprocessable_entity
     end
@@ -63,7 +64,8 @@ class SettingsController < ApplicationController
     @notification_preferences = @user.notification_preference || @user.build_notification_preference
 
     if @notification_preferences.update(notification_params)
-      redirect_to settings_notifications_path, notice: "Preferencias de notificaciones actualizadas correctamente."
+      flash[:success] = "Preferencias de notificaciones actualizadas correctamente."
+      redirect_to settings_notifications_path
     else
       render :notifications, status: :unprocessable_entity
     end
@@ -133,7 +135,8 @@ class SettingsController < ApplicationController
         Rails.logger.error("Error al crear historial de pago: #{e.message}")
       end
 
-      redirect_to settings_subscription_path, notice: "Te has suscrito exitosamente al #{plan.name}."
+      flash[:success] = "Te has suscrito exitosamente al #{plan.name}."
+      redirect_to settings_subscription_path
     else
       redirect_to settings_subscription_path, alert: "No se pudo procesar tu suscripción. Por favor, intenta de nuevo."
     end
@@ -155,7 +158,8 @@ class SettingsController < ApplicationController
     subscription.status = "canceled"
 
     if subscription.save
-      redirect_to settings_subscription_path, notice: "Tu suscripción ha sido cancelada. Tendrás acceso a las características premium hasta el #{subscription.current_period_end.strftime('%d/%m/%Y')}."
+      flash[:success] = "Tu suscripción ha sido cancelada. Tendrás acceso a las características premium hasta el #{subscription.current_period_end.strftime('%d/%m/%Y')}."
+      redirect_to settings_subscription_path
     else
       redirect_to settings_subscription_path, alert: "No se pudo cancelar tu suscripción. Por favor, intenta de nuevo."
     end
