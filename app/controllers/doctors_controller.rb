@@ -57,7 +57,7 @@ class DoctorsController < ApplicationController
       all_parameters = parameters + establishment_parameters
 
       # Use OR logic between all conditions
-      doctors_query = establishment_joins.where(all_conditions.join(' OR '), *all_parameters).distinct
+      doctors_query = establishment_joins.where(all_conditions.join(" OR "), *all_parameters).distinct
     end
 
     # Get total count for pagination

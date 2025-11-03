@@ -26,7 +26,7 @@ class DoctorProfile < ApplicationRecord
       errors.add(:image, "es demasiado grande (máximo 5MB)")
     end
 
-    acceptable_types = ["image/jpeg", "image/png", "image/jpg", "image/gif"]
+    acceptable_types = [ "image/jpeg", "image/png", "image/jpg", "image/gif" ]
     unless acceptable_types.include?(image.content_type)
       errors.add(:image, "debe ser JPEG, PNG o GIF")
     end
