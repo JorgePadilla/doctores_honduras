@@ -5,14 +5,14 @@ class Admin::DashboardController < ApplicationController
     # Basic counts
     @users_count = User.count
     @doctors_count = DoctorProfile.count
-    @active_subscriptions = Subscription.where(status: 'active').count
+    @active_subscriptions = Subscription.where(status: "active").count
 
     # Growth metrics
-    @new_users_this_week = User.where('created_at >= ?', 1.week.ago).count
-    @new_doctors_this_week = DoctorProfile.where('created_at >= ?', 1.week.ago).count
+    @new_users_this_week = User.where("created_at >= ?", 1.week.ago).count
+    @new_doctors_this_week = DoctorProfile.where("created_at >= ?", 1.week.ago).count
 
     # Revenue metrics
-    @monthly_revenue = Subscription.where(status: 'active').joins(:subscription_plan).sum('subscription_plans.price')
+    @monthly_revenue = Subscription.where(status: "active").joins(:subscription_plan).sum("subscription_plans.price")
     @revenue_growth = calculate_revenue_growth
 
     # Engagement metrics
@@ -56,10 +56,10 @@ class Admin::DashboardController < ApplicationController
   private
 
   def calculate_revenue_growth
-    current_month_revenue = Subscription.where(status: 'active', created_at: Time.current.beginning_of_month..Time.current.end_of_month)
-                                       .joins(:subscription_plan).sum('subscription_plans.price')
-    last_month_revenue = Subscription.where(status: 'active', created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month)
-                                    .joins(:subscription_plan).sum('subscription_plans.price')
+    current_month_revenue = Subscription.where(status: "active", created_at: Time.current.beginning_of_month..Time.current.end_of_month)
+                                       .joins(:subscription_plan).sum("subscription_plans.price")
+    last_month_revenue = Subscription.where(status: "active", created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month)
+                                    .joins(:subscription_plan).sum("subscription_plans.price")
 
     if last_month_revenue > 0
       ((current_month_revenue - last_month_revenue) / last_month_revenue.to_f * 100).round(1)
@@ -73,8 +73,8 @@ class Admin::DashboardController < ApplicationController
     (0..6).map do |i|
       date = i.days.ago.to_date
       {
-        date: date.strftime('%a'),
-        doctors: DoctorProfile.where('DATE(created_at) = ?', date).count
+        date: date.strftime("%a"),
+        doctors: DoctorProfile.where("DATE(created_at) = ?", date).count
       }
     end.reverse
   end
@@ -84,9 +84,9 @@ class Admin::DashboardController < ApplicationController
     (0..5).map do |i|
       month = i.months.ago.beginning_of_month
       {
-        month: month.strftime('%b'),
-        revenue: Subscription.where(status: 'active', created_at: month..month.end_of_month)
-                           .joins(:subscription_plan).sum('subscription_plans.price')
+        month: month.strftime("%b"),
+        revenue: Subscription.where(status: "active", created_at: month..month.end_of_month)
+                           .joins(:subscription_plan).sum("subscription_plans.price")
       }
     end.reverse
   end
