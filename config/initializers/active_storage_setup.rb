@@ -1,32 +1,35 @@
 # Configuración de Active Storage para Railway
-# Este script asegura que los directorios necesarios existan
+# Usa la variable RAILS_STORAGE_PATH proporcionada por Railway
 
 Rails.application.config.after_initialize do
   if Rails.env.production? && Rails.configuration.active_storage.service == :railway
-    storage_path = "/storage/active_storage"
 
-    # Crear directorio si no existe
-    unless File.directory?(storage_path)
+    puts "🔍 Configurando almacenamiento Railway..."
+
+    # Obtener la ruta del volumen desde la variable de entorno de Railway
+    storage_path = ENV['RAILS_STORAGE_PATH']
+    puts "   Variable RAILS_STORAGE_PATH: #{storage_path}"
+
+    if storage_path && File.directory?(storage_path)
+      puts "   📁 Directorio del volumen encontrado: #{storage_path}"
+
+      # Verificar permisos de escritura
+      test_file = File.join(storage_path, "test_permissions_#{Time.now.to_i}.txt")
       begin
-        FileUtils.mkdir_p(storage_path)
-        puts "✅ Directorio de almacenamiento creado: #{storage_path}"
+        File.write(test_file, "test")
+        File.delete(test_file)
+        puts "   ✅ Permisos de escritura verificados"
+        puts "✅ Almacenamiento Railway configurado correctamente en: #{storage_path}"
       rescue => e
-        puts "⚠️  No se pudo crear el directorio #{storage_path}: #{e.message}"
-        puts "   Verifica los permisos del volumen en Railway"
+        puts "   ❌ Error de permisos: #{e.message}"
+        puts "   💡 El volumen puede estar montado como solo lectura"
+        puts "   🔄 Cambiando a almacenamiento local..."
+        Rails.configuration.active_storage.service = :local
       end
     else
-      puts "✅ Directorio de almacenamiento ya existe: #{storage_path}"
-    end
-
-    # Verificar permisos de escritura
-    test_file = File.join(storage_path, "test_permissions_#{Time.now.to_i}.txt")
-    begin
-      File.write(test_file, "test")
-      File.delete(test_file)
-      puts "✅ Permisos de escritura verificados en: #{storage_path}"
-    rescue => e
-      puts "❌ Error de permisos en #{storage_path}: #{e.message}"
-      puts "   El volumen puede estar montado como solo lectura"
+      puts "   ❌ No se encontró el directorio del volumen: #{storage_path}"
+      puts "   🔄 Cambiando a almacenamiento local..."
+      Rails.configuration.active_storage.service = :local
     end
   end
 end
