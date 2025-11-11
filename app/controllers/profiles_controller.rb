@@ -71,10 +71,8 @@ class ProfilesController < ApplicationController
   def doctor_profile_params
     params.require(:doctor_profile).permit(
       :name,
-      :specialization,
       :subspecialty_id,
       :description,
-      :address,
       :website,
       :medical_license,
       :image,
