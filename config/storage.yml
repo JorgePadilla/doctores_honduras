@@ -9,7 +9,7 @@ local:
 # Railway volume storage
 railway:
   service: Disk
-  root: "/storage"
+  root: "/storage/active_storage"
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 amazon:
@@ -18,6 +18,15 @@ amazon:
   secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   region: <%= ENV['AWS_REGION'] || 'us-east-1' %>
   bucket: <%= ENV['AWS_BUCKET'] %>
+
+# Cloudflare R2 (compatible con S3, más económico)
+cloudflare:
+  service: S3
+  access_key_id: <%= ENV['R2_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['R2_SECRET_ACCESS_KEY'] %>
+  region: "auto"
+  endpoint: <%= ENV['R2_ENDPOINT'] %>
+  bucket: <%= ENV['R2_BUCKET'] %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
