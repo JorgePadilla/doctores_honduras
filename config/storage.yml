@@ -6,7 +6,6 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 amazon:
   service: S3
@@ -23,6 +22,11 @@ cloudflare:
   region: "auto"
   endpoint: <%= ENV['R2_ENDPOINT'] %>
   bucket: <%= ENV['R2_BUCKET'] %>
+
+# Railway Volume Storage (persistent storage)
+railway:
+  service: Disk
+  root: /data/storage
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
