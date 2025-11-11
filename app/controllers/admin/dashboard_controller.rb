@@ -21,8 +21,8 @@ class Admin::DashboardController < ApplicationController
 
     # Alert metrics
     @hidden_profiles = DoctorProfile.where(hidden: true).count
-    @incomplete_profiles = DoctorProfile.where("specialization IS NULL OR specialization = '' OR city_id IS NULL OR department_id IS NULL").count
-    @pending_approvals = DoctorProfile.where(hidden: false).where("specialization IS NULL OR specialization = '' OR city_id IS NULL OR department_id IS NULL").count
+    @incomplete_profiles = DoctorProfile.where("specialty_id IS NULL OR city_id IS NULL OR department_id IS NULL").count
+    @pending_approvals = DoctorProfile.where(hidden: false).where("specialty_id IS NULL OR city_id IS NULL OR department_id IS NULL").count
 
     # Recent activity
     @recent_users = User.order(created_at: :desc).limit(5)

@@ -25,7 +25,7 @@
 
           <div class="md:w-2/3 p-6">
             <h1 class="text-2xl font-bold mb-2" style="color: #38bdf8;"><%= @doctor_profile.name %></h1>
-            <p class="text-lg text-gray-600 mb-2">Especialista en <%= @doctor_profile.specialty&.name || @doctor_profile.specialization %></p>
+            <p class="text-lg text-gray-600 mb-2">Especialista en <%= @doctor_profile.specialty&.name %></p>
             <% if @doctor_profile.subspecialty.present? %>
               <p class="text-lg text-gray-600 mb-4">Subespecialidad: <%= @doctor_profile.subspecialty.name %></p>
             <% end %>

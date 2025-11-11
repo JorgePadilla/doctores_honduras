@@ -306,7 +306,7 @@
                   <% end %>
                   <div class="ml-3">
                     <p class="text-sm font-medium text-gray-900"><%= doctor.name %></p>
-                    <p class="text-xs text-gray-500"><%= doctor.specialization %></p>
+                    <p class="text-xs text-gray-500"><%= doctor.specialty&.name %></p>
                   </div>
                 </div>
                 <% if doctor.hidden? %>

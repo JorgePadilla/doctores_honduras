@@ -6,15 +6,15 @@ class DoctorsController < ApplicationController
     @per_page = 10
 
     # Load all specialties and services for filter dropdowns
-    @specialties = DoctorProfile.order(:specialization).pluck(:specialization).uniq
+    @specialties = Specialty.order(:name).pluck(:name).uniq
     @services = Service.order(:name).pluck(:name).uniq
 
     # Build the base query - exclude hidden profiles
-    doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department).where(hidden: false)
+    doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department, :specialty, :subspecialty).where(hidden: false)
 
     # Apply specialty filter if present
     if params[:specialty].present? && params[:specialty] != "Todas las especialidades"
-      doctors_query = doctors_query.where("LOWER(doctor_profiles.specialization) LIKE ?", "%#{params[:specialty].downcase}%")
+      doctors_query = doctors_query.joins(:specialty).where("LOWER(specialties.name) = ?", params[:specialty].downcase)
     end
 
     # Apply service filter if present
@@ -35,12 +35,12 @@ class DoctorsController < ApplicationController
       parameters = []
 
       terms.each do |term|
-        conditions << "(LOWER(doctor_profiles.name) LIKE ? OR LOWER(doctor_profiles.specialization) LIKE ? OR LOWER(cities.name) LIKE ? OR LOWER(departments.name) LIKE ?)"
-        parameters.push(term, term, term, term)
+        conditions << "(LOWER(doctor_profiles.name) LIKE ? OR LOWER(specialties.name) LIKE ? OR LOWER(subspecialties.name) LIKE ? OR LOWER(cities.name) LIKE ? OR LOWER(departments.name) LIKE ?)"
+        parameters.push(term, term, term, term, term)
       end
 
       # Also search in establishments and include city/department joins for search
-      establishment_joins = doctors_query.joins("LEFT JOIN doctor_establishments ON doctor_profiles.id = doctor_establishments.doctor_profile_id LEFT JOIN establishments ON doctor_establishments.establishment_id = establishments.id LEFT JOIN cities ON doctor_profiles.city_id = cities.id LEFT JOIN departments ON doctor_profiles.department_id = departments.id")
+      establishment_joins = doctors_query.joins("LEFT JOIN doctor_establishments ON doctor_profiles.id = doctor_establishments.doctor_profile_id LEFT JOIN establishments ON doctor_establishments.establishment_id = establishments.id LEFT JOIN cities ON doctor_profiles.city_id = cities.id LEFT JOIN departments ON doctor_profiles.department_id = departments.id LEFT JOIN specialties ON doctor_profiles.specialty_id = specialties.id LEFT JOIN subspecialties ON doctor_profiles.subspecialty_id = subspecialties.id")
 
       # Add establishment name to search as an optional condition
       establishment_conditions = []
