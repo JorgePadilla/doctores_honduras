@@ -40,4 +40,8 @@ class User < ApplicationRecord
       false
     end
   end
+
+  def admin?
+    admin.present? && admin
+  end
 end
