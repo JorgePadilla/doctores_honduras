@@ -13,44 +13,33 @@ Rails.application.config.after_initialize do
       storage_path = ENV['RAILS_STORAGE_PATH']
       puts "   📍 Variable RAILS_STORAGE_PATH: #{storage_path}"
 
-      if storage_path && File.directory?(storage_path)
-        puts "   📁 Directorio del volumen encontrado: #{storage_path}"
+      # Verificar si el directorio existe y es escribible
+      if storage_path && File.directory?(storage_path) && File.writable?(storage_path)
+        puts "   📁 Directorio del volumen encontrado y escribible: #{storage_path}"
+        puts "✅ Almacenamiento Railway configurado correctamente en: #{storage_path}"
+      else
+        puts "   ❌ Volumen no disponible o no escribible: #{storage_path}"
+
+        # Usar /app/storage como directorio escribible
+        app_storage_path = '/app/storage'
+        puts "   📁 Usando directorio de aplicación: #{app_storage_path}"
+
+        # Crear directorio si no existe
+        unless File.directory?(app_storage_path)
+          begin
+            FileUtils.mkdir_p(app_storage_path)
+            puts "   📁 Directorio creado: #{app_storage_path}"
+          rescue => e
+            puts "   ❌ No se pudo crear directorio: #{e.message}"
+          end
+        end
 
         # Verificar permisos de escritura
-        test_file = File.join(storage_path, "test_permissions_#{Time.now.to_i}.txt")
-        begin
-          File.write(test_file, "test")
-          File.delete(test_file)
-          puts "   ✅ Permisos de escritura verificados"
-          puts "✅ Almacenamiento Railway configurado correctamente en: #{storage_path}"
-        rescue => e
-          puts "   ❌ Error de permisos: #{e.message}"
-          puts "   💡 El volumen puede estar montado como solo lectura"
-          puts "   🔄 Cambiando a almacenamiento local..."
-          Rails.configuration.active_storage.service = :local
-        end
-      else
-        puts "   ❌ No se encontró el directorio del volumen: #{storage_path}"
-
-        # Intentar usar /app/storage como fallback
-        app_storage_path = '/app/storage'
-        if File.directory?(app_storage_path)
-          puts "   📁 Usando directorio de aplicación: #{app_storage_path}"
-
-          # Verificar permisos de escritura
-          test_file = File.join(app_storage_path, "test_permissions_#{Time.now.to_i}.txt")
-          begin
-            File.write(test_file, "test")
-            File.delete(test_file)
-            puts "   ✅ Permisos de escritura verificados en #{app_storage_path}"
-            puts "✅ Almacenamiento configurado correctamente en: #{app_storage_path}"
-          rescue => e
-            puts "   ❌ Error de permisos en #{app_storage_path}: #{e.message}"
-            puts "   🔄 Cambiando a almacenamiento local..."
-            Rails.configuration.active_storage.service = :local
-          end
+        if File.writable?(app_storage_path)
+          puts "   ✅ Permisos de escritura verificados en #{app_storage_path}"
+          puts "✅ Almacenamiento configurado correctamente en: #{app_storage_path}"
         else
-          puts "   ❌ No se encontró el directorio de aplicación: #{app_storage_path}"
+          puts "   ❌ Error de permisos en #{app_storage_path}"
           puts "   🔄 Cambiando a almacenamiento local..."
           Rails.configuration.active_storage.service = :local
         end
