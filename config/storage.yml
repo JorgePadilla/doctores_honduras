@@ -4,7 +4,7 @@ test:
 
 local:
   service: Disk
-  root: <%= Rails.root.join("storage") %>
+  root: <%= Rails.env.production? ? '/app/storage' : Rails.root.join("storage") %>
 
 # Railway volume storage - use Railway's environment variable
 # If volume is read-only, fallback to app storage
