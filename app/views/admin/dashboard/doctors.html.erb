@@ -93,7 +93,7 @@
                       <% end %>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= doctor.city %>, <%= doctor.state %>
+                      <%= doctor.city&.name %>, <%= doctor.department&.name %>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <%= doctor.user.email %>
