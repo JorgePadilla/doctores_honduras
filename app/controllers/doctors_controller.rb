@@ -10,7 +10,7 @@ class DoctorsController < ApplicationController
     @services = Service.order(:name).pluck(:name).uniq
 
     # Build the base query - exclude hidden profiles
-    doctors_query = DoctorProfile.includes(:establishments, :services).where(hidden: false)
+    doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department).where(hidden: false)
 
     # Apply specialty filter if present
     if params[:specialty].present? && params[:specialty] != "Todas las especialidades"
@@ -35,12 +35,12 @@ class DoctorsController < ApplicationController
       parameters = []
 
       terms.each do |term|
-        conditions << "(LOWER(doctor_profiles.name) LIKE ? OR LOWER(doctor_profiles.specialization) LIKE ? OR LOWER(doctor_profiles.city) LIKE ? OR LOWER(doctor_profiles.state) LIKE ?)"
+        conditions << "(LOWER(doctor_profiles.name) LIKE ? OR LOWER(doctor_profiles.specialization) LIKE ? OR LOWER(cities.name) LIKE ? OR LOWER(departments.name) LIKE ?)"
         parameters.push(term, term, term, term)
       end
 
-      # Also search in establishments
-      establishment_joins = doctors_query.joins("LEFT JOIN doctor_establishments ON doctor_profiles.id = doctor_establishments.doctor_profile_id LEFT JOIN establishments ON doctor_establishments.establishment_id = establishments.id")
+      # Also search in establishments and include city/department joins for search
+      establishment_joins = doctors_query.joins("LEFT JOIN doctor_establishments ON doctor_profiles.id = doctor_establishments.doctor_profile_id LEFT JOIN establishments ON doctor_establishments.establishment_id = establishments.id LEFT JOIN cities ON doctor_profiles.city_id = cities.id LEFT JOIN departments ON doctor_profiles.department_id = departments.id")
 
       # Add establishment name to search as an optional condition
       establishment_conditions = []
@@ -76,7 +76,7 @@ class DoctorsController < ApplicationController
   end
 
   def show
-    @doctor = DoctorProfile.find(params[:id])
+    @doctor = DoctorProfile.includes(:city, :department, :specialty, :subspecialty).find(params[:id])
 
     # Check if profile is hidden and user is not admin
     if @doctor.hidden? && !Current.user&.admin?

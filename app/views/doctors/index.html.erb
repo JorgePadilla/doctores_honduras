@@ -62,7 +62,7 @@
               <% else %>
                 <div class="mb-3 md:text-right">
                   <p class="text-gray-500 text-sm"><%= doctor.address %></p>
-                  <p class="text-gray-500 text-sm"><%= doctor.city %>, <%= doctor.state %></p>
+                  <p class="text-gray-500 text-sm"><%= doctor.city&.name %>, <%= doctor.department&.name %></p>
                 </div>
               <% end %>
             </div>
