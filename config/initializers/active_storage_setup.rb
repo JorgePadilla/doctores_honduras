@@ -31,8 +31,29 @@ Rails.application.config.after_initialize do
         end
       else
         puts "   ❌ No se encontró el directorio del volumen: #{storage_path}"
-        puts "   🔄 Cambiando a almacenamiento local..."
-        Rails.configuration.active_storage.service = :local
+
+        # Intentar usar /app/storage como fallback
+        app_storage_path = '/app/storage'
+        if File.directory?(app_storage_path)
+          puts "   📁 Usando directorio de aplicación: #{app_storage_path}"
+
+          # Verificar permisos de escritura
+          test_file = File.join(app_storage_path, "test_permissions_#{Time.now.to_i}.txt")
+          begin
+            File.write(test_file, "test")
+            File.delete(test_file)
+            puts "   ✅ Permisos de escritura verificados en #{app_storage_path}"
+            puts "✅ Almacenamiento configurado correctamente en: #{app_storage_path}"
+          rescue => e
+            puts "   ❌ Error de permisos en #{app_storage_path}: #{e.message}"
+            puts "   🔄 Cambiando a almacenamiento local..."
+            Rails.configuration.active_storage.service = :local
+          end
+        else
+          puts "   ❌ No se encontró el directorio de aplicación: #{app_storage_path}"
+          puts "   🔄 Cambiando a almacenamiento local..."
+          Rails.configuration.active_storage.service = :local
+        end
       end
     end
 
