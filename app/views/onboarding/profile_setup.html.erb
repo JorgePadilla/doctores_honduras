@@ -20,9 +20,24 @@
               <%= f.text_field :name, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true %>
             </div>
             
-            <div>
-              <%= f.label :specialization, "Especialidad", class: "block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :specialization, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true %>
+            <div data-controller="subspecialty">
+              <div>
+                <%= f.label :specialty_id, "Especialidad", class: "block text-sm font-medium text-gray-700" %>
+                <%= f.select :specialty_id,
+                            options_for_select(@specialties.map { |s| [s.name, s.id] }, @doctor_profile.specialty_id),
+                            { include_blank: "Selecciona una especialidad" },
+                            { class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm",
+                              data: { action: "change->subspecialty#updateSubspecialties", subspecialty_target: "specialty" }, required: true } %>
+              </div>
+
+              <div>
+                <%= f.label :subspecialty_id, "Subespecialidad", class: "block text-sm font-medium text-gray-700" %>
+                <%= f.select :subspecialty_id,
+                            options_for_select(@subspecialties.map { |s| [s.name, s.id] }, @doctor_profile.subspecialty_id),
+                            { include_blank: "Selecciona una subespecialidad (opcional)" },
+                            { class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm",
+                              data: { subspecialty_target: "subspecialty" } } %>
+              </div>
             </div>
             
             <div>
@@ -36,16 +51,22 @@
             </div>
             
             <div>
-              <%= f.label :city, "Ciudad", class: "block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :city, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true %>
+              <%= f.label :department_id, "Departamento", class: "block text-sm font-medium text-gray-700" %>
+              <%= f.select :department_id,
+                          options_for_select(@departments.map { |d| [d.name, d.id] }, @doctor_profile.department_id),
+                          { include_blank: "Selecciona un departamento" },
+                          { class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true } %>
             </div>
-            
+
             <div>
-              <%= f.label :state, "Departamento", class: "block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :state, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true %>
+              <%= f.label :city_id, "Ciudad", class: "block text-sm font-medium text-gray-700" %>
+              <%= f.select :city_id,
+                          options_for_select(@cities.map { |c| [c.name, c.id] }, @doctor_profile.city_id),
+                          { include_blank: "Selecciona una ciudad" },
+                          { class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true } %>
             </div>
           </div>
-          
+
           <div>
             <%= f.label :education, "Educación y certificaciones", class: "block text-sm font-medium text-gray-700" %>
             <%= f.text_area :education, rows: 3, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>

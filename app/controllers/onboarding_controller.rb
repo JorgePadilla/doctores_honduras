@@ -48,6 +48,10 @@ class OnboardingController < ApplicationController
     case @profile_type
     when 'doctor'
       @doctor_profile = current_user.doctor_profile || current_user.build_doctor_profile
+      @specialties = Specialty.order(:name)
+      @subspecialties = []
+      @departments = Department.order(:name)
+      @cities = City.order(:name)
     when 'hospital', 'clinic'
       @establishment = current_user.establishments.build(est_type: @profile_type)
     else
@@ -135,8 +139,8 @@ class OnboardingController < ApplicationController
   
   def doctor_profile_params
     params.require(:doctor_profile).permit(
-      :name, :specialization, :address, :city, :state, 
-      :phone, :bio, :education, :experience, :photo
+      :name, :specialization, :address, :phone, :bio, :education, :experience, :photo,
+      :specialty_id, :subspecialty_id, :department_id, :city_id
     )
   end
   

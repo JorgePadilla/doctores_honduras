@@ -1,5 +1,9 @@
 class DoctorProfile < ApplicationRecord
   belongs_to :user
+  belongs_to :specialty, optional: true
+  belongs_to :subspecialty, optional: true
+  belongs_to :department, optional: true
+  belongs_to :city, optional: true
   has_many :doctor_establishments, dependent: :destroy
   has_many :establishments, through: :doctor_establishments
   has_many :doctor_services, dependent: :destroy
@@ -9,10 +13,9 @@ class DoctorProfile < ApplicationRecord
   has_one_attached :image
 
   validates :name, presence: true
-  validates :specialization, presence: true
   validates :address, presence: true
-  validates :city, presence: true
-  validates :state, presence: true
+  validates :department_id, presence: true
+  validates :city_id, presence: true
 
   # Validate image file type and size
   validate :acceptable_image

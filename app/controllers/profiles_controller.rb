@@ -19,6 +19,10 @@ class ProfilesController < ApplicationController
   def new
     # Allow users to create doctor profiles even if they don't have profile_type set
     @doctor_profile = DoctorProfile.new
+    @specialties = Specialty.order(:name)
+    @subspecialties = []
+    @departments = Department.order(:name)
+    @cities = City.order(:name)
   end
 
   def create
@@ -39,6 +43,10 @@ class ProfilesController < ApplicationController
 
   def edit
     @doctor_profile = @user.doctor_profile
+    @specialties = Specialty.order(:name)
+    @subspecialties = @doctor_profile.specialty&.subspecialties || []
+    @departments = Department.order(:name)
+    @cities = City.order(:name)
     redirect_to new_profile_path unless @doctor_profile
   end
 
@@ -64,14 +72,15 @@ class ProfilesController < ApplicationController
     params.require(:doctor_profile).permit(
       :name,
       :specialization,
-      :subspecialty,
+      :subspecialty_id,
       :description,
       :address,
-      :city,
-      :state,
       :website,
       :medical_license,
-      :image
+      :image,
+      :specialty_id,
+      :department_id,
+      :city_id
     )
   end
 end

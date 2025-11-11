@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_03_002707) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_07_062029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_002707) do
     t.index ["author_id"], name: "index_articles_on_author_id"
   end
 
+  create_table "cities", force: :cascade do |t|
+    t.string "name"
+    t.bigint "department_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_cities_on_department_id"
+  end
+
   create_table "departments", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -83,6 +91,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_002707) do
     t.string "state"
     t.string "subspecialty"
     t.boolean "hidden"
+    t.bigint "specialty_id"
+    t.bigint "subspecialty_id"
+    t.bigint "department_id"
+    t.bigint "city_id"
+    t.index ["city_id"], name: "index_doctor_profiles_on_city_id"
+    t.index ["department_id"], name: "index_doctor_profiles_on_department_id"
+    t.index ["specialty_id"], name: "index_doctor_profiles_on_specialty_id"
+    t.index ["subspecialty_id"], name: "index_doctor_profiles_on_subspecialty_id"
     t.index ["user_id"], name: "index_doctor_profiles_on_user_id"
   end
 
@@ -243,6 +259,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_002707) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
+  create_table "subspecialties", force: :cascade do |t|
+    t.string "name"
+    t.bigint "specialty_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["specialty_id"], name: "index_subspecialties_on_specialty_id"
+  end
+
   create_table "suppliers", force: :cascade do |t|
     t.string "name"
     t.string "address"
@@ -278,8 +302,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_002707) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "users", column: "author_id"
+  add_foreign_key "cities", "departments"
   add_foreign_key "doctor_establishments", "doctor_profiles"
   add_foreign_key "doctor_establishments", "establishments"
+  add_foreign_key "doctor_profiles", "cities"
+  add_foreign_key "doctor_profiles", "departments"
+  add_foreign_key "doctor_profiles", "specialties"
+  add_foreign_key "doctor_profiles", "subspecialties"
   add_foreign_key "doctor_profiles", "users"
   add_foreign_key "doctor_services", "doctor_profiles"
   add_foreign_key "doctor_services", "services"
@@ -294,4 +323,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_002707) do
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "subscription_plans"
   add_foreign_key "subscriptions", "users"
+  add_foreign_key "subspecialties", "specialties"
 end

@@ -58,6 +58,11 @@ Rails.application.routes.draw do
   # Profile routes
   resource :profile, only: [:show, :new, :create, :edit, :update]
 
+  # Specialty routes for subespecialties
+  resources :specialties, only: [] do
+    get 'subspecialties', on: :member
+  end
+
   # Admin routes
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
