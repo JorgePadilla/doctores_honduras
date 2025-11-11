@@ -13,7 +13,6 @@ class DoctorProfile < ApplicationRecord
   has_one_attached :image
 
   validates :name, presence: true
-  validates :address, presence: true
   validates :department_id, presence: true
   validates :city_id, presence: true
 
