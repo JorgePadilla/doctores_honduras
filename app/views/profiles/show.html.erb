@@ -41,7 +41,7 @@
               <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Información de Contacto</h2>
               <div class="space-y-2">
                 <p class="text-gray-700"><strong>Dirección:</strong> <%= @doctor_profile.address %></p>
-                <p class="text-gray-700"><strong>Ubicación:</strong> <%= @doctor_profile.city&.name %>, <%= @doctor_profile.department&.name %></p>
+                <p class="text-gray-700"><strong>Ubicación:</strong> <%= @doctor_profile.city_id.present? ? @doctor_profile.city&.name : @doctor_profile.city %>, <%= @doctor_profile.department&.name %></p>
                 <% if @doctor_profile.website.present? %>
                   <p class="text-gray-700">
                     <strong>Sitio web:</strong>
