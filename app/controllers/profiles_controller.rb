@@ -5,7 +5,7 @@ class ProfilesController < ApplicationController
   def show
     case @user.profile_type
     when 'doctor'
-      @doctor_profile = @user.doctor_profile
+      @doctor_profile = DoctorProfile.includes(:specialty, :subspecialty, :city, :department).find_by(user_id: @user.id)
       redirect_to new_profile_path unless @doctor_profile
     when 'hospital', 'clinic'
       # Handle hospital/clinic profiles here when implemented
