@@ -72,8 +72,15 @@ DATABASE_URL=postgresql://localhost/doctores_honduras_development
 STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_SECRET_KEY=sk_test_...
 
-# Active Storage (para producción)
+# Active Storage - Desarrollo (local)
+# Para producción usar AWS S3 (ver sección de despliegue)
 RAILS_STORAGE_PATH=/data/storage
+
+# AWS S3 (opcional para desarrollo, requerido para producción)
+# AWS_ACCESS_KEY_ID=your_access_key
+# AWS_SECRET_ACCESS_KEY=your_secret_key
+# AWS_BUCKET=your_bucket_name
+# AWS_REGION=us-east-1
 ```
 
 ### 5. Iniciar el Servidor
@@ -136,17 +143,46 @@ bundle exec rubocop -a
 
 ## 🚀 Despliegue
 
-### Railway
+### Railway con AWS S3
 
-La aplicación está configurada para desplegarse en Railway:
+La aplicación está configurada para desplegarse en Railway con AWS S3 para almacenamiento persistente:
 
-1. Conectar el repositorio a Railway
-2. Configurar variables de entorno:
+1. **Conectar el repositorio a Railway**
+2. **Configurar AWS S3** (ver sección de configuración S3 abajo)
+3. **Configurar variables de entorno en Railway**:
    - `DATABASE_URL`
    - `RAILS_MASTER_KEY`
    - `STRIPE_PUBLISHABLE_KEY`
    - `STRIPE_SECRET_KEY`
-3. Configurar Railway Volume Storage para persistencia de archivos
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_BUCKET`
+   - `AWS_REGION` (opcional, por defecto 'us-east-1')
+
+### Configuración de AWS S3
+
+1. **Crear bucket S3 en AWS Console**:
+   - Ir a AWS S3 Console
+   - Crear nuevo bucket con nombre único
+   - Configurar región (ej: us-east-1)
+   - Deshabilitar "Block all public access" si necesitas acceso público
+
+2. **Crear usuario IAM**:
+   - Ir a AWS IAM Console
+   - Crear nuevo usuario con acceso programático
+   - Adjuntar política `AmazonS3FullAccess` o crear política personalizada
+
+3. **Configurar CORS (opcional)**:
+   ```json
+   [
+     {
+       "AllowedHeaders": ["*"],
+       "AllowedMethods": ["GET", "PUT", "POST"],
+       "AllowedOrigins": ["https://tu-dominio.railway.app"],
+       "ExposeHeaders": []
+     }
+   ]
+   ```
 
 ### Variables de Entorno para Producción
 
@@ -156,7 +192,12 @@ DATABASE_URL=postgresql://...
 RAILS_MASTER_KEY=...
 STRIPE_PUBLISHABLE_KEY=pk_live_...
 STRIPE_SECRET_KEY=sk_live_...
-RAILS_STORAGE_PATH=/data/storage
+
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+AWS_BUCKET=doctores-honduras-production
+AWS_REGION=us-east-1
 ```
 
 ## 📁 Estructura del Proyecto
