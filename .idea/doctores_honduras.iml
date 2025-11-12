@@ -41,6 +41,12 @@
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v8.0.2, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="addressable (v2.8.7, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ast (v2.4.3, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="aws-eventstream (v1.4.0, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="aws-partitions (v1.1181.0, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="aws-sdk-core (v3.237.0, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="aws-sdk-kms (v1.117.0, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="aws-sdk-s3 (v1.203.1, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="aws-sigv4 (v1.12.1, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="base64 (v0.2.0, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bcrypt (v3.1.20, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bcrypt_pbkdf (v1.1.1, asdf: 3.3.9) [gem]" level="application" />
@@ -69,6 +75,7 @@
     <orderEntry type="library" scope="PROVIDED" name="io-console (v0.8.0, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="irb (v1.15.2, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jbuilder (v2.13.0, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jmespath (v1.6.2, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="json (v2.12.0, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="kamal (v2.6.1, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="language_server-protocol (v3.17.0.5, asdf: 3.3.9) [gem]" level="application" />
