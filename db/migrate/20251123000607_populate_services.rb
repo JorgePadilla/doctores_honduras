@@ -32,12 +32,10 @@ class PopulateServices < ActiveRecord::Migration[8.0]
       "Cáncer de Colon",
       "Coloproctología",
       "Enfermedades y Cirugía de Colon, Recto y Ano",
-
       # Surgical services
       "Cirugía General",
       "Cirugía Laparoscópica Básica",
       "Cirugía Menor dentro del Consultorio",
-
       # Specific conditions and treatments
       "Pólipos",
       "Enfermedades Hemorroidarias",
@@ -45,12 +43,10 @@ class PopulateServices < ActiveRecord::Migration[8.0]
       "Fístulas",
       "Fisuras",
       "Enfermedades Inflamatorias",
-
       # Diagnostic procedures
       "Estudios Endoscópicos Bajos",
       "Colonoscopia",
       "Polipectomía",
-
       # Other common medical specialties
       "Cardiología",
       "Dermatología",
@@ -63,7 +59,6 @@ class PopulateServices < ActiveRecord::Migration[8.0]
       "Pediatría",
       "Psiquiatría",
       "Urología",
-
       # Common procedures
       "Procedimientos Ambulatorios Proctológicos",
       "Ecografía",
