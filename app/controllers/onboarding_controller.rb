@@ -10,21 +10,32 @@ class OnboardingController < ApplicationController
 
   def plan_confirmation
     @plan = SubscriptionPlan.find_by(id: params[:plan_id])
-    
+
     if @plan.nil?
       redirect_to onboarding_plan_selection_path, alert: "Por favor seleccione un plan válido."
       return
     end
-    
-    # Store the selected plan in the session
+
+    # Determine profile type based on plan name
+    profile_type = if @plan.name.downcase.include?('gratuito') || @plan.price == 0
+                     'viewer'
+                   elsif @plan.name.downcase.include?('hospital')
+                     'hospital'
+                   elsif @plan.name.downcase.include?('proveedor') || @plan.name.downcase.include?('provider')
+                     'provider'
+                   else
+                     'doctor'
+                   end
+
+    # Store the selected plan and profile type in the session
     session[:selected_plan_id] = @plan.id
-    session[:profile_type] = params[:profile_type]
-    
+    session[:profile_type] = profile_type
+
     # Update user's profile type
-    current_user.update(profile_type: params[:profile_type])
-    
+    current_user.update(profile_type: profile_type)
+
     # For viewer profile type (free plan), complete onboarding and redirect to doctors index
-    if params[:profile_type] == 'viewer'
+    if profile_type == 'viewer'
       current_user.update(onboarding_completed: true)
       redirect_to doctors_path
       return
@@ -52,7 +63,7 @@ class OnboardingController < ApplicationController
       @subspecialties = []
       @departments = Department.order(:name)
       @cities = City.order(:name)
-    when 'hospital', 'clinic'
+    when 'hospital', 'provider'
       @establishment = current_user.establishments.build(est_type: @profile_type)
     else
       redirect_to onboarding_plan_selection_path, alert: "Tipo de perfil no válido."
@@ -71,7 +82,7 @@ class OnboardingController < ApplicationController
       else
         render :profile_setup
       end
-    when 'hospital', 'clinic'
+    when 'hospital', 'provider'
       @establishment = current_user.establishments.build(establishment_params)
       if @establishment.save
         create_subscription
@@ -87,7 +98,7 @@ class OnboardingController < ApplicationController
   private
   
   def set_subscription_plans
-    @subscription_plans = SubscriptionPlan.all
+    @subscription_plans = SubscriptionPlan.visible
   end
   
   def current_user

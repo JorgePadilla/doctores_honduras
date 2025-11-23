@@ -207,7 +207,7 @@
               <span class="text-sm font-medium text-green-600"><%= @doctors_count - @hidden_profiles %>/<%= @doctors_count %></span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-green-500 h-2 rounded-full" style="width: <%= ((@doctors_count - @hidden_profiles).to_f / @doctors_count * 100).round %>%"></div>
+              <div class="bg-green-500 h-2 rounded-full" style="width: <%= @doctors_count > 0 ? ((@doctors_count - @hidden_profiles).to_f / @doctors_count * 100).round : 0 %>%"></div>
             </div>
 
             <div class="flex justify-between items-center">
@@ -223,7 +223,7 @@
               <span class="text-sm font-medium text-purple-600"><%= @active_subscriptions %></span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-purple-500 h-2 rounded-full" style="width: <%= [(@active_subscriptions.to_f / @users_count * 100).round, 100].min %>%"></div>
+              <div class="bg-purple-500 h-2 rounded-full" style="width: <%= @users_count > 0 ? [(@active_subscriptions.to_f / @users_count * 100).round, 100].min : 0 %>%"></div>
             </div>
           </div>
 

@@ -12,6 +12,9 @@ class SubscriptionPlan < ApplicationRecord
   validates :name, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :interval, presence: true, inclusion: { in: %w[month year] }
+
+  scope :visible, -> { where(visible: true) }
+  scope :hidden, -> { where(visible: false) }
   
   def display_price
     "#{price_in_dollars}/#{interval_display}"

@@ -53,6 +53,25 @@ class Admin::DashboardController < ApplicationController
     redirect_to admin_doctors_path
   end
 
+  def toggle_plan_visibility
+    @plan = SubscriptionPlan.find(params[:id])
+    @plan.update(visible: !@plan.visible)
+
+    flash[:success] = @plan.visible ? "Plan hecho visible correctamente" : "Plan ocultado correctamente"
+    redirect_to admin_subscriptions_path
+  end
+
+  def update_plan_price
+    @plan = SubscriptionPlan.find(params[:id])
+    price_in_cents = (params[:price].to_f * 100).to_i
+    if @plan.update(price: price_in_cents)
+      flash[:success] = "Precio actualizado correctamente"
+    else
+      flash[:alert] = "Error al actualizar el precio"
+    end
+    redirect_to admin_subscriptions_path
+  end
+
   private
 
   def calculate_revenue_growth

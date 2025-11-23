@@ -153,5 +153,8 @@ es:
           attributes:
             email:
               taken: "El correo electrónico ya está en uso"
+            password_confirmation:
+              confirmation: "no coincide con la contraseña"
       messages:
         taken: "Ya está en uso"
+        confirmation: "no coincide con %{attribute}"

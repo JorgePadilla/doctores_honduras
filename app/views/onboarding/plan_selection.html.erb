@@ -6,77 +6,164 @@
     <p class="text-lg text-gray-600">Elija el plan que mejor se adapte a sus necesidades</p>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-    <% @subscription_plans.each do |plan| %>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:border-blue-500 transition-all">
-        <div class="p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white">
-          <h3 class="text-xl font-bold mb-2"><%= plan.name %></h3>
-          <p class="text-2xl font-bold"><%= plan.price_in_dollars %> <span class="text-sm font-normal">/ <%= plan.interval_display %></span></p>
-        </div>
-        <div class="p-6">
-          <ul class="space-y-3 mb-6">
-            <% plan.features.to_s.split(',').each do |feature| %>
-              <li class="flex items-center">
-                <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <%= feature.strip %>
-              </li>
-            <% end %>
-          </ul>
-          
-          <div class="mt-6 space-y-4">
-            <% if plan.name.downcase.include?('gratuito') || plan.price == 0 %>
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <h4 class="font-medium text-gray-700 mb-2">Plan Gratuito - Solo Visualización</h4>
-                <p class="text-sm text-gray-600 mb-4">Este plan permite únicamente visualizar perfiles, sin posibilidad de edición.</p>
-                
-                <%= form_with url: onboarding_plan_confirmation_path, method: :post do |f| %>
-                  <%= f.hidden_field :plan_id, value: plan.id %>
-                  <%= f.hidden_field :profile_type, value: 'viewer' %>
-                  <div class="mt-4">
-                    <%= f.submit "Seleccionar Plan Gratuito", class: "w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-                  </div>
-                <% end %>
+  <%= form_with url: onboarding_plan_confirmation_path, method: :post, class: "space-y-6" do |f| %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <% @subscription_plans.each do |plan| %>
+        <label class="cursor-pointer">
+          <input type="radio" name="plan_id" value="<%= plan.id %>" class="hidden peer" required <%= 'checked' if plan.name == 'Plan Gratuito' %>>
+          <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 hover:border-gray-400 transition-all duration-500 ease-in-out flex flex-col h-full plan-card">
+            <div class="p-6 bg-gray-200 border-b border-gray-300 transition-all duration-500 ease-in-out plan-header">
+              <h3 class="text-xl font-bold mb-2 text-gray-800 transition-colors duration-500 plan-title"><%= plan.name %></h3>
+              <p class="text-2xl font-bold text-gray-700 transition-colors duration-500 plan-price"><%= plan.price_in_dollars %> <span class="text-sm font-normal text-gray-600 transition-colors duration-500 plan-interval">/ <%= plan.interval_display %></span></p>
+            </div>
+            <div class="p-6 flex-grow bg-gray-50 flex flex-col justify-between transition-all duration-500 ease-in-out plan-content">
+              <div>
+                <ul class="space-y-3 mb-6">
+                  <% plan.features.to_s.split(',').each do |feature| %>
+                    <li class="flex items-center">
+                      <svg class="h-5 w-5 text-gray-500 mr-2 flex-shrink-0 transition-colors duration-500 feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span class="text-sm text-gray-700 transition-colors duration-500 feature-text"><%= feature.strip %></span>
+                    </li>
+                  <% end %>
+                </ul>
               </div>
-            <% else %>
-              <h4 class="font-medium text-gray-700 mb-2">¿Qué tipo de perfil desea crear?</h4>
-              
-              <%= form_with url: onboarding_plan_confirmation_path, method: :post, class: "space-y-4" do |f| %>
-                <%= f.hidden_field :plan_id, value: plan.id %>
-                
-                <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <%= f.radio_button :profile_type, 'doctor', class: "h-4 w-4 text-blue-600 focus:ring-blue-500", required: true %>
-                  <%= f.label :profile_type, value: 'doctor', class: "ml-3 block text-sm font-medium text-gray-700" do %>
-                    <div class="font-medium">Doctor</div>
-                    <div class="text-xs text-gray-500">Para médicos individuales</div>
-                  <% end %>
+
+              <!-- Plan Description for all plans - aligned to bottom -->
+              <div class="mt-auto">
+                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200 transition-all duration-500 ease-in-out plan-description">
+                  <h4 class="font-medium text-gray-700 mb-2 text-sm transition-colors duration-500 description-title">Descripción del Plan</h4>
+                  <p class="text-sm text-gray-600 transition-colors duration-500 description-text"><%= plan.description %></p>
                 </div>
-                
-                <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <%= f.radio_button :profile_type, 'hospital', class: "h-4 w-4 text-blue-600 focus:ring-blue-500" %>
-                  <%= f.label :profile_type, value: 'hospital', class: "ml-3 block text-sm font-medium text-gray-700" do %>
-                    <div class="font-medium">Hospital</div>
-                    <div class="text-xs text-gray-500">Para hospitales con múltiples especialidades</div>
-                  <% end %>
-                </div>
-                
-                <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <%= f.radio_button :profile_type, 'clinic', class: "h-4 w-4 text-blue-600 focus:ring-blue-500" %>
-                  <%= f.label :profile_type, value: 'clinic', class: "ml-3 block text-sm font-medium text-gray-700" do %>
-                    <div class="font-medium">Clínica</div>
-                    <div class="text-xs text-gray-500">Para clínicas especializadas</div>
-                  <% end %>
-                </div>
-                
-                <div class="mt-6">
-                  <%= f.submit "Seleccionar Plan", class: "w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-                </div>
-              <% end %>
-            <% end %>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    <% end %>
-  </div>
+        </label>
+      <% end %>
+    </div>
+
+    <div class="text-center">
+      <%= f.submit "Continuar", class: "py-3 px-8 border border-transparent rounded-md shadow-sm text-lg font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed", id: "continue-button", disabled: false, style: "background-color: #00bfff;" %>
+    </div>
+  <% end %>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const radioButtons = document.querySelectorAll('input[name="plan_id"]');
+      const continueButton = document.getElementById('continue-button');
+      const planCards = document.querySelectorAll('label.cursor-pointer > div');
+
+      function updateCardStyles() {
+        planCards.forEach((card, index) => {
+          const radio = radioButtons[index];
+          const planHeader = card.querySelector('.plan-header');
+          const planTitle = card.querySelector('.plan-title');
+          const planPrice = card.querySelector('.plan-price');
+          const planInterval = card.querySelector('.plan-interval');
+          const planContent = card.querySelector('.plan-content');
+          const featureIcons = card.querySelectorAll('.feature-icon');
+          const featureTexts = card.querySelectorAll('.feature-text');
+          const planDescription = card.querySelector('.plan-description');
+          const descriptionTitle = card.querySelector('.description-title');
+          const descriptionText = card.querySelector('.description-text');
+
+          if (radio.checked) {
+            // Selected card - enhanced blue styling with zoom animation
+            card.classList.add('shadow-2xl', 'scale-110', 'ring-4', 'ring-blue-400', 'z-10');
+            card.classList.remove('shadow-lg', 'scale-100');
+
+            // Apply blue gradient and white text to header
+            planHeader.classList.add('bg-gradient-to-br', 'from-blue-500', 'to-blue-600', 'border-blue-400');
+            planHeader.classList.remove('bg-gray-200', 'border-gray-300');
+
+            // Apply white text to title and price
+            planTitle.classList.add('text-white');
+            planTitle.classList.remove('text-gray-800');
+            planPrice.classList.add('text-white');
+            planPrice.classList.remove('text-gray-700');
+            planInterval.classList.add('text-blue-100');
+            planInterval.classList.remove('text-gray-600');
+
+            // Apply blue background to content
+            planContent.classList.add('bg-blue-50');
+            planContent.classList.remove('bg-gray-50');
+
+            // Apply blue styling to features
+            featureIcons.forEach(icon => {
+              icon.classList.add('text-blue-500');
+              icon.classList.remove('text-gray-500');
+            });
+            featureTexts.forEach(text => {
+              text.classList.add('text-blue-700');
+              text.classList.remove('text-gray-700');
+            });
+
+            // Apply blue styling to description
+            planDescription.classList.add('bg-blue-100', 'border-blue-200');
+            planDescription.classList.remove('bg-gray-100', 'border-gray-200');
+            descriptionTitle.classList.add('text-blue-800');
+            descriptionTitle.classList.remove('text-gray-700');
+            descriptionText.classList.add('text-blue-700');
+            descriptionText.classList.remove('text-gray-600');
+          } else {
+            // Unselected card - gray theme
+            card.classList.remove('shadow-2xl', 'scale-110', 'ring-4', 'ring-blue-400', 'z-10');
+            card.classList.add('shadow-lg', 'scale-100');
+
+            // Reset to gray styling
+            planHeader.classList.remove('bg-gradient-to-br', 'from-blue-500', 'to-blue-600', 'border-blue-400');
+            planHeader.classList.add('bg-gray-200', 'border-gray-300');
+
+            planTitle.classList.remove('text-white');
+            planTitle.classList.add('text-gray-800');
+            planPrice.classList.remove('text-white');
+            planPrice.classList.add('text-gray-700');
+            planInterval.classList.remove('text-blue-100');
+            planInterval.classList.add('text-gray-600');
+
+            planContent.classList.remove('bg-blue-50');
+            planContent.classList.add('bg-gray-50');
+
+            featureIcons.forEach(icon => {
+              icon.classList.remove('text-blue-500');
+              icon.classList.add('text-gray-500');
+            });
+            featureTexts.forEach(text => {
+              text.classList.remove('text-blue-700');
+              text.classList.add('text-gray-700');
+            });
+
+            planDescription.classList.remove('bg-blue-100', 'border-blue-200');
+            planDescription.classList.add('bg-gray-100', 'border-gray-200');
+            descriptionTitle.classList.remove('text-blue-800');
+            descriptionTitle.classList.add('text-gray-700');
+            descriptionText.classList.remove('text-blue-700');
+            descriptionText.classList.add('text-gray-600');
+          }
+        });
+      }
+
+      radioButtons.forEach((radio, index) => {
+        radio.addEventListener('change', function() {
+          continueButton.disabled = false;
+
+          // Add smooth zoom and pulse animation to the selected card
+          const selectedCard = planCards[index];
+          selectedCard.classList.add('animate-pulse');
+
+          // Update all card styles
+          updateCardStyles();
+
+          // Remove pulse animation after it completes
+          setTimeout(() => {
+            selectedCard.classList.remove('animate-pulse');
+          }, 800);
+        });
+      });
+
+      // Initialize card styles
+      updateCardStyles();
+    });
+  </script>
 </div>

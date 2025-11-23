@@ -70,6 +70,8 @@ Rails.application.routes.draw do
     get 'doctors', to: 'dashboard#doctors'
     get 'subscriptions', to: 'dashboard#subscriptions'
     post 'doctors/:id/toggle_visibility', to: 'dashboard#toggle_doctor_visibility', as: 'toggle_doctor_visibility'
+    post 'subscription_plans/:id/toggle_visibility', to: 'dashboard#toggle_plan_visibility', as: 'toggle_plan_visibility'
+    patch 'subscription_plans/:id/update_price', to: 'dashboard#update_plan_price', as: 'update_plan_price'
   end
 
   # Defines the root path route ("/")
