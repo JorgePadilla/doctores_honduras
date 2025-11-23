@@ -49,12 +49,16 @@
   <% end %>
 
   <script>
+    // Use DOMContentLoaded to ensure the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('Plan selection script loaded');
+
       const radioButtons = document.querySelectorAll('input[name="plan_id"]');
       const continueButton = document.getElementById('continue-button');
       const planCards = document.querySelectorAll('label.cursor-pointer > div');
 
       function updateCardStyles() {
+        console.log('Updating card styles');
         planCards.forEach((card, index) => {
           const radio = radioButtons[index];
           const planHeader = card.querySelector('.plan-header');
@@ -69,12 +73,14 @@
           const descriptionText = card.querySelector('.description-text');
 
           if (radio.checked) {
+            console.log('Selected card:', index);
             // Selected card - enhanced blue styling with zoom animation
-            card.classList.add('shadow-2xl', 'scale-110', 'ring-4', 'ring-blue-400', 'z-10');
+            card.classList.add('shadow-2xl', 'scale-105', 'ring-4', 'z-10');
             card.classList.remove('shadow-lg', 'scale-100');
 
-            // Apply blue gradient and white text to header
-            planHeader.classList.add('bg-gradient-to-br', 'from-blue-500', 'to-blue-600', 'border-blue-400');
+            // Apply menu bar blue gradient and white text to header
+            planHeader.style.background = 'linear-gradient(to bottom right, #00bfff, #0099cc)';
+            planHeader.style.borderColor = '#00bfff';
             planHeader.classList.remove('bg-gray-200', 'border-gray-300');
 
             // Apply white text to title and price
@@ -82,63 +88,66 @@
             planTitle.classList.remove('text-gray-800');
             planPrice.classList.add('text-white');
             planPrice.classList.remove('text-gray-700');
-            planInterval.classList.add('text-blue-100');
+            planInterval.style.color = '#e6f7ff';
             planInterval.classList.remove('text-gray-600');
 
-            // Apply blue background to content
-            planContent.classList.add('bg-blue-50');
+            // Apply light blue background to content
+            planContent.style.backgroundColor = '#f0f9ff';
             planContent.classList.remove('bg-gray-50');
 
-            // Apply blue styling to features
+            // Apply menu bar blue styling to features
             featureIcons.forEach(icon => {
-              icon.classList.add('text-blue-500');
+              icon.style.color = '#00bfff';
               icon.classList.remove('text-gray-500');
             });
             featureTexts.forEach(text => {
-              text.classList.add('text-blue-700');
+              text.style.color = '#006699';
               text.classList.remove('text-gray-700');
             });
 
-            // Apply blue styling to description
-            planDescription.classList.add('bg-blue-100', 'border-blue-200');
+            // Apply menu bar blue styling to description
+            planDescription.style.backgroundColor = '#e6f7ff';
+            planDescription.style.borderColor = '#00bfff';
             planDescription.classList.remove('bg-gray-100', 'border-gray-200');
-            descriptionTitle.classList.add('text-blue-800');
+            descriptionTitle.style.color = '#006699';
             descriptionTitle.classList.remove('text-gray-700');
-            descriptionText.classList.add('text-blue-700');
+            descriptionText.style.color = '#0088cc';
             descriptionText.classList.remove('text-gray-600');
           } else {
             // Unselected card - gray theme
-            card.classList.remove('shadow-2xl', 'scale-110', 'ring-4', 'ring-blue-400', 'z-10');
+            card.classList.remove('shadow-2xl', 'scale-105', 'ring-4', 'z-10');
             card.classList.add('shadow-lg', 'scale-100');
 
-            // Reset to gray styling
-            planHeader.classList.remove('bg-gradient-to-br', 'from-blue-500', 'to-blue-600', 'border-blue-400');
+            // Reset to gray styling - clear inline styles
+            planHeader.style.background = '';
+            planHeader.style.borderColor = '';
             planHeader.classList.add('bg-gray-200', 'border-gray-300');
 
             planTitle.classList.remove('text-white');
             planTitle.classList.add('text-gray-800');
             planPrice.classList.remove('text-white');
             planPrice.classList.add('text-gray-700');
-            planInterval.classList.remove('text-blue-100');
+            planInterval.style.color = '';
             planInterval.classList.add('text-gray-600');
 
-            planContent.classList.remove('bg-blue-50');
+            planContent.style.backgroundColor = '';
             planContent.classList.add('bg-gray-50');
 
             featureIcons.forEach(icon => {
-              icon.classList.remove('text-blue-500');
+              icon.style.color = '';
               icon.classList.add('text-gray-500');
             });
             featureTexts.forEach(text => {
-              text.classList.remove('text-blue-700');
+              text.style.color = '';
               text.classList.add('text-gray-700');
             });
 
-            planDescription.classList.remove('bg-blue-100', 'border-blue-200');
+            planDescription.style.backgroundColor = '';
+            planDescription.style.borderColor = '';
             planDescription.classList.add('bg-gray-100', 'border-gray-200');
-            descriptionTitle.classList.remove('text-blue-800');
+            descriptionTitle.style.color = '';
             descriptionTitle.classList.add('text-gray-700');
-            descriptionText.classList.remove('text-blue-700');
+            descriptionText.style.color = '';
             descriptionText.classList.add('text-gray-600');
           }
         });
@@ -146,6 +155,7 @@
 
       radioButtons.forEach((radio, index) => {
         radio.addEventListener('change', function() {
+          console.log('Plan changed:', index);
           continueButton.disabled = false;
 
           // Add smooth zoom and pulse animation to the selected card
@@ -162,7 +172,7 @@
         });
       });
 
-      // Initialize card styles
+      // Initialize card styles immediately
       updateCardStyles();
     });
   </script>
