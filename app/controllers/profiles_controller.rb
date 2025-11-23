@@ -5,7 +5,7 @@ class ProfilesController < ApplicationController
   def show
     case @user.profile_type
     when 'doctor'
-      @doctor_profile = DoctorProfile.includes(:specialty, :subspecialty, :city, :department).find_by(user_id: @user.id)
+      @doctor_profile = DoctorProfile.includes(:specialty, :subspecialty, :city, :department, :services).find_by(user_id: @user.id)
       redirect_to new_profile_path unless @doctor_profile
     when 'hospital', 'clinic'
       # Handle hospital/clinic profiles here when implemented
@@ -23,6 +23,7 @@ class ProfilesController < ApplicationController
     @subspecialties = []
     @departments = Department.order(:name)
     @cities = City.order(:name)
+    @services = Service.order(:name)
   end
 
   def create
@@ -33,6 +34,9 @@ class ProfilesController < ApplicationController
     @user.update(profile_type: 'doctor') if @user.profile_type.blank?
 
     if @doctor_profile.save
+      # Handle service associations
+      update_doctor_services(@doctor_profile)
+
       flash[:success] = 'Perfil de doctor creado exitosamente.'
       redirect_to profile_path
     else
@@ -47,6 +51,7 @@ class ProfilesController < ApplicationController
     @subspecialties = @doctor_profile.specialty&.subspecialties || []
     @departments = Department.order(:name)
     @cities = City.order(:name)
+    @services = Service.order(:name)
     redirect_to new_profile_path unless @doctor_profile
   end
 
@@ -54,6 +59,9 @@ class ProfilesController < ApplicationController
     @doctor_profile = @user.doctor_profile
 
     if @doctor_profile.update(doctor_profile_params)
+      # Handle service associations
+      update_doctor_services(@doctor_profile)
+
       flash[:success] = 'Perfil actualizado exitosamente.'
       redirect_to profile_path
     else
@@ -68,6 +76,11 @@ class ProfilesController < ApplicationController
     @user = Current.user
   end
 
+  def update_doctor_services(doctor_profile)
+    service_ids = params[:doctor_profile][:service_ids]&.reject(&:blank?) || []
+    doctor_profile.service_ids = service_ids
+  end
+
   def doctor_profile_params
     params.require(:doctor_profile).permit(
       :name,
@@ -78,7 +91,8 @@ class ProfilesController < ApplicationController
       :image,
       :specialty_id,
       :department_id,
-      :city_id
+      :city_id,
+      service_ids: []
     )
   end
 end
