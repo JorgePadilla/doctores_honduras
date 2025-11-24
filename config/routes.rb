@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   # Onboarding flow routes
   get 'onboarding/plan_selection', to: 'onboarding#plan_selection', as: :onboarding_plan_selection
   post 'onboarding/plan_confirmation', to: 'onboarding#plan_confirmation', as: :onboarding_plan_confirmation
+  get 'onboarding/plan_confirmation', to: 'onboarding#plan_confirmation', as: :onboarding_plan_confirmation_get
+  get 'onboarding/payment_success', to: 'onboarding#payment_success', as: :onboarding_payment_success
   get 'onboarding/profile_setup', to: 'onboarding#profile_setup', as: :onboarding_profile_setup
   post 'onboarding/profile_confirmation', to: 'onboarding#profile_confirmation', as: :onboarding_profile_confirmation
   

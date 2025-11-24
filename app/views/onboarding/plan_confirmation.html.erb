@@ -2,6 +2,7 @@
   <div class="text-center mb-10">
     <h1 class="text-3xl font-bold text-gray-800 mb-2">Confirmación del Plan</h1>
     <p class="text-lg text-gray-600">Revise los detalles de su selección</p>
+
   </div>
 
   <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 mb-8">
@@ -64,9 +65,345 @@
     </div>
   </div>
 
-  <div class="flex justify-between">
-    <%= link_to "Volver", onboarding_plan_selection_path, class: "py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-    
-    <%= link_to "Continuar", onboarding_profile_setup_path, class: "py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-  </div>
+  <% if @plan.price > 0 && session[:payment_client_secret].present? %>
+    <!-- Stripe Payment Form for Paid Plans -->
+    <div class="mt-8">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Completar Pago</h3>
+      <script>
+        console.log('Payment form section rendered - Plan price: <%= @plan.price %>, Client secret present: <%= session[:payment_client_secret].present? %>');
+      </script>
+      <div id="payment-form" class="space-y-4">
+        <div id="payment-element">
+          <!-- Stripe Elements will be inserted here -->
+          <div id="payment-loading" class="text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p class="mt-2 text-gray-600">Cargando formulario de pago...</p>
+          </div>
+        </div>
+
+        <button id="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <div class="spinner hidden" id="spinner"></div>
+          <span id="button-text">Pagar ahora</span>
+        </button>
+
+        <div id="payment-message" class="hidden"></div>
+      </div>
+    </div>
+  <% else %>
+    <!-- Continue Button for Free Plans -->
+    <div class="flex justify-between">
+      <%= link_to "Volver", onboarding_plan_selection_path, class: "py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+
+      <%= link_to "Continuar", onboarding_profile_setup_path, class: "py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    </div>
+  <% end %>
 </div>
+
+<% if @plan.price > 0 && session[:payment_client_secret].present? %>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    console.log('Stripe payment script loaded');
+    console.log('Plan price:', <%= @plan.price %>);
+    console.log('Client secret present:', <%= session[:payment_client_secret].present? %>);
+
+    // Handle both initial load and Turbo navigation
+    // Global variable to track initialization
+    let stripeInitialized = false;
+
+    function initializeStripePayment() {
+      console.log('Initializing Stripe payment...');
+
+      // Prevent duplicate initialization
+      if (stripeInitialized) {
+        console.log('Stripe already initialized, skipping...');
+        return;
+      }
+
+      // Check if Stripe is loaded, if not, load it
+      if (typeof Stripe === 'undefined') {
+        console.log('Stripe.js not loaded, loading now...');
+        const script = document.createElement('script');
+        script.src = 'https://js.stripe.com/v3/';
+        script.onload = function() {
+          console.log('Stripe.js loaded dynamically');
+          initializeStripePayment(); // Retry initialization
+        };
+        script.onerror = function() {
+          console.error('Failed to load Stripe.js');
+        };
+        document.head.appendChild(script);
+        return;
+      }
+
+      // Check if required elements exist
+      const paymentElement = document.getElementById('payment-element');
+      const form = document.getElementById('payment-form');
+
+      if (!paymentElement) {
+        console.error('Payment element not found');
+        return;
+      }
+
+      if (!form) {
+        console.error('Payment form not found');
+        return;
+      }
+
+      // Initialize Stripe
+      const stripePublishableKey = '<%= Rails.configuration.stripe[:publishable_key] %>';
+      const clientSecret = '<%= session[:payment_client_secret] %>';
+
+      console.log('Stripe publishable key:', stripePublishableKey ? 'present' : 'missing');
+      console.log('Client secret:', clientSecret ? 'present' : 'missing');
+
+      if (!stripePublishableKey || stripePublishableKey.includes('your_test_key')) {
+        console.error('Invalid Stripe publishable key');
+        showError('Configuración de pago no válida. Contacte soporte.');
+        return;
+      }
+
+      if (!clientSecret) {
+        console.error('No client secret available');
+        showError('Sesión de pago expirada. Por favor regrese y seleccione el plan nuevamente.');
+        return;
+      }
+
+      const stripe = Stripe(stripePublishableKey);
+
+      const appearance = {
+        theme: 'stripe',
+        variables: {
+          colorPrimary: '#3b82f6',
+        },
+      };
+
+      console.log('Creating Stripe elements...');
+
+      try {
+        const elements = stripe.elements({ appearance, clientSecret });
+        console.log('Stripe elements created');
+
+        const stripePaymentElement = elements.create("payment");
+        console.log('Payment element created');
+
+        // Hide loading indicator and mount payment element
+        const loadingElement = document.getElementById('payment-loading');
+        if (loadingElement) {
+          loadingElement.style.display = 'none';
+          console.log('Loading indicator hidden');
+        } else {
+          console.warn('Loading element not found');
+        }
+
+        stripePaymentElement.mount("#payment-element");
+        console.log('Stripe payment element mounted');
+
+        // Mark as initialized
+        stripeInitialized = true;
+        console.log('Stripe initialization completed successfully');
+      } catch (error) {
+        console.error('Error with Stripe elements:', error);
+        showError('Error al crear formulario de pago: ' + error.message);
+        return;
+      }
+
+      // Get form elements (form already declared above)
+      const submitButton = document.getElementById('submit');
+      const spinner = document.getElementById('spinner');
+      const buttonText = document.getElementById('button-text');
+      const paymentMessage = document.getElementById('payment-message');
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        console.log('Payment form submitted');
+        console.log('Form elements available:', {
+          submitButton: !!submitButton,
+          spinner: !!spinner,
+          buttonText: !!buttonText,
+          paymentMessage: !!paymentMessage
+        });
+
+        // Disable the submit button to prevent repeated clicks
+        setLoading(true);
+
+        try {
+          console.log('Calling stripe.confirmSetup...');
+          const { error, setupIntent } = await stripe.confirmSetup({
+            elements,
+            confirmParams: {
+              return_url: '<%= onboarding_payment_success_path %>',
+            },
+            redirect: 'if_required'
+          });
+
+          if (error) {
+            console.error('Stripe payment error:', error);
+            showMessage(error.message);
+            setLoading(false);
+          } else {
+            console.log('Stripe payment initiated successfully');
+            console.log('Setup Intent status:', setupIntent.status);
+
+            // Check if the Setup Intent was completed successfully
+            if (setupIntent.status === 'succeeded') {
+              // Payment method was saved successfully
+              showSuccess('¡Método de pago guardado exitosamente! Redirigiendo...');
+              // Redirect to success page after a short delay
+              setTimeout(() => {
+                window.location.href = '<%= onboarding_payment_success_path %>';
+              }, 2000);
+            } else if (setupIntent.status === 'requires_action') {
+              // 3D Secure or other authentication required
+              showSuccess('Procesando autenticación adicional...');
+              // Stripe will handle the redirect automatically
+            } else {
+              // Other status - show success message
+              showSuccess('¡Procesando pago! Por favor espere...');
+            }
+          }
+        } catch (err) {
+          console.error('Unexpected error during payment:', err);
+          showMessage('Error procesando el pago. Por favor intente nuevamente.');
+          setLoading(false);
+        }
+      });
+
+      function showMessage(messageText, isSuccess = false) {
+        paymentMessage.classList.remove("hidden");
+        paymentMessage.textContent = messageText;
+
+        // Set appropriate styling based on message type
+        if (isSuccess) {
+          paymentMessage.style.color = '#10b981';
+          paymentMessage.style.backgroundColor = '#f0fdf4';
+          paymentMessage.style.border = '1px solid #10b981';
+        } else {
+          paymentMessage.style.color = '#ef4444';
+          paymentMessage.style.backgroundColor = '#fef2f2';
+          paymentMessage.style.border = '1px solid #ef4444';
+        }
+
+        setTimeout(function() {
+          paymentMessage.classList.add("hidden");
+          paymentMessage.textContent = "";
+          // Reset styles
+          paymentMessage.style.color = '';
+          paymentMessage.style.backgroundColor = '';
+          paymentMessage.style.border = '';
+        }, 4000);
+      }
+
+      function showSuccess(messageText) {
+        showMessage(messageText, true);
+      }
+
+      function showError(messageText) {
+        showMessage(messageText, false);
+      }
+
+      function setLoading(isLoading) {
+        if (isLoading) {
+          submitButton.disabled = true;
+          spinner.classList.remove("hidden");
+          buttonText.classList.add("hidden");
+        } else {
+          submitButton.disabled = false;
+          spinner.classList.add("hidden");
+          buttonText.classList.remove("hidden");
+        }
+      }
+    }
+
+    // Initialize immediately when script loads
+    document.addEventListener('DOMContentLoaded', initializeStripePayment);
+
+    // Re-initialize on Turbo navigation
+    document.addEventListener('turbo:load', initializeStripePayment);
+  </script>
+
+  <style>
+    #payment-form .spinner,
+    #payment-form .spinner:before,
+    #payment-form .spinner:after {
+      border-radius: 50%;
+    }
+    #payment-form .spinner {
+      color: #ffffff;
+      font-size: 22px;
+      text-indent: -99999px;
+      margin: 0px auto;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      box-shadow: inset 0 0 0 2px;
+      -webkit-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+    #payment-form .spinner:before,
+    #payment-form .spinner:after {
+      position: absolute;
+      content: "";
+    }
+    #payment-form .spinner:before {
+      width: 10.4px;
+      height: 20.4px;
+      background: #3b82f6;
+      border-radius: 20.4px 0 0 20.4px;
+      top: -0.2px;
+      left: -0.2px;
+      -webkit-transform-origin: 10.4px 10.2px;
+      transform-origin: 10.4px 10.2px;
+      -webkit-animation: loading 2s infinite ease 1.5s;
+      animation: loading 2s infinite ease 1.5s;
+    }
+    #payment-form .spinner:after {
+      width: 10.4px;
+      height: 10.2px;
+      background: #3b82f6;
+      border-radius: 0 10.2px 10.2px 0;
+      top: -0.1px;
+      left: 10.2px;
+      -webkit-transform-origin: 0px 10.2px;
+      transform-origin: 0px 10.2px;
+      -webkit-animation: loading 2s infinite ease;
+      animation: loading 2s infinite ease;
+    }
+
+    @-webkit-keyframes loading {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes loading {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    #payment-message {
+      color: rgb(105, 115, 134);
+      font-size: 16px;
+      line-height: 20px;
+      padding: 12px 16px;
+      text-align: center;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-weight: 500;
+    }
+
+    #payment-element {
+      margin-bottom: 24px;
+    }
+  </style>
+<% end %>

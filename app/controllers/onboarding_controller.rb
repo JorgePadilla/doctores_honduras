@@ -9,36 +9,109 @@ class OnboardingController < ApplicationController
   end
 
   def plan_confirmation
-    @plan = SubscriptionPlan.find_by(id: params[:plan_id])
+    # Handle both POST and GET requests
+    if request.post?
+      # POST request - process plan selection and create Stripe Setup Intent
+      @plan = SubscriptionPlan.find_by(id: params[:plan_id])
 
-    if @plan.nil?
-      redirect_to onboarding_plan_selection_path, alert: "Por favor seleccione un plan válido."
-      return
+      if @plan.nil?
+        redirect_to onboarding_plan_selection_path, alert: "Por favor seleccione un plan válido."
+        return
+      end
+
+      # Determine profile type based on plan name
+      profile_type = if @plan.name.downcase.include?('gratuito') || @plan.price == 0
+                       'viewer'
+                     elsif @plan.name.downcase.include?('hospital')
+                       'hospital'
+                     elsif @plan.name.downcase.include?('proveedor') || @plan.name.downcase.include?('provider')
+                       'provider'
+                     else
+                       'doctor'
+                     end
+
+      # Store the selected plan and profile type in the session
+      session[:selected_plan_id] = @plan.id
+      session[:profile_type] = profile_type
+
+      # Update user's profile type
+      current_user.update(profile_type: profile_type)
+
+      # For free plans, complete onboarding immediately
+      if @plan.price == 0
+        current_user.update(onboarding_completed: true)
+        redirect_to doctors_path
+        return
+      end
+
+      # For paid plans, create Stripe subscription and show payment form
+      begin
+        # Update existing subscription or create new one
+        subscription = current_user.subscription || current_user.build_subscription
+        subscription.subscription_plan = @plan
+        subscription.plan_name = @plan.name
+
+        Rails.logger.info("Attempting to save/update subscription for plan: #{@plan.name}, user: #{current_user.id}")
+
+        if subscription.save
+          Rails.logger.info("Subscription saved/updated successfully for plan: #{@plan.name}")
+        else
+          Rails.logger.error("Failed to save/update subscription: #{subscription.errors.full_messages.join(', ')}")
+          raise "Failed to save/update subscription: #{subscription.errors.full_messages.join(', ')}"
+        end
+
+        Rails.logger.info("Creating Stripe subscription for plan: #{@plan.name}, price: #{@plan.price}")
+
+        # Create Stripe Setup Intent and get client secret
+        client_secret = subscription.create_stripe_subscription
+
+        Rails.logger.info("Stripe Setup Intent created, client_secret present: #{client_secret.present?}")
+
+        session[:payment_client_secret] = client_secret if client_secret
+
+        # Show plan confirmation page with embedded Stripe form
+        # The view will handle displaying the payment form
+        render :plan_confirmation
+        return
+
+      rescue => e
+        Rails.logger.error("Error creating Stripe subscription: #{e.message}")
+        Rails.logger.error(e.backtrace.join("\n"))
+        redirect_to onboarding_plan_selection_path, alert: "Error al procesar el pago. Por favor intente nuevamente."
+        return
+      end
+    else
+      # GET request - show plan confirmation page if valid session exists
+      @plan = SubscriptionPlan.find_by(id: session[:selected_plan_id])
+
+      if @plan.nil? || session[:payment_client_secret].blank?
+        redirect_to onboarding_plan_selection_path, alert: "Por favor seleccione un plan primero."
+        return
+      end
+
+      # Show plan confirmation page with existing Stripe data
+      render :plan_confirmation
     end
+  end
 
-    # Determine profile type based on plan name
-    profile_type = if @plan.name.downcase.include?('gratuito') || @plan.price == 0
-                     'viewer'
-                   elsif @plan.name.downcase.include?('hospital')
-                     'hospital'
-                   elsif @plan.name.downcase.include?('proveedor') || @plan.name.downcase.include?('provider')
-                     'provider'
-                   else
-                     'doctor'
-                   end
+  def payment_success
+    # Check if subscription is active (payment was successful via webhook)
+    subscription = current_user.subscription
 
-    # Store the selected plan and profile type in the session
-    session[:selected_plan_id] = @plan.id
-    session[:profile_type] = profile_type
-
-    # Update user's profile type
-    current_user.update(profile_type: profile_type)
-
-    # For viewer profile type (free plan), complete onboarding and redirect to doctors index
-    if profile_type == 'viewer'
+    if subscription&.active?
+      # Payment was successful, mark onboarding as completed
       current_user.update(onboarding_completed: true)
-      redirect_to doctors_path
-      return
+
+      # Clear payment session data
+      session.delete(:payment_client_secret)
+
+      flash[:success] = "¡Pago exitoso! Bienvenido a su cuenta."
+      redirect_to dashboard_path
+    else
+      # Payment might still be processing or failed
+      # Show a waiting page or redirect to profile setup
+      @plan = SubscriptionPlan.find(session[:selected_plan_id])
+      render :payment_pending
     end
   end
 

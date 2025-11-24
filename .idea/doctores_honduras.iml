@@ -62,10 +62,12 @@
     <orderEntry type="library" scope="PROVIDED" name="connection_pool (v2.5.3, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="crass (v1.0.6, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="date (v3.4.1, asdf: 3.3.9) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="debug (v1.10.0, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="debug (v1.11.0, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="dotenv (v3.1.8, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dotenv-rails (v3.1.8, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="drb (v2.2.1, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ed25519 (v1.4.0, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="erb (v5.0.1, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubi (v1.13.1, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="et-orbi (v1.2.11, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="fugit (v1.11.1, asdf: 3.3.9) [gem]" level="application" />
@@ -120,7 +122,7 @@
     <orderEntry type="library" scope="PROVIDED" name="railties (v8.0.2, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rainbow (v3.1.1, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rake (v13.2.1, asdf: 3.3.9) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rdoc (v6.13.1, asdf: 3.3.9) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rdoc (v6.14.0, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="regexp_parser (v2.10.0, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="reline (v0.6.1, asdf: 3.3.9) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rexml (v3.4.1, asdf: 3.3.9) [gem]" level="application" />

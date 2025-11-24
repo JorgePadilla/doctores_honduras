@@ -71,3 +71,5 @@ gem "stripe", "~> 9.0"
 
 # AWS S3 for Active Storage
 gem "aws-sdk-s3", require: false
+
+gem "dotenv-rails", "~> 3.1"

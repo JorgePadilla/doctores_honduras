@@ -111,6 +111,8 @@ class StripeController < ApplicationController
 
     # Handle the event
     case event.type
+    when "setup_intent.succeeded"
+      handle_setup_intent_succeeded(event.data.object)
     when "checkout.session.completed"
       handle_checkout_session_completed(event.data.object)
     when "invoice.paid"
@@ -165,6 +167,12 @@ class StripeController < ApplicationController
       current_period_end: Time.at(stripe_subscription.current_period_end)
     )
 
+    # Mark user onboarding as completed if not already
+    user = subscription.user
+    unless user.onboarding_completed?
+      user.update(onboarding_completed: true)
+    end
+
     # Create payment history if the model exists
     if defined?(PaymentHistory) && subscription.user
       subscription.user.payment_histories.create!(
@@ -188,6 +196,29 @@ class StripeController < ApplicationController
     subscription.update(status: "past_due")
 
     # Notify the user (you could send an email here)
+  end
+
+  def handle_setup_intent_succeeded(setup_intent)
+    # Find the subscription by user ID from metadata
+    user_id = setup_intent.metadata['user_id']
+    plan_id = setup_intent.metadata['plan_id']
+
+    return unless user_id && plan_id
+
+    user = User.find_by(id: user_id)
+    return unless user
+
+    subscription = user.subscription
+    return unless subscription
+
+    # Complete the subscription creation with the payment method
+    payment_method_id = setup_intent.payment_method
+    if payment_method_id
+      subscription.complete_stripe_subscription(payment_method_id)
+      Rails.logger.info("Subscription completed for user: #{user_id} with payment method: #{payment_method_id}")
+    else
+      Rails.logger.error("No payment method found in setup intent: #{setup_intent.id}")
+    end
   end
 
   def handle_subscription_deleted(stripe_subscription)

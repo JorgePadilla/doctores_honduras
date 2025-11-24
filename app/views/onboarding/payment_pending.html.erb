@@ -1,0 +1,25 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Procesando Pago</h1>
+    <p class="text-lg text-gray-600">Estamos verificando el estado de su pago</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 mb-8">
+    <div class="p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+      <h3 class="text-xl font-bold mb-2"><%= @plan.name %></h3>
+      <p class="text-2xl font-bold"><%= @plan.price_in_dollars %> <span class="text-sm font-normal">/ <%= @plan.interval_display %></span></p>
+    </div>
+    <div class="p-6">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+        <p class="text-gray-700 mb-4">Su pago está siendo procesado. Esto puede tomar unos momentos.</p>
+        <p class="text-sm text-gray-500 mb-6">Una vez que el pago sea confirmado, tendrá acceso completo a la plataforma.</p>
+
+        <div class="flex justify-center space-x-4">
+          <%= link_to "Revisar Estado", onboarding_payment_success_path, class: "py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          <%= link_to "Volver al Inicio", root_path, class: "py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

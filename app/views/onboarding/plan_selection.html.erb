@@ -4,9 +4,10 @@
   <div class="text-center mb-10">
     <h1 class="text-3xl font-bold text-gray-800 mb-2">Seleccione su Plan</h1>
     <p class="text-lg text-gray-600">Elija el plan que mejor se adapte a sus necesidades</p>
+
   </div>
 
-  <%= form_with url: onboarding_plan_confirmation_path, method: :post, class: "space-y-6" do |f| %>
+  <%= form_with url: onboarding_plan_confirmation_path, method: :post, class: "space-y-6", data: { turbo: false } do |f| %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
       <% @subscription_plans.each do |plan| %>
         <label class="cursor-pointer">
@@ -49,8 +50,8 @@
   <% end %>
 
   <script>
-    // Use DOMContentLoaded to ensure the DOM is fully loaded
-    document.addEventListener('DOMContentLoaded', function() {
+    // Handle both initial load and Turbo navigation
+    function initializePlanSelection() {
       console.log('Plan selection script loaded');
 
       const radioButtons = document.querySelectorAll('input[name="plan_id"]');
@@ -95,23 +96,24 @@
             planContent.style.backgroundColor = '#f0f9ff';
             planContent.classList.remove('bg-gray-50');
 
-            // Apply menu bar blue styling to features
+            // Apply green checkmark styling to features
             featureIcons.forEach(icon => {
-              icon.style.color = '#00bfff';
+              icon.style.color = '#10b981';
               icon.classList.remove('text-gray-500');
             });
             featureTexts.forEach(text => {
-              text.style.color = '#006699';
+              text.style.color = '#000000';
               text.classList.remove('text-gray-700');
             });
 
-            // Apply menu bar blue styling to description
-            planDescription.style.backgroundColor = '#e6f7ff';
+            // Apply white background to description with blue border
+            planDescription.style.backgroundColor = '#ffffff';
             planDescription.style.borderColor = '#00bfff';
             planDescription.classList.remove('bg-gray-100', 'border-gray-200');
-            descriptionTitle.style.color = '#006699';
+            descriptionTitle.style.color = '#000000';
+            descriptionTitle.classList.add('font-bold');
             descriptionTitle.classList.remove('text-gray-700');
-            descriptionText.style.color = '#0088cc';
+            descriptionText.style.color = '#000000';
             descriptionText.classList.remove('text-gray-600');
           } else {
             // Unselected card - gray theme
@@ -146,6 +148,7 @@
             planDescription.style.borderColor = '';
             planDescription.classList.add('bg-gray-100', 'border-gray-200');
             descriptionTitle.style.color = '';
+            descriptionTitle.classList.remove('font-bold');
             descriptionTitle.classList.add('text-gray-700');
             descriptionText.style.color = '';
             descriptionText.classList.add('text-gray-600');
@@ -174,6 +177,12 @@
 
       // Initialize card styles immediately
       updateCardStyles();
-    });
+    }
+
+    // Initialize on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', initializePlanSelection);
+
+    // Re-initialize on Turbo navigation
+    document.addEventListener('turbo:load', initializePlanSelection);
   </script>
 </div>

@@ -29,29 +29,71 @@ class Subscription < ApplicationRecord
   # Stripe integration methods
   def create_stripe_subscription
     return if stripe_subscription_id.present?
-    
+
+    Rails.logger.info("Starting Stripe subscription creation for plan: #{subscription_plan&.name}")
+
+    # Ensure Stripe product and price exist
+    if subscription_plan.stripe_price_id.blank?
+      Rails.logger.info("Creating Stripe product for plan: #{subscription_plan.name}")
+      subscription_plan.create_or_update_stripe_product
+    else
+      Rails.logger.info("Stripe product already exists for plan: #{subscription_plan.name}")
+    end
+
     # Create or retrieve Stripe customer
     customer = find_or_create_stripe_customer
-    
-    # Create Stripe subscription
-    stripe_subscription = Stripe::Subscription.create({
+    Rails.logger.info("Stripe customer: #{customer.id}")
+
+    # Create a Setup Intent to collect payment method
+    setup_intent = Stripe::SetupIntent.create({
       customer: customer.id,
+      payment_method_types: ['card'],
+      usage: 'off_session',
+      metadata: {
+        user_id: user.id,
+        plan_id: subscription_plan.id
+      }
+    })
+
+    Rails.logger.info("Setup Intent created: #{setup_intent.id}, status: #{setup_intent.status}")
+
+    # Return the Setup Intent client secret for frontend
+    setup_intent.client_secret
+  end
+
+  def complete_stripe_subscription(payment_method_id)
+    return unless stripe_customer_id.present?
+
+    # Attach payment method to customer
+    Stripe::PaymentMethod.attach(
+      payment_method_id,
+      { customer: stripe_customer_id }
+    )
+
+    # Set as default payment method
+    Stripe::Customer.update(
+      stripe_customer_id,
+      { invoice_settings: { default_payment_method: payment_method_id } }
+    )
+
+    # Now create the subscription
+    stripe_subscription = Stripe::Subscription.create({
+      customer: stripe_customer_id,
       items: [{ price: subscription_plan.stripe_price_id }],
       expand: ['latest_invoice.payment_intent'],
     })
-    
+
     # Update subscription with Stripe data
     update(
       stripe_subscription_id: stripe_subscription.id,
-      stripe_customer_id: customer.id,
       status: stripe_subscription.status,
       current_period_start: Time.at(stripe_subscription.current_period_start),
       current_period_end: Time.at(stripe_subscription.current_period_end)
     )
-    
-    # Return client secret for payment confirmation
+
+    # Return client secret if needed for immediate payment
     if stripe_subscription.latest_invoice.payment_intent
-      return stripe_subscription.latest_invoice.payment_intent.client_secret
+      stripe_subscription.latest_invoice.payment_intent.client_secret
     end
   end
   
@@ -94,12 +136,19 @@ class Subscription < ApplicationRecord
       # Return existing customer
       Stripe::Customer.retrieve(stripe_customer_id)
     else
-      # Create new customer
-      Stripe::Customer.create({
+      # Create new customer - use email as name
+      customer_data = {
         email: user.email,
-        name: user.name,
+        name: user.email,  # Use email as name since User model doesn't have name attribute
         metadata: { user_id: user.id }
-      })
+      }
+
+      customer = Stripe::Customer.create(customer_data)
+
+      # Save the Stripe customer ID
+      update(stripe_customer_id: customer.id)
+
+      customer
     end
   end
 end
