@@ -68,3 +68,6 @@ gem "tailwindcss-rails", "~> 4.2"
 
 # Payment processing with Stripe
 gem "stripe", "~> 9.0"
+
+# AWS S3 for Active Storage
+gem "aws-sdk-s3", require: false
