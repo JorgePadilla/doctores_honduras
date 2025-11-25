@@ -78,7 +78,8 @@ class ProfilesController < ApplicationController
       :image_url,
       :specialty_id,
       :department_id,
-      :city_id
+      :city_id,
+      :image_file
     )
   end
 end
