@@ -297,8 +297,8 @@
             <% @recent_doctors.each do |doctor| %>
               <div class="flex items-center justify-between py-2 border-b border-gray-100">
                 <div class="flex items-center">
-                  <% if doctor.image.attached? %>
-                    <%= image_tag doctor.image, class: "w-8 h-8 rounded-full object-cover" %>
+                  <% if doctor.image_url.present? %>
+                    <%= img src="<%= doctor.image_url %>", class: "w-8 h-8 rounded-full object-cover" %>
                   <% else %>
                     <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                       <span class="text-sm font-medium text-gray-700"><%= doctor.name[0].upcase %></span>

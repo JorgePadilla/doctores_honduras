@@ -75,7 +75,7 @@ class ProfilesController < ApplicationController
       :description,
       :website,
       :medical_license,
-      :image,
+      :image_url,
       :specialty_id,
       :department_id,
       :city_id

@@ -73,8 +73,8 @@
                   <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
-                        <% if doctor.image.attached? %>
-                          <%= image_tag doctor.image, class: "w-10 h-10 rounded-full object-cover" %>
+                        <% if doctor.image_url.present? %>
+                          <img src="<%= doctor.image_url %>" alt="<%= doctor.name %>" class="w-10 h-10 rounded-full object-cover" />
                         <% else %>
                           <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                             <span class="text-sm font-medium text-gray-700"><%= doctor.name[0].upcase %></span>

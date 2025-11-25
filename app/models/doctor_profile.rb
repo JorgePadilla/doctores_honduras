@@ -10,7 +10,6 @@ class DoctorProfile < ApplicationRecord
   has_many :services, through: :doctor_services
 
   # Direct S3 URL for profile image
-  attribute :image_url, :string
 
   validates :name, presence: true
   validates :department_id, presence: true

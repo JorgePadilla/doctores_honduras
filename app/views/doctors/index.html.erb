@@ -35,8 +35,8 @@
       <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-8 transition-all hover:shadow-lg" style="border-color: #38bdf8;">
         <div class="flex flex-col md:flex-row">
           <div class="md:w-1/4 p-4">
-            <% if doctor.image.attached? %>
-              <%= image_tag doctor.image, alt: doctor.name, class: "w-full h-auto rounded-lg object-cover" %>
+            <% if doctor.image_url.present? %>
+              <%= img src="<%= doctor.image_url %>", alt: doctor.name, class: "w-full h-auto rounded-lg object-cover" %>
             <% else %>
               <div class="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                 <span class="text-gray-500">Sin imagen</span>
