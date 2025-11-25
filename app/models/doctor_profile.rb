@@ -9,28 +9,23 @@ class DoctorProfile < ApplicationRecord
   has_many :doctor_services, dependent: :destroy
   has_many :services, through: :doctor_services
 
-  # ActiveStorage attachment for profile image
-  has_one_attached :image
+  # Direct S3 URL for profile image
+  attribute :image_url, :string
 
   validates :name, presence: true
   validates :department_id, presence: true
   validates :city_id, presence: true
 
-  # Validate image file type and size
-  validate :acceptable_image
+  # Validate image URL format
+  validate :valid_image_url
 
   private
 
-  def acceptable_image
-    return unless image.attached?
+  def valid_image_url
+    return if image_url.blank?
 
-    unless image.blob.byte_size <= 5.megabyte
-      errors.add(:image, "es demasiado grande (máximo 5MB)")
-    end
-
-    acceptable_types = [ "image/jpeg", "image/png", "image/jpg", "image/gif" ]
-    unless acceptable_types.include?(image.content_type)
-      errors.add(:image, "debe ser JPEG, PNG o GIF")
+    unless image_url =~ URI::DEFAULT_PARSER.make_regexp
+      errors.add(:image_url, "debe ser una URL válida")
     end
   end
 end
