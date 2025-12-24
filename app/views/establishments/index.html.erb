@@ -1,0 +1,98 @@
+<div class="container mx-auto px-4 py-8">
+  <header class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-primary-700 mb-4"><%= t('establishments.title') %></h1>
+    <p class="text-xl text-gray-600">Encuentra los mejores centros médicos en Honduras</p>
+  </header>
+
+  <div class="max-w-5xl mx-auto mb-8">
+    <div class="bg-white rounded-full shadow-md p-2 transition-all hover:shadow-lg">
+      <form action="<%= establishments_path %>" method="get" class="flex items-center">
+        <div class="flex-grow pl-4">
+          <input type="text" name="q" value="<%= params[:q] %>" placeholder="<%= t('common.search') %>..." class="w-full py-3 px-2 text-gray-700 focus:outline-none" style="background: transparent;">
+        </div>
+        <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105" style="background-color: #00bfff;">
+          <%= t('common.search') %>
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="max-w-5xl mx-auto mb-8 flex flex-col md:flex-row gap-8">
+    <!-- Filters sidebar -->
+    <div class="md:w-1/4">
+      <%= render 'shared/establishment_filters' %>
+    </div>
+    
+    <!-- Main content -->
+    <div class="md:w-3/4">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-primary-600">Resultados</h2>
+      </div>
+      <%= turbo_frame_tag "establishments-list" do %>
+      <div class="grid md:grid-cols-1 gap-8">
+    <% @establishments.each do |establishment| %>
+      <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-8 transition-all hover:shadow-lg" style="border-color: #00bfff;">
+        <div class="flex flex-col md:flex-row">
+          <div class="md:w-1/4 p-4 flex items-center justify-center">
+            <% if establishment.logo_url.present? %>
+              <div class="w-full h-32 flex items-center justify-center overflow-hidden bg-white rounded-lg shadow-md p-2 border border-gray-100 transition-all hover:shadow-lg">
+                <img src="<%= establishment.logo_url %>" alt="<%= establishment.name %>" class="max-w-full max-h-full object-contain">
+              </div>
+            <% else %>
+              <div class="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center shadow-md">
+                <span class="text-gray-500">Sin logo</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="md:w-3/4 p-4">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-start">
+              <div>
+                <h2 class="text-xl font-semibold mb-2" style="color: #00bfff;"><%= establishment.name %></h2>
+                <p class="text-gray-700 mb-1"><%= establishment.est_type %></p>
+                <div class="mt-2">
+                  <p class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-2"></i><%= establishment.address %></p>
+                  <% if establishment.phone.present? %>
+                    <p class="text-gray-600 text-sm"><i class="fas fa-phone mr-2"></i><%= establishment.phone %></p>
+                  <% end %>
+                  <% if establishment.map_link.present? %>
+                    <p class="text-gray-600 text-sm">
+                      <i class="fas fa-map mr-2"></i>
+                      <a href="<%= establishment.map_link %>" target="_blank" class="text-blue-500 hover:underline">Ver en mapa</a>
+                    </p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4 text-right">
+              <%= link_to establishment_path(establishment), class: "inline-flex items-center px-5 py-2.5 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg transform hover:scale-105", style: "background-color: #00bfff;", data: { turbo: false } do %>
+                <span class="text-sm"><%= t('establishments.view_details') %></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if @establishments.empty? %>
+      <div class="bg-white rounded-xl shadow-md p-8 text-center">
+        <p class="text-gray-600 text-lg"><%= t('establishments.no_establishments') %></p>
+      </div>
+    <% end %>
+    
+    <!-- Pagination controls -->
+    <% if @total_pages > 1 %>
+      <div class="mt-10 mb-6 flex justify-center">
+        <nav class="shadow-sm rounded-lg" aria-label="Pagination">
+          <%= pagination_links(@page, @total_pages, { q: params[:q], specialty_id: params[:specialty_id], service_id: params[:service_id] }) %>
+        </nav>
+      </div>
+    <% end %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>

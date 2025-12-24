@@ -1,18 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title>DoctoresHonduras</title>
+    <title><%= content_for(:title) || "Doctores Honduras - #{t('navigation.doctors')} #{t('navigation.establishments')}" %></title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<%= content_for(:meta_description) || 'Directorio de médicos y establecimientos de salud en Honduras. Encuentra especialistas, hospitales y clínicas cerca de ti.' %>">
+    <meta name="keywords" content="<%= content_for(:meta_keywords) || 'médicos, doctores, hospitales, clínicas, salud, Honduras, especialistas' %>">
+    <meta name="author" content="Doctores Honduras">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:title" content="<%= content_for(:title) || 'Doctores Honduras' %>">
+    <meta property="og:description" content="<%= content_for(:meta_description) || 'Directorio de médicos y establecimientos de salud en Honduras' %>">
+    <meta property="og:image" content="<%= content_for(:og_image) || asset_path('og-image.jpg') %>">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<%= request.original_url %>">
+    <meta property="twitter:title" content="<%= content_for(:title) || 'Doctores Honduras' %>">
+    <meta property="twitter:description" content="<%= content_for(:meta_description) || 'Directorio de médicos y establecimientos de salud en Honduras' %>">
+    <meta property="twitter:image" content="<%= content_for(:og_image) || asset_path('og-image.jpg') %>">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<%= content_for(:canonical_url) || request.original_url %>">
+    
+    <!-- Alternate language versions -->
+    <link rel="alternate" hreflang="es" href="<%= url_for(locale: :es) %>">
+    <link rel="alternate" hreflang="en" href="<%= url_for(locale: :en) %>">
+    <link rel="alternate" hreflang="x-default" href="<%= url_for(locale: :es) %>">
+    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Include Tailwind CSS %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="min-h-screen bg-gray-50">
+    <%= render "shared/navbar" %>
+    
+    <% if flash.any? %>
+      <div class="container mx-auto px-4 mt-4">
+        <% flash.each do |type, message| %>
+          <%
+            alert_config = {
+              'notice' => {
+                bg: 'bg-blue-50',
+                text: 'text-blue-800',
+                border: 'border-blue-200',
+                icon: 'text-blue-400',
+                icon_path: 'M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+              },
+              'alert' => {
+                bg: 'bg-red-50',
+                text: 'text-red-800',
+                border: 'border-red-200',
+                icon: 'text-red-400',
+                icon_path: 'M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
+              },
+              'success' => {
+                bg: 'bg-green-50',
+                text: 'text-green-800',
+                border: 'border-green-200',
+                icon: 'text-green-400',
+                icon_path: 'M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+              }
+            }
+
+            config = alert_config[type] || alert_config['notice']
+          %>
+          <div class="<%= config[:bg] %> <%= config[:text] %> <%= config[:border] %> px-4 py-3 rounded-lg border mb-4 flex items-center shadow-lg" data-controller="flash" data-flash-target="message">
+            <svg class="h-5 w-5 <%= config[:icon] %> mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="<%= config[:icon_path] %>" clip-rule="evenodd"></path>
+            </svg>
+            <div class="flex-1"><%= message %></div>
+            <button class="<%= config[:text] %> hover:opacity-70 transition-opacity duration-200 focus:outline-none ml-4" data-action="click->flash#dismiss">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <main class="container mx-auto px-4 py-8">
       <%= yield %>
     </main>
   </body>

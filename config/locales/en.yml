@@ -29,3 +29,111 @@
 
 en:
   hello: "Hello world"
+  
+  # Common terms
+  common:
+    search: "Search"
+    filter: "Filter"
+    view: "View"
+    edit: "Edit"
+    delete: "Delete"
+    back: "Back"
+    save: "Save"
+    cancel: "Cancel"
+    confirm: "Confirm"
+    loading: "Loading..."
+    no_results: "No results found"
+    
+  # Navigation
+  navigation:
+    home: "Home"
+    doctors: "Doctors"
+    establishments: "Hospitals and Clinics"
+    suppliers: "Suppliers"
+    products: "Products"
+    dashboard: "Dashboard"
+    settings: "Settings"
+    logout: "Log Out"
+    login: "Log In"
+    signup: "Sign Up"
+    
+  # Doctor profiles
+  doctors:
+    title: "Doctor Directory"
+    specialization: "Specialization"
+    location: "Location"
+    contact: "Contact"
+    profile: "Doctor Profile"
+    establishments: "Practices at"
+    no_doctors: "No doctors found matching your search criteria"
+    
+  # Establishments
+  establishments:
+    title: "Hospitals and Clinics"
+    type: "Type"
+    view_details: "VIEW DETAILS"
+    address: "Address"
+    phone: "Phone"
+    services: "Services"
+    specialties: "Specialties"
+    doctors: "Doctors practicing here"
+    no_establishments: "No establishments found matching your search criteria"
+    filters:
+      title: "Filter Results"
+      specialty: "Specialty"
+      service: "Service"
+      all_specialties: "All specialties"
+      all_services: "All services"
+      apply: "Apply Filters"
+      clear: "Clear Filters"
+    
+  # User account
+  users:
+    login: "Log In"
+    signup: "Sign Up"
+    email: "Email"
+    password: "Password"
+    password_confirmation: "Confirm Password"
+    forgot_password: "Forgot your password?"
+    reset_password: "Reset Password"
+    
+  # Settings
+  settings:
+    title: "Settings"
+    account: "Account"
+    subscription: "Subscription"
+    notifications: "Notifications"
+    security: "Security"
+    language: "Language"
+    
+  # Subscriptions
+  subscriptions:
+    free: "Free"
+    basic: "Basic"
+    premium: "Premium"
+    current_plan: "Current Plan"
+    upgrade: "Upgrade Plan"
+    downgrade: "Downgrade Plan"
+    
+  # Time and dates
+  time:
+    formats:
+      default: "%m/%d/%Y %H:%M"
+      short: "%b %d %H:%M"
+      long: "%B %d, %Y at %H:%M"
+  date:
+    formats:
+      default: "%m/%d/%Y"
+      short: "%b %d"
+      long: "%B %d, %Y"
+    day_names: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+    abbr_day_names: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+    month_names: [~, January, February, March, April, May, June, July, August, September, October, November, December]
+    abbr_month_names: [~, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+    
+  # Flash messages
+  flash:
+    success: "Operation completed successfully"
+    error: "An error occurred"
+    login_required: "You must be logged in to access this page"
+    unauthorized: "You are not authorized to access this page"
