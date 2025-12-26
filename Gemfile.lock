@@ -174,6 +174,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
+    method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.5)
     msgpack (1.8.0)
@@ -229,6 +230,8 @@ GEM
     public_suffix (6.0.2)
     puma (6.6.0)
       nio4r (~> 2.0)
+    pundit (2.5.2)
+      activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.1.14)
@@ -367,6 +370,10 @@ GEM
     unicode-emoji (4.0.4)
     uri (1.0.3)
     useragent (0.16.11)
+    view_component (3.24.0)
+      activesupport (>= 5.2.0, < 8.2)
+      concurrent-ruby (~> 1)
+      method_source (~> 1.0)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -406,6 +413,7 @@ DEPENDENCIES
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
+  pundit (~> 2.5)
   rails (~> 8.0.2)
   rubocop-rails-omakase
   selenium-webdriver
@@ -418,6 +426,7 @@ DEPENDENCIES
   thruster
   turbo-rails
   tzinfo-data
+  view_component (~> 3.21)
   web-console
 
 BUNDLED WITH
