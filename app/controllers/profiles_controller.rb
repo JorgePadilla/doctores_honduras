@@ -39,6 +39,10 @@ class ProfilesController < ApplicationController
       flash[:success] = 'Perfil de doctor creado exitosamente.'
       redirect_to profile_path
     else
+      @specialties = Specialty.order(:name)
+      @subspecialties = []
+      @departments = Department.order(:name)
+      @cities = City.order(:name)
       flash.now[:alert] = 'Error al crear el perfil. Por favor verifica los campos.'
       render :new, status: :unprocessable_entity
     end
@@ -60,6 +64,10 @@ class ProfilesController < ApplicationController
       flash[:success] = 'Perfil actualizado exitosamente.'
       redirect_to profile_path
     else
+      @specialties = Specialty.order(:name)
+      @subspecialties = @doctor_profile.specialty&.subspecialties || []
+      @departments = Department.order(:name)
+      @cities = City.order(:name)
       flash.now[:alert] = 'Error al actualizar el perfil. Por favor verifica los campos.'
       render :edit, status: :unprocessable_entity
     end
