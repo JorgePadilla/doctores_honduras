@@ -9,6 +9,7 @@ Built with Rails 8, PostgreSQL, Tailwind CSS, Stripe, and AWS S3.
 - [Local Development Setup](setup.md) -- Ruby, Postgres, env vars, seeds, tests
 - [Architecture](architecture.md) -- Models, controllers, services, auth system
 - [Database Schema](database.md) -- All tables, columns, and relationships
+- [Subscription Plans](subscription-plans.md) -- Plan tiers, pricing, Stripe integration
 - [Deployment](deployment.md) -- Railway + Docker, env vars, S3 bucket policy
 
 ## Key Concepts
