@@ -13,7 +13,13 @@ class SettingsController < ApplicationController
   def subscription
     @user = Current.user
     @subscription = @user.subscription
-    @plans = SubscriptionPlan.all
+    # Show plans relevant to the user's profile type
+    plan_profile = @user.profile_type == "clinic" ? "hospital" : @user.profile_type
+    if plan_profile.present?
+      @plans = SubscriptionPlan.for_profile_type(plan_profile).ordered
+    else
+      @plans = SubscriptionPlan.where(profile_type: nil).or(SubscriptionPlan.where(profile_type: ""))
+    end
   end
 
   def notifications

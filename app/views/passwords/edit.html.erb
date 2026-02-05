@@ -1,5 +1,5 @@
 <div class="max-w-md mx-auto my-12 bg-white p-8 rounded-lg shadow-lg">
-  <h1 class="text-2xl font-bold mb-6 text-center" style="color: #0369a1;">Actualizar tu contraseña</h1>
+  <h1 class="text-2xl font-bold mb-6 text-center text-sky-800">Actualizar tu contraseña</h1>
   
   <% if alert = flash[:alert] %>
     <div class="bg-red-50 text-red-700 p-4 rounded-md mb-6 border border-red-200">
@@ -20,7 +20,7 @@
     </div>
 
     <div>
-      <%= form.submit "Guardar contraseña", class: "w-full text-white py-2 px-4 rounded-md focus:outline-none transition duration-150 ease-in-out", style: "background-color: #0284c7;" %>
+      <%= form.submit "Guardar contraseña", class: "w-full bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded-md focus:outline-none transition duration-150 ease-in-out" %>
     </div>
   <% end %>
 </div>

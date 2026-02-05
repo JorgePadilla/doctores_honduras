@@ -8,6 +8,10 @@ fi
 
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  echo "[entrypoint] AWS_BUCKET=${AWS_BUCKET:-(not set)}"
+  echo "[entrypoint] AWS_REGION=${AWS_REGION:-(not set)}"
+  echo "[entrypoint] AWS_ACCESS_KEY_ID is ${AWS_ACCESS_KEY_ID:+set}${AWS_ACCESS_KEY_ID:-not set}"
+  echo "[entrypoint] AWS_SECRET_ACCESS_KEY is ${AWS_SECRET_ACCESS_KEY:+set}${AWS_SECRET_ACCESS_KEY:-not set}"
   ./bin/rails db:prepare
 fi
 

@@ -1,0 +1,25 @@
+<div class="bg-white rounded-lg shadow-md p-4">
+  <nav class="space-y-1">
+    <%
+      items = [
+        { path: settings_path, icon: "fa-cog", label: "General", key: "general" },
+        { path: settings_account_path, icon: "fa-user", label: "Cuenta", key: "account" },
+        { path: settings_subscription_path, icon: "fa-credit-card", label: "Suscripción", key: "subscription" },
+        { path: settings_notifications_path, icon: "fa-bell", label: "Notificaciones", key: "notifications" },
+        { path: settings_security_path, icon: "fa-shield-alt", label: "Seguridad", key: "security" },
+        { path: settings_language_path, icon: "fa-language", label: "Idioma", key: "language" },
+      ]
+    %>
+    <% items.each do |item| %>
+      <% if item[:key] == local_assigns[:current] %>
+        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md bg-sky-100 text-sky-700 font-medium">
+          <i class="fas <%= item[:icon] %> mr-2"></i><%= item[:label] %>
+        </a>
+      <% else %>
+        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+          <i class="fas <%= item[:icon] %> mr-2"></i><%= item[:label] %>
+        </a>
+      <% end %>
+    <% end %>
+  </nav>
+</div>

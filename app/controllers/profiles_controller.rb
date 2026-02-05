@@ -8,8 +8,11 @@ class ProfilesController < ApplicationController
       @doctor_profile = DoctorProfile.includes(:specialty, :subspecialty, :city, :department).find_by(user_id: @user.id)
       redirect_to new_profile_path unless @doctor_profile
     when 'hospital', 'clinic'
-      # Handle hospital/clinic profiles here when implemented
-      redirect_to dashboard_path
+      @establishment = @user.establishments.first
+      redirect_to dashboard_path unless @establishment
+    when 'vendor'
+      redirect_to vendor_profile_path
+      return
     else
       # If user doesn't have profile type set, allow them to create a doctor profile
       redirect_to new_profile_path

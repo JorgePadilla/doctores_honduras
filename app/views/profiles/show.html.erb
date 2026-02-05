@@ -14,7 +14,7 @@
             <% end %>
 
             <div class="mt-6">
-              <a href="<%= edit_profile_path %>" class="w-full inline-flex justify-center items-center px-4 py-2 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md" style="background-color: #38bdf8;">
+              <a href="<%= edit_profile_path %>" class="w-full inline-flex justify-center items-center px-4 py-2 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md bg-sky-500 hover:bg-sky-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                 </svg>
@@ -24,7 +24,7 @@
           </div>
 
           <div class="md:w-2/3 p-6">
-            <h1 class="text-2xl font-bold mb-2" style="color: #38bdf8;"><%= @doctor_profile.name %></h1>
+            <h1 class="text-2xl font-bold mb-2 text-sky-600"><%= @doctor_profile.name %></h1>
             <p class="text-lg text-gray-600 mb-2">Especialista en <%= @doctor_profile.specialty&.name %></p>
             <% if @doctor_profile.subspecialty.present? %>
               <p class="text-lg text-gray-600 mb-4">Subespecialidad: <%= @doctor_profile.subspecialty.name %></p>
@@ -32,19 +32,19 @@
 
             <% if @doctor_profile.description.present? %>
               <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Sobre el médico</h2>
+                <h2 class="text-xl font-semibold mb-2 text-sky-600">Sobre el médico</h2>
                 <p class="text-gray-700"><%= @doctor_profile.description %></p>
               </div>
             <% end %>
 
             <div class="mb-6">
-              <h2 class="text-xl font-semibold mb-2" style="color: #38bdf8;">Información de Contacto</h2>
+              <h2 class="text-xl font-semibold mb-2 text-sky-600">Información de Contacto</h2>
               <div class="space-y-2">
                 <p class="text-gray-700"><strong>Ubicación:</strong> <%= @doctor_profile.city&.name %>, <%= @doctor_profile.department&.name %></p>
                 <% if @doctor_profile.website.present? %>
                   <p class="text-gray-700">
                     <strong>Sitio web:</strong>
-                    <a href="<%= @doctor_profile.website %>" target="_blank" class="hover:underline" style="color: #38bdf8;"><%= @doctor_profile.website %></a>
+                    <a href="<%= @doctor_profile.website %>" target="_blank" class="hover:underline text-sky-600"><%= @doctor_profile.website %></a>
                   </p>
                 <% end %>
                 <% if @doctor_profile.medical_license.present? %>
@@ -64,7 +64,7 @@
           </svg>
           <h2 class="text-2xl font-bold text-gray-900 mb-2">No tienes un perfil creado</h2>
           <p class="text-gray-600 mb-6">Crea tu perfil de doctor para que los pacientes puedan encontrarte.</p>
-          <a href="<%= new_profile_path %>" class="inline-flex items-center px-6 py-3 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md" style="background-color: #38bdf8;">
+          <a href="<%= new_profile_path %>" class="inline-flex items-center px-6 py-3 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md bg-sky-500 hover:bg-sky-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>

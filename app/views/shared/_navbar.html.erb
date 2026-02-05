@@ -1,4 +1,4 @@
-<nav style="background-color: #00bfff;" class="text-white shadow-lg">
+<nav class="bg-sky-500 text-white shadow-lg">
   <div class="container mx-auto px-4">
     <div class="flex justify-between items-center py-4">
       <!-- Logo/Brand -->
@@ -28,9 +28,13 @@
             </button>
             <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" style="display: none;">
               <% if Current.user&.admin? %>
-                <a href="<%= admin_dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100 bg-blue-50 border-l-2 border-blue-500">Panel Admin</a>
+                <a href="<%= admin_dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100 bg-sky-50 border-l-2 border-sky-500">Panel Admin</a>
               <% end %>
               <a href="<%= profile_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Mi Perfil</a>
+              <a href="<%= dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Panel de Control</a>
+              <% if Current.user.profile_type == "vendor" %>
+                <a href="<%= vendor_products_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Mis Productos</a>
+              <% end %>
               <a href="<%= settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Configuración</a>
               <div class="border-t border-gray-200"></div>
               <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-primary-100" %>
@@ -38,7 +42,7 @@
           </div>
         <% else %>
           <a href="<%= new_session_path %>" class="text-white hover:text-primary-200 transition">Iniciar Sesión</a>
-          <a href="/signup" class="px-5 py-2 rounded-lg text-white font-medium transition-all shadow-md hover:shadow-lg" style="background-color: #00bfff; border: 2px solid white;">Registrarse</a>
+          <a href="/signup" class="px-5 py-2 rounded-lg text-white font-medium transition-all shadow-md hover:shadow-lg bg-sky-600 border-2 border-white">Registrarse</a>
         <% end %>
       </div>
       
@@ -62,16 +66,20 @@
         <div class="mt-4 pt-4 border-t border-primary-300">
           <div class="block py-2 text-white font-medium"><%= Current.user.email %></div>
           <% if Current.user&.admin? %>
-            <a href="<%= admin_dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition bg-blue-900/20 border-l-2 border-blue-400 pl-2">Panel Admin</a>
+            <a href="<%= admin_dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition bg-sky-900/20 border-l-2 border-sky-400 pl-2">Panel Admin</a>
           <% end %>
           <a href="<%= profile_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mi Perfil</a>
+          <a href="<%= dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition">Panel de Control</a>
+          <% if Current.user.profile_type == "vendor" %>
+            <a href="<%= vendor_products_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mis Productos</a>
+          <% end %>
           <a href="<%= settings_path %>" class="block py-2 text-white hover:text-primary-200 transition">Configuración</a>
           <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "block w-full text-left py-2 text-white hover:text-primary-200 transition" %>
         </div>
       <% else %>
         <div class="mt-4 pt-4 border-t border-primary-300">
           <a href="<%= new_session_path %>" class="block py-2 text-white hover:text-primary-200 transition">Iniciar Sesión</a>
-          <a href="/signup" class="inline-block mt-2 px-5 py-2 rounded-lg text-white font-medium transition-all shadow-md hover:shadow-lg" style="background-color: #00bfff; border: 1px solid white;">Registrarse</a>
+          <a href="/signup" class="inline-block mt-2 px-5 py-2 rounded-lg text-white font-medium transition-all shadow-md hover:shadow-lg bg-sky-600 border border-white">Registrarse</a>
         </div>
       <% end %>
     </div>

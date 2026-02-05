@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_04_000006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -92,6 +92,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
     t.bigint "subspecialty_id"
     t.bigint "department_id"
     t.bigint "city_id"
+    t.string "video_consultation_url"
     t.index ["city_id"], name: "index_doctor_profiles_on_city_id"
     t.index ["department_id"], name: "index_doctor_profiles_on_department_id"
     t.index ["specialty_id"], name: "index_doctor_profiles_on_specialty_id"
@@ -140,6 +141,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
     t.datetime "updated_at", null: false
     t.string "logo_url"
     t.string "building_image_url"
+    t.bigint "user_id"
+    t.bigint "department_id"
+    t.bigint "city_id"
+    t.text "description"
+    t.string "website"
+    t.string "email"
+    t.index ["user_id"], name: "index_establishments_on_user_id"
+  end
+
+  create_table "lead_contacts", force: :cascade do |t|
+    t.bigint "supplier_id", null: false
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "phone"
+    t.string "organization"
+    t.text "message"
+    t.string "status", default: "new"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["supplier_id"], name: "index_lead_contacts_on_supplier_id"
   end
 
   create_table "notification_preferences", force: :cascade do |t|
@@ -174,6 +195,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
     t.bigint "supplier_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true
+    t.boolean "featured", default: false
     t.index ["supplier_id"], name: "index_products_on_supplier_id"
   end
 
@@ -232,6 +255,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "stripe_product_id"
+    t.boolean "visible"
+    t.string "profile_type"
+    t.string "tier"
+    t.integer "position", default: 0
+    t.index ["profile_type", "tier"], name: "index_subscription_plans_on_profile_type_and_tier", unique: true
     t.index ["stripe_price_id"], name: "index_subscription_plans_on_stripe_price_id", unique: true
     t.index ["stripe_product_id"], name: "index_subscription_plans_on_stripe_product_id", unique: true
   end
@@ -273,6 +301,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
     t.string "logo_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.string "category"
+    t.string "website"
+    t.bigint "department_id"
+    t.bigint "city_id"
+    t.boolean "featured", default: false
+    t.boolean "hidden", default: false
+    t.index ["user_id"], name: "index_suppliers_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -313,6 +349,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
   add_foreign_key "establishment_services", "services"
   add_foreign_key "establishment_specialties", "establishments"
   add_foreign_key "establishment_specialties", "specialties"
+  add_foreign_key "establishments", "users"
+  add_foreign_key "lead_contacts", "suppliers"
   add_foreign_key "notification_preferences", "users"
   add_foreign_key "payment_histories", "users"
   add_foreign_key "products", "suppliers"
@@ -321,4 +359,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_135352) do
   add_foreign_key "subscriptions", "subscription_plans"
   add_foreign_key "subscriptions", "users"
   add_foreign_key "subspecialties", "specialties"
+  add_foreign_key "suppliers", "users"
 end

@@ -2,29 +2,7 @@
   <h1 class="text-3xl font-bold text-primary-700 mb-6">Configuración</h1>
   
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <!-- Sidebar Navigation -->
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <nav class="space-y-1">
-        <a href="<%= settings_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-cog mr-2"></i>General
-        </a>
-        <a href="<%= settings_account_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-user mr-2"></i>Cuenta
-        </a>
-        <a href="<%= settings_subscription_path %>" class="block px-3 py-2 rounded-md bg-primary-100 text-primary-700 font-medium">
-          <i class="fas fa-credit-card mr-2"></i>Suscripción
-        </a>
-        <a href="<%= settings_notifications_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-bell mr-2"></i>Notificaciones
-        </a>
-        <a href="<%= settings_security_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-shield-alt mr-2"></i>Seguridad
-        </a>
-        <a href="<%= settings_language_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-language mr-2"></i>Idioma
-        </a>
-      </nav>
-    </div>
+    <%= render "settings/sidebar", current: "subscription" %>
     
     <!-- Main Content -->
     <div class="md:col-span-3 bg-white rounded-lg shadow-md p-6">
@@ -68,7 +46,7 @@
             </div>
             <div class="p-4">
               <ul class="space-y-2">
-                <% plan.features.split(',').each do |feature| %>
+                <% plan.features.to_s.split(',').each do |feature| %>
                   <li class="flex items-start">
                     <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -80,7 +58,7 @@
               
               <div class="mt-4">
                 <% if @subscription&.subscription_plan_id == plan.id %>
-                  <div class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 flex items-center justify-center">
+                  <div class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 flex items-center justify-center">
                     <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -88,7 +66,7 @@
                   </div>
                 <% else %>
                   <% if plan.price > 0 %>
-                    <%= button_to stripe_checkout_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" do %>
+                    <%= button_to stripe_checkout_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 hover:bg-sky-600" do %>
                       <span class="flex items-center justify-center">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
@@ -97,7 +75,7 @@
                       </span>
                     <% end %>
                   <% else %>
-                    <%= button_to settings_subscribe_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" do %>
+                    <%= button_to settings_subscribe_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 hover:bg-sky-600" do %>
                       <span class="flex items-center justify-center">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>

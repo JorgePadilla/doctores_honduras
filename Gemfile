@@ -72,5 +72,4 @@ gem "stripe", "~> 9.0"
 # AWS S3 for Active Storage
 gem "aws-sdk-s3", require: false
 
-gem "pundit", "~> 2.5"
 gem "view_component", "~> 3.21"

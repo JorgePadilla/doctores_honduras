@@ -2,44 +2,22 @@
   <h1 class="text-3xl font-bold text-primary-700 mb-6">Completar Suscripción</h1>
   
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <!-- Sidebar Navigation -->
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <nav class="space-y-1">
-        <a href="<%= settings_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-cog mr-2"></i>General
-        </a>
-        <a href="<%= settings_account_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-user mr-2"></i>Cuenta
-        </a>
-        <a href="<%= settings_subscription_path %>" class="block px-3 py-2 rounded-md bg-primary-100 text-primary-700 font-medium">
-          <i class="fas fa-credit-card mr-2"></i>Suscripción
-        </a>
-        <a href="<%= settings_notifications_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-bell mr-2"></i>Notificaciones
-        </a>
-        <a href="<%= settings_security_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-shield-alt mr-2"></i>Seguridad
-        </a>
-        <a href="<%= settings_language_path %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-          <i class="fas fa-language mr-2"></i>Idioma
-        </a>
-      </nav>
-    </div>
+    <%= render "settings/sidebar", current: "subscription" %>
     
     <!-- Main Content -->
     <div class="md:col-span-3 bg-white rounded-lg shadow-md p-6">
       <h2 class="text-xl font-semibold mb-4">Información de Pago</h2>
       
       <!-- Plan Summary -->
-      <div class="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
-        <h3 class="text-lg font-medium mb-2 text-blue-800">Resumen de la Suscripción</h3>
+      <div class="bg-sky-50 p-4 rounded-lg mb-6 border border-sky-200">
+        <h3 class="text-lg font-medium mb-2 text-sky-800">Resumen de la Suscripción</h3>
         <div class="flex justify-between items-center">
           <div>
             <p class="text-gray-900 font-medium"><%= @plan.name %></p>
             <p class="text-gray-600 text-sm">Renovación automática mensual</p>
           </div>
-          <div class="bg-blue-100 px-4 py-2 rounded-md">
-            <p class="text-xl font-bold text-blue-800">$<%= sprintf('%.2f', @plan.price / 100.0) %>/mes</p>
+          <div class="bg-sky-100 px-4 py-2 rounded-md">
+            <p class="text-xl font-bold text-sky-800">$<%= sprintf('%.2f', @plan.price / 100.0) %>/mes</p>
           </div>
         </div>
       </div>
@@ -49,7 +27,7 @@
         <!-- Credit Card Information -->
         <div class="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
           <h3 class="text-lg font-medium mb-4 flex items-center">
-            <svg class="h-6 w-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="h-6 w-6 text-sky-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
             </svg>
             Información de Tarjeta
@@ -84,7 +62,7 @@
         <!-- Billing Information -->
         <div class="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
           <h3 class="text-lg font-medium mb-4 flex items-center">
-            <svg class="h-6 w-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="h-6 w-6 text-sky-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
             </svg>
             Información de Facturación
@@ -127,11 +105,11 @@
         <div class="bg-white p-5 border border-gray-200 rounded-lg shadow-sm">
           <div class="flex items-start">
             <div class="flex items-center h-5">
-              <%= f.check_box :terms, class: "focus:ring-primary-500 h-4 w-4 text-blue-600 border-gray-300 rounded" %>
+              <%= f.check_box :terms, class: "focus:ring-primary-500 h-4 w-4 text-sky-600 border-gray-300 rounded" %>
             </div>
             <div class="ml-3 text-sm">
               <%= f.label :terms, class: "font-medium text-gray-700" do %>
-                Acepto los <a href="#" class="text-blue-600 hover:text-blue-500">Términos y Condiciones</a> y la <a href="#" class="text-blue-600 hover:text-blue-500">Política de Privacidad</a>
+                Acepto los <a href="#" class="text-sky-600 hover:text-sky-500">Términos y Condiciones</a> y la <a href="#" class="text-sky-600 hover:text-sky-500">Política de Privacidad</a>
               <% end %>
             </div>
           </div>
@@ -146,7 +124,7 @@
                 Cancelar
               </span>
             </a>
-            <%= f.button type: "submit", class: "w-full sm:w-auto py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+            <%= f.button type: "submit", class: "w-full sm:w-auto py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" do %>
               <span class="flex items-center justify-center">
                 <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>

@@ -1,0 +1,26 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Configure su Perfil</h1>
+    <p class="text-lg text-gray-600">
+      <% if @profile_type == "doctor" %>
+        Complete la informaci&oacute;n b&aacute;sica de su perfil m&eacute;dico
+      <% elsif @profile_type == "hospital" || @profile_type == "clinic" %>
+        Complete la informaci&oacute;n b&aacute;sica de su establecimiento
+      <% elsif @profile_type == "vendor" %>
+        Complete la informaci&oacute;n b&aacute;sica de su empresa
+      <% end %>
+    </p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 mb-8">
+    <div class="p-6">
+      <% if @profile_type == "doctor" %>
+        <%= render "onboarding/doctor_basic_form", doctor_profile: @doctor_profile, specialties: @specialties, departments: @departments, cities: @cities %>
+      <% elsif @profile_type == "hospital" || @profile_type == "clinic" %>
+        <%= render "onboarding/establishment_basic_form", establishment: @establishment, departments: @departments, cities: @cities, profile_type: @profile_type %>
+      <% elsif @profile_type == "vendor" %>
+        <%= render "onboarding/vendor_basic_form", supplier: @supplier, departments: @departments, cities: @cities %>
+      <% end %>
+    </div>
+  </div>
+</div>

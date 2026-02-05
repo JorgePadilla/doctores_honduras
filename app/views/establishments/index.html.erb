@@ -10,7 +10,7 @@
         <div class="flex-grow pl-4">
           <input type="text" name="q" value="<%= params[:q] %>" placeholder="<%= t('common.search') %>..." class="w-full py-3 px-2 text-gray-700 focus:outline-none" style="background: transparent;">
         </div>
-        <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105" style="background-color: #00bfff;">
+        <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
           <%= t('common.search') %>
         </button>
       </form>
@@ -31,7 +31,7 @@
       <%= turbo_frame_tag "establishments-list" do %>
       <div class="grid md:grid-cols-1 gap-8">
     <% @establishments.each do |establishment| %>
-      <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-8 transition-all hover:shadow-lg" style="border-color: #00bfff;">
+      <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-8 transition-all hover:shadow-lg border-sky-300">
         <div class="flex flex-col md:flex-row">
           <div class="md:w-1/4 p-4 flex items-center justify-center">
             <% if establishment.logo_url.present? %>
@@ -47,7 +47,7 @@
           <div class="md:w-3/4 p-4">
             <div class="flex flex-col md:flex-row md:justify-between md:items-start">
               <div>
-                <h2 class="text-xl font-semibold mb-2" style="color: #00bfff;"><%= establishment.name %></h2>
+                <h2 class="text-xl font-semibold mb-2 text-sky-600"><%= establishment.name %></h2>
                 <p class="text-gray-700 mb-1"><%= establishment.est_type %></p>
                 <div class="mt-2">
                   <p class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-2"></i><%= establishment.address %></p>
@@ -57,7 +57,7 @@
                   <% if establishment.map_link.present? %>
                     <p class="text-gray-600 text-sm">
                       <i class="fas fa-map mr-2"></i>
-                      <a href="<%= establishment.map_link %>" target="_blank" class="text-blue-500 hover:underline">Ver en mapa</a>
+                      <a href="<%= establishment.map_link %>" target="_blank" class="text-sky-500 hover:underline">Ver en mapa</a>
                     </p>
                   <% end %>
                 </div>
@@ -65,7 +65,7 @@
             </div>
             
             <div class="mt-4 text-right">
-              <%= link_to establishment_path(establishment), class: "inline-flex items-center px-5 py-2.5 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg transform hover:scale-105", style: "background-color: #00bfff;", data: { turbo: false } do %>
+              <%= link_to establishment_path(establishment), class: "inline-flex items-center px-5 py-2.5 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600", data: { turbo: false } do %>
                 <span class="text-sm"><%= t('establishments.view_details') %></span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />

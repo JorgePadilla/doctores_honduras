@@ -12,7 +12,8 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 8 }, if: -> { password.present? }
   validates :language, inclusion: { in: %w[es en], allow_nil: true }
-  validates :profile_type, inclusion: { in: %w[doctor hospital clinic], allow_nil: true }
+  validates :profile_type, inclusion: { in: %w[doctor hospital clinic vendor], allow_nil: true }
+  has_one :supplier, dependent: :destroy
   
   # Valores predeterminados
   attribute :language, :string, default: 'es'
@@ -36,6 +37,8 @@ class User < ApplicationRecord
       doctor_profile.present? && doctor_profile.valid?
     when 'hospital', 'clinic'
       establishments.exists?
+    when 'vendor'
+      supplier.present?
     else
       false
     end

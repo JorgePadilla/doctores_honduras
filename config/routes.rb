@@ -1,17 +1,25 @@
 Rails.application.routes.draw do
   get "payments/show"
   # Onboarding flow routes
-  get 'onboarding/plan_selection', to: 'onboarding#plan_selection', as: :onboarding_plan_selection
-  post 'onboarding/plan_confirmation', to: 'onboarding#plan_confirmation', as: :onboarding_plan_confirmation
-  get 'onboarding/profile_setup', to: 'onboarding#profile_setup', as: :onboarding_profile_setup
-  post 'onboarding/profile_confirmation', to: 'onboarding#profile_confirmation', as: :onboarding_profile_confirmation
+  get "onboarding/profile_type", to: "onboarding#profile_type_selection", as: :onboarding_profile_type
+  post "onboarding/profile_type", to: "onboarding#save_profile_type", as: :onboarding_save_profile_type
+  get "onboarding/basic_info", to: "onboarding#basic_info", as: :onboarding_basic_info
+  post "onboarding/complete", to: "onboarding#complete", as: :onboarding_complete
   
   # Payment route for subscription
   get 'payment', to: 'payments#show', as: :payment
   get "products/index"
   get "products/show"
-  resources :suppliers, path: 'proveedores', only: [:index, :show] do
-    resources :products, only: [:index, :show], path: 'productos'
+  resources :suppliers, path: "proveedores", only: [ :index, :show ] do
+    resources :products, only: [ :index, :show ], path: "productos"
+    resources :lead_contacts, only: [ :new, :create ], path: "contacto"
+  end
+
+  # Vendor dashboard
+  namespace :vendor do
+    resource :profile, only: [ :show, :edit, :update ]
+    resources :products, path: "productos"
+    resources :leads, only: [ :index, :show, :update ], path: "contactos"
   end
   resource :session
   resources :passwords, param: :token

@@ -5,7 +5,7 @@
       <div class="flex justify-between items-center py-6">
         <div class="flex items-center">
           <h1 class="text-2xl font-bold text-gray-900">Gestión de Doctores</h1>
-          <span class="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Admin</span>
+          <span class="ml-2 px-2 py-1 text-xs bg-sky-100 text-sky-800 rounded-full">Admin</span>
         </div>
         <div class="text-sm text-gray-500">
           <%= Current.user.email %>
@@ -20,7 +20,7 @@
       <nav class="flex space-x-8 py-4">
         <%= link_to "Dashboard", admin_dashboard_path, class: "text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 px-1 py-2 text-sm font-medium" %>
         <%= link_to "Usuarios", admin_users_path, class: "text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 px-1 py-2 text-sm font-medium" %>
-        <%= link_to "Doctores", admin_doctors_path, class: "text-blue-600 border-b-2 border-blue-600 px-1 py-2 text-sm font-medium" %>
+        <%= link_to "Doctores", admin_doctors_path, class: "text-sky-600 border-b-2 border-sky-500 px-1 py-2 text-sm font-medium" %>
         <%= link_to "Suscripciones", admin_subscriptions_path, class: "text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 px-1 py-2 text-sm font-medium" %>
       </nav>
     </div>
@@ -46,7 +46,7 @@
           </div>
           <div class="text-center">
             <p class="text-sm font-medium text-gray-500">Con Imagen</p>
-            <p class="text-2xl font-bold text-blue-600"><%= @doctors&.joins("INNER JOIN active_storage_attachments ON active_storage_attachments.record_id = doctor_profiles.id AND active_storage_attachments.record_type = 'DoctorProfile' AND active_storage_attachments.name = 'image'")&.count || 0 %></p>
+            <p class="text-2xl font-bold text-sky-600"><%= @doctors&.joins("INNER JOIN active_storage_attachments ON active_storage_attachments.record_id = doctor_profiles.id AND active_storage_attachments.record_type = 'DoctorProfile' AND active_storage_attachments.name = 'image'")&.count || 0 %></p>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <%= form_with url: admin_toggle_doctor_visibility_path(doctor), method: :post, class: "inline-flex items-center", data: { turbo: true } do |form| %>
-                        <button type="submit" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 <%= doctor.hidden? ? 'bg-gray-200' : 'bg-blue-600' %>">
+                        <button type="submit" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 <%= doctor.hidden? ? 'bg-gray-200' : 'bg-sky-500' %>">
                           <span class="sr-only"><%= doctor.hidden? ? 'Activar' : 'Desactivar' %></span>
                           <span aria-hidden="true" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out <%= doctor.hidden? ? 'translate-x-0' : 'translate-x-5' %>"></span>
                         </button>
@@ -119,7 +119,7 @@
                           <%= doctor.hidden? ? 'Desactivado' : 'Activado' %>
                         </span>
                       <% end %>
-                      <%= link_to "Ver", doctor_path(doctor), class: "ml-4 text-blue-600 hover:text-blue-900", target: "_blank" %>
+                      <%= link_to "Ver", doctor_path(doctor), class: "ml-4 text-sky-600 hover:text-sky-900", target: "_blank" %>
                     </td>
                   </tr>
                 <% end %>

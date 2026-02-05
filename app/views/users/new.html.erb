@@ -1,5 +1,5 @@
 <div class="max-w-md mx-auto my-12 bg-white p-8 rounded-lg shadow-lg">
-  <h1 class="text-2xl font-bold mb-6 text-center" style="color: #0369a1;">Crear una cuenta</h1>
+  <h1 class="text-2xl font-bold mb-6 text-center text-sky-800">Crear una cuenta</h1>
 
   <%= form_with(model: @user, url: signup_path, class: "space-y-6") do |form| %>
     <% if @user.errors.any? %>
@@ -30,14 +30,14 @@
     </div>
 
     <div>
-      <%= form.submit "Registrarse", class: "w-full text-white py-2 px-4 rounded-md focus:outline-none transition duration-150 ease-in-out", style: "background-color: #0284c7;" %>
+      <%= form.submit "Registrarse", class: "w-full bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded-md focus:outline-none transition duration-150 ease-in-out" %>
     </div>
   <% end %>
 
   <div class="mt-6 text-center">
     <p class="text-sm text-gray-600">
       ¿Ya tienes una cuenta? 
-      <%= link_to "Iniciar sesión", new_session_path, class: "font-medium hover:underline", style: "color: #0284c7;" %>
+      <%= link_to "Iniciar sesión", new_session_path, class: "font-medium text-sky-600 hover:underline" %>
     </p>
   </div>
 </div>

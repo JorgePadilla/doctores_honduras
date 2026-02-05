@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
       # Redirect to onboarding flow
       flash[:success] = "¡Bienvenido! Por favor complete la configuración de su cuenta."
-      redirect_to onboarding_plan_selection_path
+      redirect_to onboarding_profile_type_path
     else
       render :new, status: :unprocessable_entity
     end
