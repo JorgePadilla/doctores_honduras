@@ -16,8 +16,8 @@ class Admin::DashboardController < ApplicationController
     @revenue_growth = calculate_revenue_growth
 
     # Engagement metrics
-    @doctors_with_images = DoctorProfile.joins("INNER JOIN active_storage_attachments ON active_storage_attachments.record_id = doctor_profiles.id AND active_storage_attachments.record_type = 'DoctorProfile' AND active_storage_attachments.name = 'image'").count
-    @completion_rate = (@doctors_with_images.to_f / @doctors_count * 100).round(1) rescue 0
+    @doctors_with_images = DoctorProfile.where.not(image_url: [nil, ""]).count
+    @completion_rate = @doctors_count > 0 ? [(@doctors_with_images.to_f / @doctors_count * 100).round, 100].min : 0
 
     # Alert metrics
     @hidden_profiles = DoctorProfile.where(hidden: true).count
