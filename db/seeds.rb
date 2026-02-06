@@ -1,6 +1,11 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+# Always seed subscription plans, departments, and services (idempotent)
+load File.join(Rails.root, 'db', 'seeds', 'subscription_plans.rb')
+load File.join(Rails.root, 'db', 'seeds', 'services.rb')
+load File.join(Rails.root, 'db', 'seeds', 'departments.rb')
+
 # Create suppliers
 puts "Creating suppliers..."
 
@@ -124,9 +129,8 @@ puts "Creating sample data for doctor profiles..."
 
 # Skip if we already have doctors
 if DoctorProfile.count >= 5
-  puts "#{DoctorProfile.count} doctor profiles already exist. Skipping seed data creation."
-  exit
-end
+  puts "#{DoctorProfile.count} doctor profiles already exist. Skipping sample doctor creation."
+else
 
 # Generate a timestamp to make emails unique
 timestamp = Time.now.to_i
@@ -209,14 +213,7 @@ doctors << DoctorProfile.create!(
   image_url: "https://randomuser.me/api/portraits/women/65.jpg"
 )
 
-# Load subscription plans seed
-load File.join(Rails.root, 'db', 'seeds', 'subscription_plans.rb')
-
-# Load medical services/tags for doctors
-load File.join(Rails.root, 'db', 'seeds', 'services.rb')
-
-# Load departments (states) of Honduras
-load File.join(Rails.root, 'db', 'seeds', 'departments.rb')
+# (subscription plans, services, and departments are loaded at the top of this file)
 
 # Create 18 more doctors
 18.times do |i|
@@ -558,3 +555,4 @@ DoctorProfile.create!(
 )
 
 puts "Seed data created successfully!"
+end # DoctorProfile.count >= 5 else block

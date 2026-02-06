@@ -26,13 +26,9 @@ class DoctorProfile < ApplicationRecord
   private
 
   def validate_image
-    if image_file.present? && image_url.present?
-      errors.add(:base, "No puedes subir un archivo y especificar una URL al mismo tiempo")
-    end
-
     if image_file.present?
       validate_image_file
-    elsif image_url.present?
+    elsif image_url_changed? && image_url.present?
       validate_image_url
     end
   end
