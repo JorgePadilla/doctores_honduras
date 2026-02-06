@@ -1,3 +1,5 @@
+require "aws-sdk-s3"
+
 # Service to handle uploading files to AWS S3
 #
 # Requires a S3 Bucket Policy for public reads instead of per-object ACLs.
@@ -13,6 +15,8 @@
 #     }]
 #   }
 class S3UploadService
+  attr_reader :last_error
+
   def initialize(bucket_name = nil)
     @bucket_name = bucket_name || ENV["AWS_BUCKET"]
     @region = ENV["AWS_REGION"] || "us-east-1"
@@ -42,8 +46,9 @@ class S3UploadService
     url = "https://#{@bucket_name}.s3.#{@region}.amazonaws.com/#{filename}"
     Rails.logger.info "S3 Upload: success -> #{url}"
     url
-  rescue Aws::S3::Errors::ServiceError => e
+  rescue => e
     Rails.logger.error "S3 Upload Error: #{e.class} - #{e.message} (bucket=#{@bucket_name}, region=#{@region})"
+    @last_error = e
     nil
   end
 

@@ -38,8 +38,8 @@ class DoctorProfile < ApplicationRecord
   end
 
   def validate_image_file
-    unless image_file.content_type.in?(%w[image/jpeg image/png image/jpg image/gif])
-      errors.add(:image_file, "debe ser JPEG, PNG o GIF")
+    unless image_file.content_type.in?(%w[image/jpeg image/png image/jpg image/gif image/webp image/avif])
+      errors.add(:image_file, "debe ser JPEG, PNG, GIF, WebP o AVIF")
     end
 
     if image_file.size > 5.megabytes
@@ -62,8 +62,13 @@ class DoctorProfile < ApplicationRecord
     self.image_url = upload_service.upload_file(image_file)
 
     if image_url.nil?
-      errors.add(:image_file, "no se pudo subir a S3")
+      error_detail = upload_service.last_error&.message || "error desconocido"
+      errors.add(:image_file, "no se pudo subir a S3: #{error_detail}")
       throw :abort
     end
+  rescue => e
+    Rails.logger.error "S3 Upload unexpected error: #{e.class} - #{e.message}"
+    errors.add(:image_file, "no se pudo subir a S3: #{e.message}")
+    throw :abort
   end
 end
