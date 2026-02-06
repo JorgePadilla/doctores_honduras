@@ -9,14 +9,26 @@ class DashboardController < ApplicationController
     when "doctor"
       @doctor_profile = @user.doctor_profile
       @completeness = compute_doctor_completeness
+      if @doctor_profile
+        @profile_views_total = @doctor_profile.profile_views.count
+        @profile_views_week = @doctor_profile.profile_views.this_week.count
+      end
     when "hospital", "clinic"
       @establishment = @user.establishments.first
       @completeness = compute_establishment_completeness
+      if @establishment
+        @profile_views_total = @establishment.profile_views.count
+        @profile_views_week = @establishment.profile_views.this_week.count
+      end
     when "vendor"
       @supplier = @user.supplier
       @products_count = @supplier&.products&.count || 0
       @leads_count = @supplier&.lead_contacts&.count || 0
       @completeness = compute_vendor_completeness
+      if @supplier
+        @profile_views_total = @supplier.profile_views.count
+        @profile_views_week = @supplier.profile_views.this_week.count
+      end
     else
       @completeness = 0
     end

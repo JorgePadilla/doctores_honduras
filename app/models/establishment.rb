@@ -15,6 +15,8 @@ class Establishment < ApplicationRecord
   has_many :establishment_services, dependent: :destroy
   has_many :services, through: :establishment_services
 
+  has_many :profile_views, as: :viewable, dependent: :destroy
+
   validates :name, presence: true
   validates :est_type, presence: true
   validates :address, presence: true

@@ -20,6 +20,14 @@ class SuppliersController < ApplicationController
 
   def show
     @supplier = Supplier.find(params[:id])
+
+    ProfileViewTracker.track(
+      viewable: @supplier,
+      viewer: Current.user,
+      ip_address: request.remote_ip,
+      user_agent: request.user_agent
+    )
+
     @page = (params[:page] || 1).to_i
     @per_page = 10
 

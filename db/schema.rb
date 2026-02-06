@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_04_000006) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -198,6 +198,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_04_000006) do
     t.boolean "active", default: true
     t.boolean "featured", default: false
     t.index ["supplier_id"], name: "index_products_on_supplier_id"
+  end
+
+  create_table "profile_views", force: :cascade do |t|
+    t.string "viewable_type", null: false
+    t.bigint "viewable_id", null: false
+    t.bigint "viewer_id"
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ip_address", "viewable_type", "viewable_id", "created_at"], name: "idx_profile_views_dedup"
+    t.index ["viewable_type", "viewable_id", "created_at"], name: "idx_on_viewable_type_viewable_id_created_at_d7cb744234"
+    t.index ["viewable_type", "viewable_id"], name: "index_profile_views_on_viewable_type_and_viewable_id"
+    t.index ["viewer_id"], name: "index_profile_views_on_viewer_id"
   end
 
   create_table "provider_profiles", force: :cascade do |t|

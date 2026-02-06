@@ -60,6 +60,13 @@ class EstablishmentsController < ApplicationController
   end
 
   def show
+    ProfileViewTracker.track(
+      viewable: @establishment,
+      viewer: Current.user,
+      ip_address: request.remote_ip,
+      user_agent: request.user_agent
+    )
+
     @doctors = @establishment.doctor_profiles.order(name: :asc)
     @specialties = @establishment.specialties.order(name: :asc)
     @services = @establishment.services.order(name: :asc)

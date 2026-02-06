@@ -85,6 +85,13 @@ class DoctorsController < ApplicationController
       return
     end
 
+    ProfileViewTracker.track(
+      viewable: @doctor,
+      viewer: Current.user,
+      ip_address: request.remote_ip,
+      user_agent: request.user_agent
+    )
+
     @establishments = @doctor.establishments
     @services = @doctor.services
   end

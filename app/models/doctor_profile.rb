@@ -8,6 +8,7 @@ class DoctorProfile < ApplicationRecord
   has_many :establishments, through: :doctor_establishments
   has_many :doctor_services, dependent: :destroy
   has_many :services, through: :doctor_services
+  has_many :profile_views, as: :viewable, dependent: :destroy
 
   # Virtual attribute for file upload
   attr_accessor :image_file
