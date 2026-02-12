@@ -1,4 +1,6 @@
 class DoctorProfile < ApplicationRecord
+  AVAILABLE_LANGUAGES = ["Español", "Inglés", "Francés", "Portugués", "Alemán", "Italiano", "Mandarín", "Otro"].freeze
+
   belongs_to :user
   belongs_to :specialty, optional: true
   belongs_to :subspecialty, optional: true
@@ -9,6 +11,13 @@ class DoctorProfile < ApplicationRecord
   has_many :doctor_services, dependent: :destroy
   has_many :services, through: :doctor_services
   has_many :profile_views, as: :viewable, dependent: :destroy
+  has_many :doctor_branches, dependent: :destroy
+  has_many :doctor_educations, dependent: :destroy
+  has_many :doctor_certifications, dependent: :destroy
+
+  accepts_nested_attributes_for :doctor_branches, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :doctor_educations, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :doctor_certifications, allow_destroy: true, reject_if: :all_blank
 
   # Virtual attribute for file upload
   attr_accessor :image_file

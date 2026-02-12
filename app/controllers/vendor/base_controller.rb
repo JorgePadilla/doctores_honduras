@@ -1,4 +1,6 @@
 class Vendor::BaseController < ApplicationController
+  include SubscriptionGating
+
   before_action :require_authentication
   before_action :require_vendor_profile
 
@@ -14,15 +16,4 @@ class Vendor::BaseController < ApplicationController
       redirect_to dashboard_path, alert: "Acceso no autorizado."
     end
   end
-
-  def current_subscription_tier
-    plan = Current.user.subscription&.subscription_plan
-    plan&.tier || "gratis"
-  end
-  helper_method :current_subscription_tier
-
-  def paid_plan?
-    current_subscription_tier != "gratis"
-  end
-  helper_method :paid_plan?
 end

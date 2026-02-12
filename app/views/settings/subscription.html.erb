@@ -1,53 +1,53 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-primary-700 mb-6">Configuración</h1>
-  
+  <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-6">Configuración</h1>
+
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <%= render "settings/sidebar", current: "subscription" %>
-    
+
     <!-- Main Content -->
-    <div class="md:col-span-3 bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-semibold mb-4">Administrar Suscripción</h2>
-      
+    <div class="md:col-span-3 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500">
+      <h2 class="text-xl font-semibold mb-4 dark:text-white">Administrar Suscripción</h2>
+
       <!-- Current Subscription Info -->
-      <div class="bg-gray-50 p-4 rounded-lg mb-6">
-        <h3 class="text-lg font-medium mb-2">Plan Actual</h3>
+      <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg mb-6">
+        <h3 class="text-lg font-medium mb-2 dark:text-white">Plan Actual</h3>
         <% if @subscription && @subscription.active? %>
           <div class="flex justify-between items-center">
             <div>
-              <p class="text-gray-900 font-medium"><%= @subscription.plan_name %></p>
-              <p class="text-gray-600 text-sm">Renovación: <%= @subscription.current_period_end&.strftime("%d/%m/%Y") || "N/A" %></p>
+              <p class="text-gray-900 dark:text-white font-medium"><%= @subscription.plan_name %></p>
+              <p class="text-gray-600 dark:text-slate-400 text-sm">Renovación: <%= @subscription.current_period_end&.strftime("%d/%m/%Y") || "N/A" %></p>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
               Activo
             </span>
           </div>
         <% else %>
           <div class="flex justify-between items-center">
             <div>
-              <p class="text-gray-900 font-medium">Plan Gratuito</p>
-              <p class="text-gray-600 text-sm">Perfil sin aparecer en el directorio</p>
+              <p class="text-gray-900 dark:text-white font-medium">Plan Gratuito</p>
+              <p class="text-gray-600 dark:text-slate-400 text-sm">Perfil sin aparecer en el directorio</p>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-slate-600 text-gray-800 dark:text-slate-300">
               Activo
             </span>
           </div>
         <% end %>
       </div>
-      
+
       <!-- Available Plans -->
-      <h3 class="text-lg font-medium mb-4">Planes Disponibles</h3>
-      
+      <h3 class="text-lg font-medium mb-4 dark:text-white">Planes Disponibles</h3>
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <% @plans&.each do |plan| %>
-          <div class="border rounded-lg overflow-hidden <%= @subscription&.subscription_plan_id == plan.id ? 'border-primary-500 shadow-lg ring-2 ring-primary-500' : (plan.name == 'Plan Premium' ? 'border-primary-300 shadow-md' : '') %>">
-            <div class="p-4 <%= @subscription&.subscription_plan_id == plan.id ? 'bg-primary-100' : (plan.name == 'Plan Premium' ? 'bg-primary-50' : 'bg-gray-50') %> border-b">
-              <h4 class="text-lg font-medium"><%= plan.name %></h4>
-              <p class="text-2xl font-bold mt-1">$<%= sprintf('%.2f', plan.price / 100.0) %><span class="text-sm text-gray-500">/mes</span></p>
+          <div class="border dark:border-slate-600 rounded-lg overflow-hidden <%= @subscription&.subscription_plan_id == plan.id ? 'border-primary-500 shadow-lg ring-2 ring-primary-500' : (plan.name == 'Plan Premium' ? 'border-primary-300 shadow-md' : '') %>">
+            <div class="p-4 <%= @subscription&.subscription_plan_id == plan.id ? 'bg-primary-100 dark:bg-sky-900/30' : (plan.name == 'Plan Premium' ? 'bg-primary-50 dark:bg-sky-900/20' : 'bg-gray-50 dark:bg-slate-700') %> border-b dark:border-slate-600">
+              <h4 class="text-lg font-medium dark:text-white"><%= plan.name %></h4>
+              <p class="text-2xl font-bold mt-1 dark:text-white">$<%= sprintf('%.2f', plan.price / 100.0) %><span class="text-sm text-gray-500 dark:text-slate-400">/mes</span></p>
             </div>
-            <div class="p-4">
+            <div class="p-4 dark:bg-slate-800">
               <ul class="space-y-2">
                 <% plan.features.to_s.split(',').each do |feature| %>
-                  <li class="flex items-start">
+                  <li class="flex items-start text-gray-700 dark:text-slate-300">
                     <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -55,10 +55,10 @@
                   </li>
                 <% end %>
               </ul>
-              
+
               <div class="mt-4">
                 <% if @subscription&.subscription_plan_id == plan.id %>
-                  <div class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 flex items-center justify-center">
+                  <div class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 flex items-center justify-center">
                     <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -66,7 +66,7 @@
                   </div>
                 <% else %>
                   <% if plan.price > 0 %>
-                    <%= button_to stripe_checkout_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 hover:bg-sky-600" do %>
+                    <%= button_to stripe_checkout_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 hover:bg-sky-600" do %>
                       <span class="flex items-center justify-center">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
@@ -75,7 +75,7 @@
                       </span>
                     <% end %>
                   <% else %>
-                    <%= button_to settings_subscribe_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 hover:bg-sky-600" do %>
+                    <%= button_to settings_subscribe_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 hover:bg-sky-600" do %>
                       <span class="flex items-center justify-center">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -90,12 +90,12 @@
           </div>
         <% end %>
       </div>
-      
+
       <% if @subscription&.active? %>
-        <div class="mt-6 pt-6 border-t border-gray-200">
-          <h3 class="text-lg font-medium text-red-600 mb-2">Cancelar Suscripción</h3>
-          <p class="text-gray-600 mb-4">Al cancelar tu suscripción, seguirás teniendo acceso a las características premium hasta el final del período de facturación actual.</p>
-          <%= button_to settings_cancel_subscription_path, method: :delete, class: "py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700", data: { confirm: "¿Estás seguro de que deseas cancelar tu suscripción?" } do %>
+        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
+          <h3 class="text-lg font-medium text-red-600 dark:text-red-400 mb-2">Cancelar Suscripción</h3>
+          <p class="text-gray-600 dark:text-slate-400 mb-4">Al cancelar tu suscripción, seguirás teniendo acceso a las características premium hasta el final del período de facturación actual.</p>
+          <%= button_to settings_cancel_subscription_path, method: :delete, class: "py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-red-600 hover:bg-red-700", data: { confirm: "¿Estás seguro de que deseas cancelar tu suscripción?" } do %>
             Cancelar Suscripción
           <% end %>
         </div>

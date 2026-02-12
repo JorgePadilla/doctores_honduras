@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= I18n.locale %>">
+<html lang="<%= I18n.locale %>" data-controller="dark-mode">
   <head>
     <title><%= content_for(:title) || "Doctores Honduras - #{t('navigation.doctors')} #{t('navigation.establishments')}" %></title>
     <meta charset="utf-8">
@@ -52,7 +52,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-gray-50">
+  <body class="min-h-screen bg-gray-50 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-200">
     <%= render "shared/navbar" %>
     
     <% if flash.any? %>

@@ -43,13 +43,13 @@ puts "Seeding per-profile-type subscription plans..."
 new_plans = [
   # Doctor plans
   { profile_type: "doctor", tier: "gratis", name: "Doctor Gratis", price: 0, interval: "month", position: 0,
-    features: "Perfil básico, Aparecer en directorio, Búsqueda de doctores",
+    features: "Perfil básico, Aparecer en directorio, Búsqueda de doctores, Sucursales (sin horarios ni teléfono)",
     description: "Plan gratuito para doctores" },
   { profile_type: "doctor", tier: "profesional", name: "Doctor Profesional", price: 1200, interval: "month", position: 1,
-    features: "Perfil destacado, Estadísticas de visitas, Notificaciones, Soporte prioritario",
+    features: "Perfil destacado, Estadísticas de visitas, Notificaciones, Soporte prioritario, Sucursales con horarios y teléfono",
     description: "Ideal para doctores que buscan mayor visibilidad" },
   { profile_type: "doctor", tier: "elite", name: "Doctor Elite", price: 2900, interval: "month", position: 2,
-    features: "Perfil premium, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada",
+    features: "Perfil premium, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada, Sucursales con horarios y teléfono",
     description: "La mejor opción para doctores: incluye enlace de video consulta" },
 
   # Hospital/Clinic plans

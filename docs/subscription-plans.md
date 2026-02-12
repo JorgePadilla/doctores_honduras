@@ -12,9 +12,9 @@ The platform uses a **per-profile-type** subscription model. Each profile type (
 
 | Tier | Name | Price | Features |
 |------|------|-------|----------|
-| gratis | Doctor Gratis | $0/mes | Perfil básico, Aparecer en directorio, Búsqueda de doctores |
-| profesional | Doctor Profesional | $12/mes | Perfil destacado, Estadísticas de visitas, Notificaciones, Soporte prioritario |
-| elite | Doctor Elite | $29/mes | Perfil premium, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada |
+| gratis | Doctor Gratis | $0/mes | Perfil básico, Aparecer en directorio, Búsqueda de doctores, Sucursales (sin horarios ni teléfono) |
+| profesional | Doctor Profesional | $12/mes | Perfil destacado, Estadísticas de visitas, Notificaciones, Soporte prioritario, Sucursales con horarios y teléfono |
+| elite | Doctor Elite | $29/mes | Perfil premium, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada, Sucursales con horarios y teléfono |
 
 ### Hospital/Clinic Plans
 
@@ -137,6 +137,21 @@ There are 6 legacy plans (with `profile_type: nil`) from the old system:
 Users without a `profile_type` set will see these legacy plans. New users who complete onboarding will always have a `profile_type` and see the new per-profile-type plans.
 
 ## Feature Gating
+
+### Doctor Sucursales (Branches)
+
+All doctor plans can add sucursales (branch locations), but phone numbers and schedules are gated:
+
+| Feature | Gratis | Profesional | Elite |
+|---------|--------|-------------|-------|
+| Sucursales | 1 max | Ilimitadas | Ilimitadas |
+| Branch name & address | Yes | Yes | Yes |
+| Department & city | Yes | Yes | Yes |
+| Map link | Yes | Yes | Yes |
+| Phone number | No | Yes | Yes |
+| Horarios (schedules) | No | Yes | Yes |
+
+Server-side enforcement in `ProfilesController#strip_paid_branch_fields` strips phone/schedule params and limits free-tier doctors to 1 branch.
 
 ### Vendor Product Limit
 

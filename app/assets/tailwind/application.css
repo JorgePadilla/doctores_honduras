@@ -1,11 +1,30 @@
 @import "tailwindcss";
 
-/* Custom styles for Doctores Honduras */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme variables */
+:root {
+  --color-surface: #ffffff;
+  --color-surface-alt: #f8fafc;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-border: #e5e7eb;
+  --color-input-border: #d1d5db;
+}
+
+.dark {
+  --color-surface: #1e293b;
+  --color-surface-alt: #0f172a;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-border: #334155;
+  --color-input-border: #475569;
+}
 
 /* Base styles */
 body {
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-primary);
 }
 
 h1 {
@@ -15,11 +34,19 @@ h1 {
   margin-bottom: 1rem;
 }
 
+.dark h1 {
+  color: #7dd3fc;
+}
+
 h2 {
   font-size: 1.5rem;
   font-weight: 600;
   color: #0369a1;
   margin-bottom: 1rem;
+}
+
+.dark h2 {
+  color: #38bdf8;
 }
 
 h3 {
@@ -29,23 +56,6 @@ h3 {
   margin-bottom: 0.75rem;
 }
 
-/* Component styles */
-.btn-primary {
-  background-color: #0284c7;
-  color: white;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: #0369a1;
-}
-
-.card {
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+.dark h3 {
+  color: #7dd3fc;
 }

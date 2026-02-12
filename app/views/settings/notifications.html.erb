@@ -1,56 +1,56 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-primary-700 mb-6">Configuración</h1>
-  
+  <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-6">Configuración</h1>
+
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <%= render "settings/sidebar", current: "notifications" %>
-    
+
     <!-- Main Content -->
-    <div class="md:col-span-3 bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-semibold mb-4">Preferencias de Notificaciones</h2>
-      
+    <div class="md:col-span-3 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500">
+      <h2 class="text-xl font-semibold mb-4 dark:text-white">Preferencias de Notificaciones</h2>
+
       <%= form_with model: @notification_preferences, url: settings_notifications_path, method: :patch, class: "space-y-6" do |f| %>
         <div class="space-y-4">
           <div class="flex items-start">
             <div class="flex items-center h-5">
-              <%= f.check_box :email_notifications, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded" %>
+              <%= f.check_box :email_notifications, class: "focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700" %>
             </div>
             <div class="ml-3 text-sm">
-              <%= f.label :email_notifications, "Notificaciones por correo electrónico", class: "font-medium text-gray-700" %>
-              <p class="text-gray-500">Recibe notificaciones importantes por correo electrónico.</p>
+              <%= f.label :email_notifications, "Notificaciones por correo electrónico", class: "font-medium text-gray-700 dark:text-slate-300" %>
+              <p class="text-gray-500 dark:text-slate-400">Recibe notificaciones importantes por correo electrónico.</p>
             </div>
           </div>
-          
+
           <div class="flex items-start">
             <div class="flex items-center h-5">
-              <%= f.check_box :marketing_emails, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded" %>
+              <%= f.check_box :marketing_emails, class: "focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700" %>
             </div>
             <div class="ml-3 text-sm">
-              <%= f.label :marketing_emails, "Correos de marketing", class: "font-medium text-gray-700" %>
-              <p class="text-gray-500">Recibe información sobre promociones y ofertas especiales.</p>
+              <%= f.label :marketing_emails, "Correos de marketing", class: "font-medium text-gray-700 dark:text-slate-300" %>
+              <p class="text-gray-500 dark:text-slate-400">Recibe información sobre promociones y ofertas especiales.</p>
             </div>
           </div>
-          
+
           <div class="flex items-start">
             <div class="flex items-center h-5">
-              <%= f.check_box :new_features_notifications, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded" %>
+              <%= f.check_box :new_features_notifications, class: "focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700" %>
             </div>
             <div class="ml-3 text-sm">
-              <%= f.label :new_features_notifications, "Notificaciones de nuevas características", class: "font-medium text-gray-700" %>
-              <p class="text-gray-500">Recibe notificaciones cuando se añadan nuevas características a la plataforma.</p>
+              <%= f.label :new_features_notifications, "Notificaciones de nuevas características", class: "font-medium text-gray-700 dark:text-slate-300" %>
+              <p class="text-gray-500 dark:text-slate-400">Recibe notificaciones cuando se añadan nuevas características a la plataforma.</p>
             </div>
           </div>
-          
+
           <div class="flex items-start">
             <div class="flex items-center h-5">
-              <%= f.check_box :security_alerts, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded" %>
+              <%= f.check_box :security_alerts, class: "focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700" %>
             </div>
             <div class="ml-3 text-sm">
-              <%= f.label :security_alerts, "Alertas de seguridad", class: "font-medium text-gray-700" %>
-              <p class="text-gray-500">Recibe alertas importantes relacionadas con la seguridad de tu cuenta.</p>
+              <%= f.label :security_alerts, "Alertas de seguridad", class: "font-medium text-gray-700 dark:text-slate-300" %>
+              <p class="text-gray-500 dark:text-slate-400">Recibe alertas importantes relacionadas con la seguridad de tu cuenta.</p>
             </div>
           </div>
         </div>
-        
+
         <div class="flex justify-end">
           <%= f.submit "Guardar Preferencias", class: "ml-3 inline-flex justify-center py-2 px-5 border border-transparent shadow-sm text-sm font-medium rounded-full text-white transition-all hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 bg-sky-500 hover:bg-sky-600" %>
         </div>

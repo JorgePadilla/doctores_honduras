@@ -1,4 +1,4 @@
-<nav class="bg-sky-500 text-white shadow-lg">
+<nav class="bg-sky-500 dark:bg-slate-800 text-white shadow-lg dark:shadow-slate-900/50 transition-colors duration-200">
   <div class="container mx-auto px-4">
     <div class="flex justify-between items-center py-4">
       <!-- Logo/Brand -->
@@ -7,7 +7,7 @@
           Doctores Honduras
         </a>
       </div>
-      
+
       <!-- Navigation Links -->
       <div class="hidden md:flex space-x-6">
         <a href="/" class="text-white hover:text-primary-200 transition">Inicio</a>
@@ -15,9 +15,21 @@
         <a href="/hospitales-y-clinicas" class="text-white hover:text-primary-200 transition">Hospitales y Clínicas</a>
         <a href="/proveedores" class="text-white hover:text-primary-200 transition">Proveedores</a>
       </div>
-      
-      <!-- Authentication Links -->
+
+      <!-- Authentication Links + Dark Mode Toggle -->
       <div class="flex items-center space-x-4">
+        <!-- Dark Mode Toggle -->
+        <button data-action="dark-mode#toggle" class="p-2 rounded-lg hover:bg-sky-600 dark:hover:bg-slate-700 transition-colors" title="Cambiar tema">
+          <!-- Sun icon (shown in dark mode) -->
+          <svg data-dark-mode-target="sunIcon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+          </svg>
+          <!-- Moon icon (shown in light mode) -->
+          <svg data-dark-mode-target="moonIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+        </button>
+
         <% if Current.user %>
           <div class="relative dropdown">
             <button id="user-menu-button" class="flex items-center text-white hover:text-primary-200 transition focus:outline-none">
@@ -26,26 +38,26 @@
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </button>
-            <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" style="display: none;">
+            <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg dark:shadow-slate-900/50 py-1 z-50 border border-transparent dark:border-slate-700" style="display: none;">
               <% if Current.user&.admin? %>
-                <a href="<%= admin_dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100 bg-sky-50 border-l-2 border-sky-500">Panel Admin</a>
+                <a href="<%= admin_dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700 bg-sky-50 dark:bg-slate-700/50 border-l-2 border-sky-500">Panel Admin</a>
               <% end %>
-              <a href="<%= profile_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Mi Perfil</a>
-              <a href="<%= dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Panel de Control</a>
+              <a href="<%= profile_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Mi Perfil</a>
+              <a href="<%= dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Panel de Control</a>
               <% if Current.user.profile_type == "vendor" %>
-                <a href="<%= vendor_products_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Mis Productos</a>
+                <a href="<%= vendor_products_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Mis Productos</a>
               <% end %>
-              <a href="<%= settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-100">Configuración</a>
-              <div class="border-t border-gray-200"></div>
-              <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-primary-100" %>
+              <a href="<%= settings_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Configuración</a>
+              <div class="border-t border-gray-200 dark:border-slate-600"></div>
+              <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700" %>
             </div>
           </div>
         <% else %>
           <a href="<%= new_session_path %>" class="text-white hover:text-primary-200 transition">Iniciar Sesión</a>
-          <a href="/signup" class="px-5 py-2 rounded-lg text-white font-medium transition-all shadow-md hover:shadow-lg bg-sky-600 border-2 border-white">Registrarse</a>
+          <a href="/signup" class="px-5 py-2 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-600 dark:bg-sky-700 border-2 border-white dark:border-slate-500">Registrarse</a>
         <% end %>
       </div>
-      
+
       <!-- Mobile Menu Button -->
       <div class="md:hidden">
         <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none">
@@ -55,7 +67,7 @@
         </button>
       </div>
     </div>
-    
+
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="md:hidden hidden pb-4">
       <a href="/" class="block py-2 text-white hover:text-primary-200 transition">Inicio</a>
@@ -63,7 +75,7 @@
       <a href="/hospitales-y-clinicas" class="block py-2 text-white hover:text-primary-200 transition">Hospitales y Clínicas</a>
       <a href="/proveedores" class="block py-2 text-white hover:text-primary-200 transition">Proveedores</a>
       <% if Current.user %>
-        <div class="mt-4 pt-4 border-t border-primary-300">
+        <div class="mt-4 pt-4 border-t border-primary-300 dark:border-slate-600">
           <div class="block py-2 text-white font-medium"><%= Current.user.email %></div>
           <% if Current.user&.admin? %>
             <a href="<%= admin_dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition bg-sky-900/20 border-l-2 border-sky-400 pl-2">Panel Admin</a>
@@ -77,9 +89,9 @@
           <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "block w-full text-left py-2 text-white hover:text-primary-200 transition" %>
         </div>
       <% else %>
-        <div class="mt-4 pt-4 border-t border-primary-300">
+        <div class="mt-4 pt-4 border-t border-primary-300 dark:border-slate-600">
           <a href="<%= new_session_path %>" class="block py-2 text-white hover:text-primary-200 transition">Iniciar Sesión</a>
-          <a href="/signup" class="inline-block mt-2 px-5 py-2 rounded-lg text-white font-medium transition-all shadow-md hover:shadow-lg bg-sky-600 border border-white">Registrarse</a>
+          <a href="/signup" class="inline-block mt-2 px-5 py-2 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-600 dark:bg-sky-700 border border-white dark:border-slate-500">Registrarse</a>
         </div>
       <% end %>
     </div>
@@ -92,29 +104,29 @@
     // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
-    
+
     if (mobileMenuButton && mobileMenu) {
       mobileMenuButton.addEventListener('click', function() {
         mobileMenu.classList.toggle('hidden');
       });
     }
-    
+
     // User dropdown menu toggle
     const userMenuButton = document.getElementById('user-menu-button');
     const userDropdown = document.getElementById('user-dropdown');
-    
+
     if (userMenuButton && userDropdown) {
       // Variable para controlar el estado del menú
       let menuOpen = false;
-      
+
       // Eliminar eventos anteriores para evitar duplicados
       userMenuButton.removeEventListener('click', handleUserMenuClick);
-      
+
       // Función para manejar el clic en el menú de usuario
       function handleUserMenuClick(e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (menuOpen) {
           userDropdown.style.display = 'none';
           menuOpen = false;
@@ -123,13 +135,13 @@
           menuOpen = true;
         }
       }
-      
+
       // Agregar el evento de clic
       userMenuButton.addEventListener('click', handleUserMenuClick);
-      
+
       // Eliminar eventos anteriores para evitar duplicados
       document.removeEventListener('click', handleDocumentClick);
-      
+
       // Función para manejar clics fuera del menú
       function handleDocumentClick(e) {
         if (menuOpen && !userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
@@ -137,15 +149,15 @@
           menuOpen = false;
         }
       }
-      
+
       // Agregar el evento de clic en el documento
       document.addEventListener('click', handleDocumentClick);
     }
   }
-  
+
   // Inicializar menús cuando se carga la página
   document.addEventListener('DOMContentLoaded', initializeMenus);
-  
+
   // Inicializar menús cuando se navega con Turbo
   document.addEventListener('turbo:load', initializeMenus);
   document.addEventListener('turbo:render', initializeMenus);

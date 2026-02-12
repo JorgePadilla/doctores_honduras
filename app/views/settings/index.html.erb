@@ -1,48 +1,48 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-sky-800 mb-6">Configuración</h1>
-  
+  <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-6">Configuración</h1>
+
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <%= render "settings/sidebar", current: "general" %>
-    
+
     <!-- Main Content -->
-    <div class="md:col-span-3 bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-semibold mb-4">Resumen de Configuración</h2>
-      
+    <div class="md:col-span-3 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500">
+      <h2 class="text-xl font-semibold mb-4 dark:text-white">Resumen de Configuración</h2>
+
       <div class="space-y-6">
-        <div class="border-b pb-4">
-          <h3 class="text-lg font-medium mb-2">Cuenta</h3>
-          <p class="text-gray-600">Email: <%= @user.email %></p>
+        <div class="border-b border-gray-200 dark:border-slate-700 pb-4">
+          <h3 class="text-lg font-medium mb-2 dark:text-white">Cuenta</h3>
+          <p class="text-gray-600 dark:text-slate-400">Email: <%= @user.email %></p>
           <div class="mt-2">
-            <a href="<%= settings_account_path %>" class="text-sky-600 hover:text-sky-800">Administrar cuenta</a>
+            <a href="<%= settings_account_path %>" class="text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300">Administrar cuenta</a>
           </div>
         </div>
-        
-        <div class="border-b pb-4">
-          <h3 class="text-lg font-medium mb-2">Suscripción</h3>
+
+        <div class="border-b border-gray-200 dark:border-slate-700 pb-4">
+          <h3 class="text-lg font-medium mb-2 dark:text-white">Suscripción</h3>
           <% if @subscription && @subscription.active? %>
-            <p class="text-gray-600">Plan actual: <%= @user.subscription_plan_name %></p>
-            <p class="text-gray-600">Estado: Activo</p>
+            <p class="text-gray-600 dark:text-slate-400">Plan actual: <%= @user.subscription_plan_name %></p>
+            <p class="text-gray-600 dark:text-slate-400">Estado: Activo</p>
           <% else %>
-            <p class="text-gray-600">Plan actual: Gratuito</p>
+            <p class="text-gray-600 dark:text-slate-400">Plan actual: Gratuito</p>
           <% end %>
           <div class="mt-2">
-            <a href="<%= settings_subscription_path %>" class="text-sky-600 hover:text-sky-800">Administrar suscripción</a>
+            <a href="<%= settings_subscription_path %>" class="text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300">Administrar suscripción</a>
           </div>
         </div>
-        
-        <div class="border-b pb-4">
-          <h3 class="text-lg font-medium mb-2">Seguridad</h3>
-          <p class="text-gray-600">Última actualización: <%= @user.updated_at.strftime("%d/%m/%Y") %></p>
+
+        <div class="border-b border-gray-200 dark:border-slate-700 pb-4">
+          <h3 class="text-lg font-medium mb-2 dark:text-white">Seguridad</h3>
+          <p class="text-gray-600 dark:text-slate-400">Última actualización: <%= @user.updated_at.strftime("%d/%m/%Y") %></p>
           <div class="mt-2">
-            <a href="<%= settings_security_path %>" class="text-sky-600 hover:text-sky-800">Administrar seguridad</a>
+            <a href="<%= settings_security_path %>" class="text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300">Administrar seguridad</a>
           </div>
         </div>
-        
+
         <div>
-          <h3 class="text-lg font-medium mb-2">Idioma</h3>
-          <p class="text-gray-600">Idioma actual: <%= @user.language == 'es' ? 'Español' : 'English' %></p>
+          <h3 class="text-lg font-medium mb-2 dark:text-white">Idioma</h3>
+          <p class="text-gray-600 dark:text-slate-400">Idioma actual: <%= @user.language == 'es' ? 'Español' : 'English' %></p>
           <div class="mt-2">
-            <a href="<%= settings_language_path %>" class="text-sky-600 hover:text-sky-800">Cambiar idioma</a>
+            <a href="<%= settings_language_path %>" class="text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300">Cambiar idioma</a>
           </div>
         </div>
       </div>

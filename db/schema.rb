@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
     t.index ["author_id"], name: "index_articles_on_author_id"
   end
 
+  create_table "branch_schedules", force: :cascade do |t|
+    t.bigint "doctor_branch_id", null: false
+    t.integer "day_of_week", null: false
+    t.time "opens_at", null: false
+    t.time "closes_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_branch_id", "day_of_week"], name: "index_branch_schedules_on_doctor_branch_id_and_day_of_week", unique: true
+    t.index ["doctor_branch_id"], name: "index_branch_schedules_on_doctor_branch_id"
+  end
+
   create_table "cities", force: :cascade do |t|
     t.string "name"
     t.bigint "department_id", null: false
@@ -65,6 +76,44 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_departments_on_name", unique: true
+  end
+
+  create_table "doctor_branches", force: :cascade do |t|
+    t.bigint "doctor_profile_id", null: false
+    t.string "name", null: false
+    t.string "address", null: false
+    t.bigint "department_id"
+    t.bigint "city_id"
+    t.string "map_link"
+    t.string "phone"
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_doctor_branches_on_city_id"
+    t.index ["department_id"], name: "index_doctor_branches_on_department_id"
+    t.index ["doctor_profile_id"], name: "index_doctor_branches_on_doctor_profile_id"
+  end
+
+  create_table "doctor_certifications", force: :cascade do |t|
+    t.bigint "doctor_profile_id", null: false
+    t.string "name", null: false
+    t.string "institution"
+    t.integer "year"
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_profile_id"], name: "index_doctor_certifications_on_doctor_profile_id"
+  end
+
+  create_table "doctor_educations", force: :cascade do |t|
+    t.bigint "doctor_profile_id", null: false
+    t.string "institution", null: false
+    t.string "degree"
+    t.integer "graduation_year"
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_profile_id"], name: "index_doctor_educations_on_doctor_profile_id"
   end
 
   create_table "doctor_establishments", force: :cascade do |t|
@@ -87,12 +136,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
     t.string "medical_license"
     t.string "state"
     t.string "subspecialty"
-    t.boolean "hidden"
+    t.boolean "hidden", default: false, null: false
     t.bigint "specialty_id"
     t.bigint "subspecialty_id"
     t.bigint "department_id"
     t.bigint "city_id"
     t.string "video_consultation_url"
+    t.date "fecha_de_nacimiento"
+    t.string "numero_de_identidad"
+    t.string "correo_personal"
+    t.string "facebook_url"
+    t.string "instagram_url"
+    t.string "twitter_url"
+    t.string "linkedin_url"
+    t.string "tiktok_url"
+    t.string "youtube_url"
+    t.text "languages", default: [], array: true
     t.index ["city_id"], name: "index_doctor_profiles_on_city_id"
     t.index ["department_id"], name: "index_doctor_profiles_on_department_id"
     t.index ["specialty_id"], name: "index_doctor_profiles_on_specialty_id"
@@ -242,6 +301,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "specialty_id"
+    t.index ["specialty_id"], name: "index_services_on_specialty_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -349,7 +410,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "users", column: "author_id"
+  add_foreign_key "branch_schedules", "doctor_branches"
   add_foreign_key "cities", "departments"
+  add_foreign_key "doctor_branches", "cities"
+  add_foreign_key "doctor_branches", "departments"
+  add_foreign_key "doctor_branches", "doctor_profiles"
+  add_foreign_key "doctor_certifications", "doctor_profiles"
+  add_foreign_key "doctor_educations", "doctor_profiles"
   add_foreign_key "doctor_establishments", "doctor_profiles"
   add_foreign_key "doctor_establishments", "establishments"
   add_foreign_key "doctor_profiles", "cities"
@@ -369,6 +436,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_05_145831) do
   add_foreign_key "payment_histories", "users"
   add_foreign_key "products", "suppliers"
   add_foreign_key "provider_profiles", "users"
+  add_foreign_key "services", "specialties"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "subscription_plans"
   add_foreign_key "subscriptions", "users"

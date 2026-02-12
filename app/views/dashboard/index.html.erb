@@ -1,205 +1,205 @@
 <div class="container mx-auto px-4 py-8 max-w-5xl">
-  <h1 class="text-2xl font-bold text-gray-800 mb-6">Panel de Control</h1>
+  <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-6">Panel de Control</h1>
 
-  <div class="rounded-lg p-6 mb-6 bg-sky-50 border border-sky-200">
-    <h2 class="text-lg font-semibold mb-1 text-sky-900">Bienvenido, <%= @user.email %></h2>
-    <p class="text-gray-600 text-sm">
+  <div class="rounded-xl p-6 mb-6 bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800">
+    <h2 class="text-lg font-semibold mb-1 text-sky-900 dark:text-sky-300">Bienvenido, <%= @user.email %></h2>
+    <p class="text-gray-600 dark:text-slate-400 text-sm">
       <% if @plan %>
-        Plan actual: <strong><%= @plan.name %></strong>
+        Plan actual: <strong class="dark:text-slate-200"><%= @plan.name %></strong>
         <% if @plan.free? %>
-          &mdash; <%= link_to "Actualizar plan", settings_subscription_path, class: "text-sky-600 underline" %>
+          &mdash; <%= link_to "Actualizar plan", settings_subscription_path, class: "text-sky-600 dark:text-sky-400 underline" %>
         <% end %>
       <% else %>
-        Sin plan activo &mdash; <%= link_to "Ver planes", settings_subscription_path, class: "text-sky-600 underline" %>
+        Sin plan activo &mdash; <%= link_to "Ver planes", settings_subscription_path, class: "text-sky-600 dark:text-sky-400 underline" %>
       <% end %>
     </p>
   </div>
 
   <!-- Profile Completeness -->
   <% if @completeness < 100 && @profile_type.present? %>
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
       <div class="flex justify-between items-center mb-2">
-        <h3 class="text-sm font-medium text-gray-700">Progreso del perfil</h3>
-        <span class="text-sm text-gray-500"><%= @completeness %>%</span>
+        <h3 class="text-sm font-medium text-gray-700 dark:text-slate-300">Progreso del perfil</h3>
+        <span class="text-sm text-gray-500 dark:text-slate-400"><%= @completeness %>%</span>
       </div>
-      <div class="w-full bg-gray-200 rounded-full h-2.5">
+      <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5">
         <div class="h-2.5 rounded-full <%= @completeness >= 70 ? 'bg-green-500' : @completeness >= 40 ? 'bg-yellow-500' : 'bg-red-500' %>" style="width: <%= @completeness %>%"></div>
       </div>
-      <p class="text-xs text-gray-500 mt-2">Completa tu perfil para mejorar tu visibilidad en el directorio.</p>
+      <p class="text-xs text-gray-500 dark:text-slate-400 mt-2">Completa tu perfil para mejorar tu visibilidad en el directorio.</p>
     </div>
   <% end %>
 
   <!-- Upgrade CTA for free tier -->
   <% if @plan&.free? %>
-    <div class="bg-gradient-to-r from-sky-500 to-sky-600 rounded-lg shadow p-6 mb-6 text-white">
+    <div class="bg-gradient-to-r from-sky-500 to-sky-600 rounded-xl shadow-md p-6 mb-6 text-white">
       <h3 class="text-lg font-bold mb-2">Mejora tu plan</h3>
       <p class="text-sm opacity-90 mb-3">
         <% if @profile_type == "doctor" %>
-          Obt&eacute;n un perfil destacado, estad&iacute;sticas de visitas y soporte prioritario.
+          Obtén un perfil destacado, estadísticas de visitas y soporte prioritario.
         <% elsif @profile_type == "hospital" || @profile_type == "clinic" %>
-          Gestiona m&uacute;ltiples doctores, obt&eacute;n estad&iacute;sticas y soporte prioritario.
+          Gestiona múltiples doctores, obtén estadísticas y soporte prioritario.
         <% elsif @profile_type == "vendor" %>
-          Productos ilimitados, contactos de clientes y estad&iacute;sticas.
+          Productos ilimitados, contactos de clientes y estadísticas.
         <% end %>
       </p>
-      <%= link_to "Ver planes", settings_subscription_path, class: "inline-block py-2 px-4 bg-white text-sky-700 rounded-md font-medium text-sm hover:bg-sky-50" %>
+      <%= link_to "Ver planes", settings_subscription_path, class: "inline-block py-2.5 px-5 bg-white text-sky-700 rounded-full font-medium text-sm transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50" %>
     </div>
   <% end %>
 
   <!-- Profile-type specific content -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <% if @profile_type == "doctor" %>
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Mi Perfil M&eacute;dico</h3>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Mi Perfil Médico</h3>
         <% if @doctor_profile %>
-          <p class="text-gray-600 text-sm mb-1"><strong>Nombre:</strong> <%= @doctor_profile.name %></p>
-          <p class="text-gray-600 text-sm mb-1"><strong>Especialidad:</strong> <%= @doctor_profile.specialty&.name || "No especificada" %></p>
-          <p class="text-gray-600 text-sm mb-4"><strong>Ubicaci&oacute;n:</strong> <%= [@doctor_profile.city&.name, @doctor_profile.department&.name].compact.join(", ") %></p>
-          <%= link_to "Editar perfil", edit_profile_path, class: "text-sky-600 hover:text-sky-800 text-sm font-medium" %>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Nombre:</strong> <%= @doctor_profile.name %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Especialidad:</strong> <%= @doctor_profile.specialty&.name || "No especificada" %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-4"><strong class="dark:text-slate-200">Ubicación:</strong> <%= [@doctor_profile.city&.name, @doctor_profile.department&.name].compact.join(", ") %></p>
+          <%= link_to "Editar perfil", edit_profile_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
         <% else %>
-          <p class="text-gray-500 text-sm mb-4">A&uacute;n no has creado tu perfil.</p>
-          <%= link_to "Crear perfil", new_profile_path, class: "py-2 px-4 bg-sky-500 text-white rounded-md text-sm font-medium hover:bg-sky-600" %>
+          <p class="text-gray-500 dark:text-slate-400 text-sm mb-4">Aún no has creado tu perfil.</p>
+          <%= link_to "Crear perfil", new_profile_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>
         <% end %>
       </div>
 
       <% if @doctor_profile %>
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-800 mb-3">Visitas al Perfil</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Visitas al Perfil</h3>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-3xl font-bold text-sky-600"><%= @profile_views_total || 0 %></p>
-              <p class="text-xs text-gray-500">visitas totales</p>
+              <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @profile_views_total || 0 %></p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">visitas totales</p>
             </div>
             <div class="text-right">
-              <p class="text-lg font-semibold text-gray-800"><%= @profile_views_week || 0 %></p>
-              <p class="text-xs text-gray-500">esta semana</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-white"><%= @profile_views_week || 0 %></p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
           </div>
         </div>
       <% end %>
 
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Establecimientos</h3>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Establecimientos</h3>
         <% if @doctor_profile&.establishments&.any? %>
-          <p class="text-gray-600 text-sm"><%= @doctor_profile.establishments.count %> establecimiento(s) asociado(s)</p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm"><%= @doctor_profile.establishments.count %> establecimiento(s) asociado(s)</p>
         <% else %>
-          <p class="text-gray-500 text-sm">Sin establecimientos asociados.</p>
+          <p class="text-gray-500 dark:text-slate-400 text-sm">Sin establecimientos asociados.</p>
         <% end %>
       </div>
 
     <% elsif @profile_type == "hospital" || @profile_type == "clinic" %>
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Mi Establecimiento</h3>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Mi Establecimiento</h3>
         <% if @establishment %>
-          <p class="text-gray-600 text-sm mb-1"><strong>Nombre:</strong> <%= @establishment.name %></p>
-          <p class="text-gray-600 text-sm mb-1"><strong>Tipo:</strong> <%= @establishment.est_type %></p>
-          <p class="text-gray-600 text-sm mb-4"><strong>Direcci&oacute;n:</strong> <%= @establishment.address %></p>
-          <%= link_to "Ver en directorio", establishment_path(@establishment), class: "text-sky-600 hover:text-sky-800 text-sm font-medium" %>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Nombre:</strong> <%= @establishment.name %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Tipo:</strong> <%= @establishment.est_type %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-4"><strong class="dark:text-slate-200">Dirección:</strong> <%= @establishment.address %></p>
+          <%= link_to "Ver en directorio", establishment_path(@establishment), class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
         <% else %>
-          <p class="text-gray-500 text-sm">A&uacute;n no has registrado tu establecimiento.</p>
+          <p class="text-gray-500 dark:text-slate-400 text-sm">Aún no has registrado tu establecimiento.</p>
         <% end %>
       </div>
 
       <% if @establishment %>
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-800 mb-3">Visitas al Perfil</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Visitas al Perfil</h3>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-3xl font-bold text-sky-600"><%= @profile_views_total || 0 %></p>
-              <p class="text-xs text-gray-500">visitas totales</p>
+              <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @profile_views_total || 0 %></p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">visitas totales</p>
             </div>
             <div class="text-right">
-              <p class="text-lg font-semibold text-gray-800"><%= @profile_views_week || 0 %></p>
-              <p class="text-xs text-gray-500">esta semana</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-white"><%= @profile_views_week || 0 %></p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
           </div>
         </div>
       <% end %>
 
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Doctores y Servicios</h3>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Doctores y Servicios</h3>
         <% if @establishment %>
-          <p class="text-gray-600 text-sm mb-1"><strong>Doctores:</strong> <%= @establishment.doctor_profiles.count %></p>
-          <p class="text-gray-600 text-sm"><strong>Servicios:</strong> <%= @establishment.services.count %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Doctores:</strong> <%= @establishment.doctor_profiles.count %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm"><strong class="dark:text-slate-200">Servicios:</strong> <%= @establishment.services.count %></p>
         <% else %>
-          <p class="text-gray-500 text-sm">Registra tu establecimiento para gestionar doctores y servicios.</p>
+          <p class="text-gray-500 dark:text-slate-400 text-sm">Registra tu establecimiento para gestionar doctores y servicios.</p>
         <% end %>
       </div>
 
     <% elsif @profile_type == "vendor" %>
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Mi Empresa</h3>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Mi Empresa</h3>
         <% if @supplier %>
-          <p class="text-gray-600 text-sm mb-1"><strong>Nombre:</strong> <%= @supplier.name %></p>
-          <p class="text-gray-600 text-sm mb-4"><strong>Categor&iacute;a:</strong> <%= @supplier.category&.humanize || "No especificada" %></p>
-          <%= link_to "Editar perfil", edit_vendor_profile_path, class: "text-sky-600 hover:text-sky-800 text-sm font-medium" %>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Nombre:</strong> <%= @supplier.name %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-4"><strong class="dark:text-slate-200">Categoría:</strong> <%= @supplier.category&.humanize || "No especificada" %></p>
+          <%= link_to "Editar perfil", edit_vendor_profile_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
         <% end %>
       </div>
 
       <% if @supplier %>
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-800 mb-3">Visitas al Perfil</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Visitas al Perfil</h3>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-3xl font-bold text-sky-600"><%= @profile_views_total || 0 %></p>
-              <p class="text-xs text-gray-500">visitas totales</p>
+              <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @profile_views_total || 0 %></p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">visitas totales</p>
             </div>
             <div class="text-right">
-              <p class="text-lg font-semibold text-gray-800"><%= @profile_views_week || 0 %></p>
-              <p class="text-xs text-gray-500">esta semana</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-white"><%= @profile_views_week || 0 %></p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
           </div>
         </div>
       <% end %>
 
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Productos y Contactos</h3>
-        <p class="text-gray-600 text-sm mb-1"><strong>Productos:</strong> <%= @products_count %>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Productos y Contactos</h3>
+        <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Productos:</strong> <%= @products_count %>
           <% unless paid_plan?(@plan) %>
-            <span class="text-gray-400">(m&aacute;x. 5 en plan gratuito)</span>
+            <span class="text-gray-400 dark:text-slate-500">(máx. 5 en plan gratuito)</span>
           <% end %>
         </p>
-        <p class="text-gray-600 text-sm mb-4"><strong>Contactos:</strong>
+        <p class="text-gray-600 dark:text-slate-400 text-sm mb-4"><strong class="dark:text-slate-200">Contactos:</strong>
           <% if paid_plan?(@plan) %>
             <%= @leads_count %>
           <% else %>
-            <span class="text-gray-400">Disponible en planes de pago</span>
+            <span class="text-gray-400 dark:text-slate-500">Disponible en planes de pago</span>
           <% end %>
         </p>
         <div class="flex space-x-3">
-          <%= link_to "Mis productos", vendor_products_path, class: "text-sky-600 hover:text-sky-800 text-sm font-medium" %>
+          <%= link_to "Mis productos", vendor_products_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
           <% if paid_plan?(@plan) %>
-            <%= link_to "Mis contactos", vendor_leads_path, class: "text-sky-600 hover:text-sky-800 text-sm font-medium" %>
+            <%= link_to "Mis contactos", vendor_leads_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
           <% end %>
         </div>
       </div>
 
     <% else %>
       <!-- Viewer or no profile type -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Explorar</h3>
-        <p class="text-gray-600 text-sm mb-4">Busca doctores y establecimientos en Honduras.</p>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Explorar</h3>
+        <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">Busca doctores y establecimientos en Honduras.</p>
         <div class="flex space-x-3">
-          <%= link_to "Ver doctores", doctors_path, class: "py-2 px-4 bg-sky-500 text-white rounded-md text-sm font-medium hover:bg-sky-600" %>
-          <%= link_to "Ver establecimientos", establishments_path, class: "py-2 px-4 border border-sky-500 text-sky-600 rounded-md text-sm font-medium hover:bg-sky-50" %>
+          <%= link_to "Ver doctores", doctors_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>
+          <%= link_to "Ver establecimientos", establishments_path, class: "py-2.5 px-5 border border-sky-500 dark:border-sky-400 text-sky-600 dark:text-sky-400 rounded-full text-sm font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/30" %>
         </div>
       </div>
     <% end %>
 
     <!-- Quick Links (always visible) -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Acciones R&aacute;pidas</h3>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Acciones Rápidas</h3>
       <ul class="space-y-2">
         <li>
-          <%= link_to settings_subscription_path, class: "flex items-center text-sm text-gray-600 hover:text-sky-600" do %>
+          <%= link_to settings_subscription_path, class: "flex items-center text-sm text-gray-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400" do %>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-            Gestionar suscripci&oacute;n
+            Gestionar suscripción
           <% end %>
         </li>
         <li>
-          <%= link_to settings_path, class: "flex items-center text-sm text-gray-600 hover:text-sky-600" do %>
+          <%= link_to settings_path, class: "flex items-center text-sm text-gray-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400" do %>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            Configuraci&oacute;n
+            Configuración
           <% end %>
         </li>
       </ul>

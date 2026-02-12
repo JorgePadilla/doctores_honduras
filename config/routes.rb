@@ -66,10 +66,19 @@ Rails.application.routes.draw do
   # Profile routes
   resource :profile, only: [:show, :new, :create, :edit, :update]
 
-  # Specialty routes for subespecialties
+  # Specialty routes for subespecialties and services
   resources :specialties, only: [] do
     get 'subspecialties', on: :member
+    get 'services', on: :member
   end
+
+  # Department cities JSON endpoint
+  resources :departments, only: [] do
+    get 'cities', on: :member
+  end
+
+  # Service find or create endpoint
+  post 'services/find_or_create', to: 'services#find_or_create'
 
   # Admin routes
   namespace :admin do

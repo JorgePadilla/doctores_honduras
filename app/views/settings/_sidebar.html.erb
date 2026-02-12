@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg shadow-md p-4">
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-4 border-l-4 border-l-sky-300 dark:border-l-sky-500">
   <nav class="space-y-1">
     <%
       items = [
@@ -12,11 +12,11 @@
     %>
     <% items.each do |item| %>
       <% if item[:key] == local_assigns[:current] %>
-        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md bg-sky-100 text-sky-700 font-medium">
+        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 font-medium">
           <i class="fas <%= item[:icon] %> mr-2"></i><%= item[:label] %>
         </a>
       <% else %>
-        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white">
           <i class="fas <%= item[:icon] %> mr-2"></i><%= item[:label] %>
         </a>
       <% end %>

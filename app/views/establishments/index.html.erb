@@ -1,14 +1,14 @@
 <div class="container mx-auto px-4 py-8">
   <header class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-primary-700 mb-4"><%= t('establishments.title') %></h1>
-    <p class="text-xl text-gray-600">Encuentra los mejores centros médicos en Honduras</p>
+    <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-4"><%= t('establishments.title') %></h1>
+    <p class="text-xl text-gray-600 dark:text-slate-400">Encuentra los mejores centros médicos en Honduras</p>
   </header>
 
   <div class="max-w-5xl mx-auto mb-8">
-    <div class="bg-white rounded-full shadow-md p-2 transition-all hover:shadow-lg">
+    <div class="bg-white dark:bg-slate-800 rounded-full shadow-md dark:shadow-slate-900/50 p-2 transition-all hover:shadow-lg border border-transparent dark:border-slate-700">
       <form action="<%= establishments_path %>" method="get" class="flex items-center">
         <div class="flex-grow pl-4">
-          <input type="text" name="q" value="<%= params[:q] %>" placeholder="<%= t('common.search') %>..." class="w-full py-3 px-2 text-gray-700 focus:outline-none" style="background: transparent;">
+          <input type="text" name="q" value="<%= params[:q] %>" placeholder="<%= t('common.search') %>..." class="w-full py-3 px-2 text-gray-700 dark:text-slate-200 focus:outline-none bg-transparent dark:placeholder-slate-400">
         </div>
         <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
           <%= t('common.search') %>
@@ -16,54 +16,54 @@
       </form>
     </div>
   </div>
-  
+
   <div class="max-w-5xl mx-auto mb-8 flex flex-col md:flex-row gap-8">
     <!-- Filters sidebar -->
     <div class="md:w-1/4">
       <%= render 'shared/establishment_filters' %>
     </div>
-    
+
     <!-- Main content -->
     <div class="md:w-3/4">
       <div class="mb-6">
-        <h2 class="text-2xl font-bold text-primary-600">Resultados</h2>
+        <h2 class="text-2xl font-bold text-primary-600 dark:text-sky-400">Resultados</h2>
       </div>
       <%= turbo_frame_tag "establishments-list" do %>
       <div class="grid md:grid-cols-1 gap-8">
     <% @establishments.each do |establishment| %>
-      <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-8 transition-all hover:shadow-lg border-sky-300">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border-l-8 transition-all hover:shadow-lg border-sky-300 dark:border-sky-500">
         <div class="flex flex-col md:flex-row">
           <div class="md:w-1/4 p-4 flex items-center justify-center">
             <% if establishment.logo_url.present? %>
-              <div class="w-full h-32 flex items-center justify-center overflow-hidden bg-white rounded-lg shadow-md p-2 border border-gray-100 transition-all hover:shadow-lg">
+              <div class="w-full h-32 flex items-center justify-center overflow-hidden bg-white dark:bg-slate-700 rounded-lg shadow-md p-2 border border-gray-100 dark:border-slate-600 transition-all hover:shadow-lg">
                 <img src="<%= establishment.logo_url %>" alt="<%= establishment.name %>" class="max-w-full max-h-full object-contain">
               </div>
             <% else %>
-              <div class="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center shadow-md">
-                <span class="text-gray-500">Sin logo</span>
+              <div class="w-full h-32 bg-gray-200 dark:bg-slate-700 rounded-lg flex items-center justify-center shadow-md">
+                <span class="text-gray-500 dark:text-slate-400">Sin logo</span>
               </div>
             <% end %>
           </div>
           <div class="md:w-3/4 p-4">
             <div class="flex flex-col md:flex-row md:justify-between md:items-start">
               <div>
-                <h2 class="text-xl font-semibold mb-2 text-sky-600"><%= establishment.name %></h2>
-                <p class="text-gray-700 mb-1"><%= establishment.est_type %></p>
+                <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400"><%= establishment.name %></h2>
+                <p class="text-gray-700 dark:text-slate-300 mb-1"><%= establishment.est_type %></p>
                 <div class="mt-2">
-                  <p class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-2"></i><%= establishment.address %></p>
+                  <p class="text-gray-600 dark:text-slate-400 text-sm"><i class="fas fa-map-marker-alt mr-2"></i><%= establishment.address %></p>
                   <% if establishment.phone.present? %>
-                    <p class="text-gray-600 text-sm"><i class="fas fa-phone mr-2"></i><%= establishment.phone %></p>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm"><i class="fas fa-phone mr-2"></i><%= establishment.phone %></p>
                   <% end %>
                   <% if establishment.map_link.present? %>
-                    <p class="text-gray-600 text-sm">
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">
                       <i class="fas fa-map mr-2"></i>
-                      <a href="<%= establishment.map_link %>" target="_blank" class="text-sky-500 hover:underline">Ver en mapa</a>
+                      <a href="<%= establishment.map_link %>" target="_blank" class="text-sky-500 dark:text-sky-400 hover:underline">Ver en mapa</a>
                     </p>
                   <% end %>
                 </div>
               </div>
             </div>
-            
+
             <div class="mt-4 text-right">
               <%= link_to establishment_path(establishment), class: "inline-flex items-center px-5 py-2.5 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600", data: { turbo: false } do %>
                 <span class="text-sm"><%= t('establishments.view_details') %></span>
@@ -76,13 +76,13 @@
         </div>
       </div>
     <% end %>
-    
+
     <% if @establishments.empty? %>
-      <div class="bg-white rounded-xl shadow-md p-8 text-center">
-        <p class="text-gray-600 text-lg"><%= t('establishments.no_establishments') %></p>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-8 text-center border border-transparent dark:border-slate-700">
+        <p class="text-gray-600 dark:text-slate-400 text-lg"><%= t('establishments.no_establishments') %></p>
       </div>
     <% end %>
-    
+
     <!-- Pagination controls -->
     <% if @total_pages > 1 %>
       <div class="mt-10 mb-6 flex justify-center">

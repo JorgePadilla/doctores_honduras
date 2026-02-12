@@ -1,42 +1,42 @@
 <div class="container mx-auto px-4 py-8 max-w-4xl">
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Mi Perfil de Proveedor</h1>
-    <%= link_to "Editar Perfil", edit_vendor_profile_path, class: "py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600" %>
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Mi Perfil de Proveedor</h1>
+    <%= link_to "Editar Perfil", edit_vendor_profile_path, class: "py-2 px-4 border border-transparent rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600" %>
   </div>
 
-  <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border border-gray-200 dark:border-slate-700">
     <div class="p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <p class="text-sm text-gray-500">Nombre de la empresa</p>
-          <p class="font-medium text-gray-800"><%= @supplier.name %></p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Nombre de la empresa</p>
+          <p class="font-medium text-gray-800 dark:text-white"><%= @supplier.name %></p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Tel&eacute;fono</p>
-          <p class="font-medium text-gray-800"><%= @supplier.phone || "No especificado" %></p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Teléfono</p>
+          <p class="font-medium text-gray-800 dark:text-white"><%= @supplier.phone || "No especificado" %></p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Categor&iacute;a</p>
-          <p class="font-medium text-gray-800"><%= @supplier.category&.humanize || "No especificada" %></p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Categoría</p>
+          <p class="font-medium text-gray-800 dark:text-white"><%= @supplier.category&.humanize || "No especificada" %></p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Email</p>
-          <p class="font-medium text-gray-800"><%= @supplier.email || "No especificado" %></p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Email</p>
+          <p class="font-medium text-gray-800 dark:text-white"><%= @supplier.email || "No especificado" %></p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Sitio web</p>
-          <p class="font-medium text-gray-800"><%= @supplier.website || "No especificado" %></p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Sitio web</p>
+          <p class="font-medium text-gray-800 dark:text-white"><%= @supplier.website || "No especificado" %></p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Direcci&oacute;n</p>
-          <p class="font-medium text-gray-800"><%= @supplier.address || "No especificada" %></p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Dirección</p>
+          <p class="font-medium text-gray-800 dark:text-white"><%= @supplier.address || "No especificada" %></p>
         </div>
       </div>
 
       <% if @supplier.description.present? %>
         <div class="mt-6">
-          <p class="text-sm text-gray-500">Descripci&oacute;n</p>
-          <p class="text-gray-800 mt-1"><%= @supplier.description %></p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Descripción</p>
+          <p class="text-gray-800 dark:text-white mt-1"><%= @supplier.description %></p>
         </div>
       <% end %>
     </div>

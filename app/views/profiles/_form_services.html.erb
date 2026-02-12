@@ -1,0 +1,71 @@
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 p-6 mb-6"
+     data-controller="service-tags"
+     data-service-tags-specialty-value="<%= @doctor_profile.specialty_id %>">
+
+  <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100 dark:border-slate-700">
+    <div class="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Servicios</h2>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Selecciona los servicios que ofreces</p>
+    </div>
+  </div>
+
+  <%# Selected service tags %>
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Servicios seleccionados</label>
+    <div data-service-tags-target="selected" class="flex flex-wrap">
+      <% @doctor_profile.services.each do |service| %>
+        <span class="inline-flex items-center px-3 py-1 text-sm rounded-full bg-sky-500 text-white mr-2 mb-2" data-service-id="<%= service.id %>">
+          <%= service.name %>
+          <button type="button" class="ml-1.5 hover:text-sky-200"
+                  data-action="service-tags#removeTag"
+                  data-service-id="<%= service.id %>"
+                  data-service-name="<%= service.name %>">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </span>
+      <% end %>
+    </div>
+    <% if @doctor_profile.services.empty? %>
+      <p class="text-sm text-gray-400 dark:text-slate-500 italic" data-service-tags-target="emptyMessage">Aún no has seleccionado servicios</p>
+    <% end %>
+  </div>
+
+  <%# Hidden field to ensure empty array is sent when no services selected %>
+  <input type="hidden" name="doctor_profile[service_ids][]" value="">
+
+  <%# Hidden fields for selected service IDs %>
+  <div data-service-tags-target="hiddenFields">
+    <% @doctor_profile.services.each do |service| %>
+      <input type="hidden" name="doctor_profile[service_ids][]" value="<%= service.id %>" data-service-id="<%= service.id %>">
+    <% end %>
+  </div>
+
+  <%# Suggestions based on specialty %>
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Sugerencias para tu especialidad</label>
+    <div data-service-tags-target="suggestions" class="flex flex-wrap">
+      <%# Loaded dynamically via Stimulus %>
+    </div>
+  </div>
+
+  <%# Custom service input %>
+  <div class="flex gap-2">
+    <input type="text"
+           data-service-tags-target="customInput"
+           data-action="keydown->service-tags#handleCustomKeydown"
+           class="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white"
+           placeholder="Agregar un servicio personalizado...">
+    <button type="button"
+            data-action="service-tags#addCustom"
+            class="inline-flex items-center px-5 py-2 text-sm font-medium text-white bg-sky-500 rounded-full transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-500">
+      Agregar
+    </button>
+  </div>
+</div>

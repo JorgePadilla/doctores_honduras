@@ -1,41 +1,74 @@
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-5xl mx-auto mb-6 flex items-center">
-    <a href="/doctors" class="inline-flex items-center px-4 py-2 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md bg-sky-500 hover:bg-sky-600">
+    <a href="/doctors" class="inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
       </svg>
       Volver al directorio
     </a>
   </div>
-  <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+  <div class="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border-l-4 border-l-sky-300 dark:border-l-sky-500">
     <div class="flex flex-col md:flex-row">
       <div class="md:w-1/3 p-6">
         <% if @doctor.image_url.present? %>
           <img src="<%= @doctor.image_url %>" alt="<%= @doctor.name %>" class="w-full h-auto rounded-lg object-cover" />
         <% else %>
-          <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-            <span class="text-gray-500">Sin imagen</span>
+          <div class="w-full h-64 bg-gray-200 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+            <span class="text-gray-500 dark:text-slate-400">Sin imagen</span>
+          </div>
+        <% end %>
+
+        <%# Social media links %>
+        <% social_links = [
+          { url: @doctor.facebook_url, label: "Facebook" },
+          { url: @doctor.instagram_url, label: "Instagram" },
+          { url: @doctor.twitter_url, label: "X" },
+          { url: @doctor.linkedin_url, label: "LinkedIn" },
+          { url: @doctor.tiktok_url, label: "TikTok" },
+          { url: @doctor.youtube_url, label: "YouTube" }
+        ].select { |l| l[:url].present? } %>
+
+        <% if social_links.any? %>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <% social_links.each do |link| %>
+              <a href="<%= link[:url] %>" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center px-3 py-1.5 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors">
+                <%= link[:label] %>
+              </a>
+            <% end %>
           </div>
         <% end %>
       </div>
-      
+
       <div class="md:w-2/3 p-6">
-        <h1 class="text-2xl font-bold mb-2 text-sky-600"><%= @doctor.name %></h1>
-        <p class="text-lg text-gray-600 mb-2">Especialista en <%= @doctor.specialty&.name %></p>
+        <h1 class="text-2xl font-bold mb-2 text-sky-600 dark:text-sky-400"><%= @doctor.name %></h1>
+        <p class="text-lg text-gray-600 dark:text-slate-400 mb-2">Especialista en <%= @doctor.specialty&.name %></p>
         <% if @doctor.subspecialty.present? %>
-          <p class="text-lg text-gray-600 mb-4">Subespecialidad: <%= @doctor.subspecialty.name %></p>
+          <p class="text-lg text-gray-600 dark:text-slate-400 mb-4">Subespecialidad: <%= @doctor.subspecialty.name %></p>
         <% end %>
-        
+
         <% if @doctor.description.present? %>
           <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600">Sobre el médico</h2>
-            <p class="text-gray-700"><%= @doctor.description %></p>
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Sobre el médico</h2>
+            <p class="text-gray-700 dark:text-slate-300"><%= @doctor.description %></p>
           </div>
         <% end %>
-        
+
+        <%# Languages %>
+        <% if @doctor.languages.present? && @doctor.languages.reject(&:blank?).any? %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Idiomas</h2>
+            <div class="flex flex-wrap gap-2">
+              <% @doctor.languages.reject(&:blank?).each do |language| %>
+                <span class="inline-block px-3 py-1 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400"><%= language %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
         <% if @services.any? %>
           <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600">Servicios</h2>
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Servicios</h2>
             <div class="flex flex-wrap gap-2">
               <% @services.each do |service| %>
                 <span class="inline-block px-3 py-1 text-sm rounded-full text-white bg-sky-500"><%= service.name %></span>
@@ -43,34 +76,112 @@
             </div>
           </div>
         <% end %>
-        
-        <% if @establishments.any? %>
+
+        <%# Education %>
+        <% educations = @doctor.doctor_educations.ordered %>
+        <% if educations.any? %>
           <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600">Consultorios</h2>
-            
-            <% @establishments.each do |establishment| %>
-              <div class="mb-4 border-l-4 pl-4 border-sky-300">
-                <h3 class="text-lg font-medium text-sky-600"><%= establishment.name %></h3>
-                <p class="text-gray-600"><%= establishment.address %></p>
-                <% if establishment.phone.present? %>
-                  <p class="text-gray-600">Tel: <%= establishment.phone %></p>
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Formación Académica</h2>
+            <div class="space-y-3">
+              <% educations.each do |edu| %>
+                <div class="border-l-4 pl-4 border-sky-300 dark:border-sky-500">
+                  <p class="font-medium text-gray-800 dark:text-slate-200"><%= edu.institution %></p>
+                  <% if edu.degree.present? %>
+                    <p class="text-gray-600 dark:text-slate-400"><%= edu.degree %></p>
+                  <% end %>
+                  <% if edu.graduation_year.present? %>
+                    <p class="text-sm text-gray-500 dark:text-slate-500"><%= edu.graduation_year %></p>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <%# Certifications %>
+        <% certifications = @doctor.doctor_certifications.ordered %>
+        <% if certifications.any? %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Capacitaciones y Certificaciones</h2>
+            <div class="space-y-3">
+              <% certifications.each do |cert| %>
+                <div class="border-l-4 pl-4 border-sky-300 dark:border-sky-500">
+                  <p class="font-medium text-gray-800 dark:text-slate-200"><%= cert.name %></p>
+                  <% if cert.institution.present? %>
+                    <p class="text-gray-600 dark:text-slate-400"><%= cert.institution %></p>
+                  <% end %>
+                  <% if cert.year.present? %>
+                    <p class="text-sm text-gray-500 dark:text-slate-500"><%= cert.year %></p>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <%# Branches (sucursales) - phone and schedules gated by doctor's plan %>
+        <% doctor_plan_tier = @doctor.user.subscription&.subscription_plan&.tier || "gratis" %>
+        <% doctor_has_paid_plan = doctor_plan_tier != "gratis" %>
+        <% branches = @doctor.doctor_branches.ordered %>
+        <% if branches.any? %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Sucursales</h2>
+            <% branches.each do |branch| %>
+              <div class="mb-4 border-l-4 pl-4 border-sky-300 dark:border-sky-500">
+                <h3 class="text-lg font-medium text-sky-600 dark:text-sky-400"><%= branch.name %></h3>
+                <p class="text-gray-600 dark:text-slate-400"><%= branch.address %></p>
+                <% if branch.city.present? || branch.department.present? %>
+                  <p class="text-gray-600 dark:text-slate-400"><%= [branch.city&.name, branch.department&.name].compact.join(", ") %></p>
                 <% end %>
-                <% if establishment.map_link.present? %>
-                  <a href="<%= establishment.map_link %>" target="_blank" class="text-sm hover:underline text-sky-600">Ver en mapa</a>
+                <% if doctor_has_paid_plan && branch.phone.present? %>
+                  <p class="text-gray-600 dark:text-slate-400">Tel: <%= branch.phone %></p>
+                <% end %>
+                <% if branch.map_link.present? %>
+                  <a href="<%= branch.map_link %>" target="_blank" class="text-sm hover:underline text-sky-600 dark:text-sky-400">Ver en mapa</a>
+                <% end %>
+                <% if doctor_has_paid_plan %>
+                  <% schedules = branch.branch_schedules.reject { |s| s.opens_at.nil? }.sort_by(&:day_of_week) %>
+                  <% if schedules.any? %>
+                    <div class="mt-2">
+                      <p class="text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Horarios:</p>
+                      <div class="text-sm text-gray-600 dark:text-slate-400 space-y-0.5">
+                        <% schedules.each do |schedule| %>
+                          <p><span class="w-24 inline-block"><%= schedule.day_name %>:</span> <%= schedule.opens_at.strftime("%H:%M") %> - <%= schedule.closes_at.strftime("%H:%M") %></p>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
                 <% end %>
               </div>
             <% end %>
           </div>
-        <% else %>
+        <% end %>
+
+        <% if @establishments.any? %>
           <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600">Ubicación</h2>
-            <div class="mb-4 border-l-4 pl-4 border-sky-300">
-              <p class="text-gray-600"><%= @doctor.city&.name %>, <%= @doctor.department&.name %></p>
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Consultorios</h2>
+
+            <% @establishments.each do |establishment| %>
+              <div class="mb-4 border-l-4 pl-4 border-sky-300 dark:border-sky-500">
+                <h3 class="text-lg font-medium text-sky-600 dark:text-sky-400"><%= establishment.name %></h3>
+                <p class="text-gray-600 dark:text-slate-400"><%= establishment.address %></p>
+                <% if establishment.phone.present? %>
+                  <p class="text-gray-600 dark:text-slate-400">Tel: <%= establishment.phone %></p>
+                <% end %>
+                <% if establishment.map_link.present? %>
+                  <a href="<%= establishment.map_link %>" target="_blank" class="text-sm hover:underline text-sky-600 dark:text-sky-400">Ver en mapa</a>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% elsif branches.empty? %>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Ubicación</h2>
+            <div class="mb-4 border-l-4 pl-4 border-sky-300 dark:border-sky-500">
+              <p class="text-gray-600 dark:text-slate-400"><%= @doctor.city&.name %>, <%= @doctor.department&.name %></p>
             </div>
           </div>
         <% end %>
-        
-
       </div>
     </div>
   </div>

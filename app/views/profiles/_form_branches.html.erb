@@ -1,0 +1,57 @@
+<% max_branches = paid_plan? ? 0 : 1 %>
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 p-6 mb-6"
+     data-controller="nested-fields"
+     data-nested-fields-max-entries-value="<%= max_branches %>">
+  <div class="flex items-center justify-between mb-5 pb-4 border-b border-gray-100 dark:border-slate-700">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Sucursales</h2>
+        <% unless paid_plan? %>
+          <p class="text-sm text-gray-500 dark:text-slate-400">
+            El plan gratuito permite 1 sucursal sin horarios ni teléfono.
+          </p>
+        <% else %>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Consultorios y sucursales donde atiendes</p>
+        <% end %>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" data-action="nested-fields#add"
+              data-nested-fields-target="addButton"
+              class="inline-flex items-center px-4 py-1.5 text-sm font-medium text-white bg-sky-500 rounded-full transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-500">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Agregar sucursal
+      </button>
+      <% unless paid_plan? %>
+        <a href="<%= settings_subscription_path %>"
+           data-nested-fields-target="upgrade"
+           style="display: none;"
+           class="inline-flex items-center px-4 py-1.5 text-sm font-medium text-white bg-amber-500 rounded-full transition-all hover:shadow-md transform hover:scale-105 hover:bg-amber-600">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"></path>
+          </svg>
+          Mejorar plan para más sucursales
+        </a>
+      <% end %>
+    </div>
+  </div>
+
+  <template data-nested-fields-target="template">
+    <%= render "profiles/form_branch_fields", form: form, branch_title: "Nueva sucursal" %>
+  </template>
+
+  <div data-nested-fields-target="container">
+    <% @doctor_profile.doctor_branches.each_with_index do |branch, index| %>
+      <%= form.fields_for :doctor_branches, branch, child_index: branch.persisted? ? branch.id : index do |bf| %>
+        <%= render "profiles/form_branch_fields", form: form, bf: bf, branch: branch, branch_title: "Sucursal ##{index + 1}" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

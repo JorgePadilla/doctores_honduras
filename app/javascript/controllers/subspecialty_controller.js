@@ -8,6 +8,11 @@ export default class extends Controller {
     this.updateSubspecialties()
   }
 
+  broadcastSpecialtyChange() {
+    const specialtyId = this.specialtyTarget.value
+    window.dispatchEvent(new CustomEvent("specialty-changed", { detail: { specialtyId: specialtyId } }))
+  }
+
   updateSubspecialties() {
     console.log('updateSubspecialties called')
     const specialtyId = this.specialtyTarget.value

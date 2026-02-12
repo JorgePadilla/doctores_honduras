@@ -1,51 +1,51 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-primary-700 mb-6">Configuración</h1>
-  
+  <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-6">Configuración</h1>
+
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <%= render "settings/sidebar", current: "security" %>
-    
+
     <!-- Main Content -->
-    <div class="md:col-span-3 bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-semibold mb-4">Seguridad de la Cuenta</h2>
-      
+    <div class="md:col-span-3 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500">
+      <h2 class="text-xl font-semibold mb-4 dark:text-white">Seguridad de la Cuenta</h2>
+
       <!-- Change Password Section -->
       <div class="mb-8">
-        <h3 class="text-lg font-medium mb-4">Cambiar Contraseña</h3>
-        
+        <h3 class="text-lg font-medium mb-4 dark:text-white">Cambiar Contraseña</h3>
+
         <%= form_with url: "#", method: :patch, class: "space-y-4" do |f| %>
           <div>
-            <%= f.label :current_password, "Contraseña Actual", class: "block text-sm font-medium text-gray-700" %>
+            <%= f.label :current_password, "Contraseña Actual", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
             <div class="mt-1">
-              <%= f.password_field :current_password, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+              <%= f.password_field :current_password, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-white" %>
             </div>
           </div>
-          
+
           <div>
-            <%= f.label :password, "Nueva Contraseña", class: "block text-sm font-medium text-gray-700" %>
+            <%= f.label :password, "Nueva Contraseña", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
             <div class="mt-1">
-              <%= f.password_field :password, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+              <%= f.password_field :password, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-white" %>
             </div>
           </div>
-          
+
           <div>
-            <%= f.label :password_confirmation, "Confirmar Nueva Contraseña", class: "block text-sm font-medium text-gray-700" %>
+            <%= f.label :password_confirmation, "Confirmar Nueva Contraseña", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
             <div class="mt-1">
-              <%= f.password_field :password_confirmation, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+              <%= f.password_field :password_confirmation, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-white" %>
             </div>
           </div>
-          
+
           <div class="flex justify-end">
             <%= f.submit "Actualizar Contraseña", class: "inline-flex justify-center py-2 px-5 border border-transparent shadow-sm text-sm font-medium rounded-full text-white transition-all hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 bg-sky-500 hover:bg-sky-600" %>
           </div>
         <% end %>
       </div>
-      
+
       <!-- Two-Factor Authentication -->
-      <div class="pt-6 border-t border-gray-200 mb-8">
-        <h3 class="text-lg font-medium mb-4">Autenticación de Dos Factores</h3>
-        
+      <div class="pt-6 border-t border-gray-200 dark:border-slate-700 mb-8">
+        <h3 class="text-lg font-medium mb-4 dark:text-white">Autenticación de Dos Factores</h3>
+
         <% if @user.two_factor_enabled? %>
-          <div class="bg-green-50 p-4 rounded-md mb-4">
+          <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-md mb-4">
             <div class="flex">
               <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -53,36 +53,36 @@
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm font-medium text-green-800">La autenticación de dos factores está habilitada.</p>
+                <p class="text-sm font-medium text-green-800 dark:text-green-300">La autenticación de dos factores está habilitada.</p>
               </div>
             </div>
           </div>
-          
-          <%= button_to "Desactivar Autenticación de Dos Factores", "#", method: :delete, class: "py-2 px-5 border border-gray-300 shadow-sm text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 transition-all hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" %>
+
+          <%= button_to "Desactivar Autenticación de Dos Factores", "#", method: :delete, class: "py-2 px-5 border border-gray-300 dark:border-slate-600 shadow-sm text-sm font-medium rounded-full text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-all hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" %>
         <% else %>
-          <p class="text-gray-600 mb-4">La autenticación de dos factores añade una capa adicional de seguridad a tu cuenta. Además de tu contraseña, necesitarás ingresar un código de verificación para iniciar sesión.</p>
-          
+          <p class="text-gray-600 dark:text-slate-400 mb-4">La autenticación de dos factores añade una capa adicional de seguridad a tu cuenta. Además de tu contraseña, necesitarás ingresar un código de verificación para iniciar sesión.</p>
+
           <%= button_to "Activar Autenticación de Dos Factores", "#", method: :post, class: "py-2 px-5 border border-transparent shadow-sm text-sm font-medium rounded-full text-white transition-all hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 bg-sky-500 hover:bg-sky-600" %>
         <% end %>
       </div>
-      
+
       <!-- Active Sessions -->
-      <div class="pt-6 border-t border-gray-200">
-        <h3 class="text-lg font-medium mb-4">Sesiones Activas</h3>
-        
-        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead class="bg-gray-50">
+      <div class="pt-6 border-t border-gray-200 dark:border-slate-700">
+        <h3 class="text-lg font-medium mb-4 dark:text-white">Sesiones Activas</h3>
+
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 dark:ring-slate-700 md:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-300 dark:divide-slate-700">
+            <thead class="bg-gray-50 dark:bg-slate-700">
               <tr>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Dispositivo</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ubicación</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Última actividad</th>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6">Dispositivo</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Ubicación</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Última actividad</th>
                 <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                   <span class="sr-only">Acciones</span>
                 </th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
+            <tbody class="divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800">
               <% if @active_sessions.present? %>
                 <% @active_sessions.each do |session| %>
                   <tr>
@@ -98,7 +98,7 @@
                           <% end %>
                         </div>
                         <div class="ml-4">
-                          <div class="font-medium text-gray-900">
+                          <div class="font-medium text-gray-900 dark:text-white">
                             <% if session.user_agent&.include?('iPhone') || session.user_agent&.include?('iPad') %>
                               iPhone/iPad
                             <% elsif session.user_agent&.include?('Android') %>
@@ -111,7 +111,7 @@
                               Dispositivo
                             <% end %>
                           </div>
-                          <div class="text-gray-500">
+                          <div class="text-gray-500 dark:text-slate-400">
                             <% if session.user_agent&.include?('Chrome') %>
                               Chrome
                             <% elsif session.user_agent&.include?('Firefox') %>
@@ -129,13 +129,13 @@
                         </div>
                       </div>
                       <% if session.id == Current.session&.id %>
-                        <span class="ml-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span class="ml-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
                           Actual
                         </span>
                       <% end %>
                     </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= session.ip_address || "Ubicación desconocida" %></td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400"><%= session.ip_address || "Ubicación desconocida" %></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400">
                       <% if session.updated_at > 1.day.ago %>
                         Hoy, <%= session.updated_at.strftime("%H:%M") %>
                       <% elsif session.updated_at > 2.days.ago %>
@@ -153,7 +153,7 @@
                 <% end %>
               <% else %>
                 <tr>
-                  <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                  <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-slate-400">
                     No hay sesiones activas registradas.
                   </td>
                 </tr>
@@ -161,8 +161,8 @@
             </tbody>
           </table>
         </div>
-        
-        <div class="mt-4 text-sm text-gray-500">
+
+        <div class="mt-4 text-sm text-gray-500 dark:text-slate-400">
           <p class="flex items-center">
             <i class="fas fa-info-circle text-sky-500 mr-2"></i>
             Si no reconoces alguna de estas sesiones, ciérrala y considera cambiar tu contraseña.

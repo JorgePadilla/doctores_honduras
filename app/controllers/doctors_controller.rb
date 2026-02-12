@@ -76,7 +76,12 @@ class DoctorsController < ApplicationController
   end
 
   def show
-    @doctor = DoctorProfile.includes(:city, :department, :specialty, :subspecialty).find(params[:id])
+    @doctor = DoctorProfile.includes(
+      :city, :department, :specialty, :subspecialty,
+      doctor_branches: [:department, :city, :branch_schedules],
+      doctor_educations: [],
+      doctor_certifications: []
+    ).find(params[:id])
 
     # Check if profile is hidden and user is not admin
     if @doctor.hidden? && !Current.user&.admin?

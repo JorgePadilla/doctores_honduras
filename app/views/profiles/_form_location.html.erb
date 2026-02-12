@@ -1,0 +1,31 @@
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 p-6 mb-6">
+  <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100 dark:border-slate-700">
+    <div class="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Ubicación Principal</h2>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Departamento y ciudad donde ejerces</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :department_id, "Departamento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
+      <%= form.select :department_id,
+                      options_for_select(@departments.map { |d| [d.name, d.id] }, @doctor_profile.department_id),
+                      { include_blank: "Selecciona un departamento" },
+                      { class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", required: true } %>
+    </div>
+
+    <div>
+      <%= form.label :city_id, "Ciudad", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
+      <%= form.select :city_id,
+                      options_for_select(@cities.map { |c| [c.name, c.id] }, @doctor_profile.city_id),
+                      { include_blank: "Selecciona una ciudad" },
+                      { class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", required: true } %>
+    </div>
+  </div>
+</div>

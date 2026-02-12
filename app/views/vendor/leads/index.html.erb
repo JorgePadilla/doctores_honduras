@@ -1,38 +1,38 @@
 <div class="container mx-auto px-4 py-8 max-w-5xl">
-  <h1 class="text-2xl font-bold text-gray-800 mb-6">Contactos Recibidos</h1>
+  <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Contactos Recibidos</h1>
 
   <% if @leads.any? %>
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+        <thead class="bg-gray-50 dark:bg-slate-700">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizaci&oacute;n</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ver</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Nombre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Organización</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Estado</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Fecha</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Ver</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
           <% @leads.each do |lead| %>
             <tr>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= lead.name %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= lead.email %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= lead.organization || "-" %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"><%= lead.name %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= lead.email %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= lead.organization || "-" %></td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <% case lead.status %>
                 <% when "new" %>
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-sky-100 text-sky-800">Nuevo</span>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-800 dark:text-sky-300">Nuevo</span>
                 <% when "contacted" %>
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Contactado</span>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Contactado</span>
                 <% when "converted" %>
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Convertido</span>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Convertido</span>
                 <% end %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= lead.created_at.strftime("%d/%m/%Y") %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= lead.created_at.strftime("%d/%m/%Y") %></td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%= link_to "Ver", vendor_lead_path(lead), class: "text-sky-600 hover:text-sky-900" %>
+                <%= link_to "Ver", vendor_lead_path(lead), class: "text-sky-600 dark:text-sky-400 hover:text-sky-900 dark:hover:text-sky-300" %>
               </td>
             </tr>
           <% end %>
@@ -40,8 +40,8 @@
       </table>
     </div>
   <% else %>
-    <div class="text-center py-12 bg-white rounded-lg shadow">
-      <p class="text-gray-500">A&uacute;n no has recibido contactos.</p>
+    <div class="text-center py-12 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50">
+      <p class="text-gray-500 dark:text-slate-400">Aún no has recibido contactos.</p>
     </div>
   <% end %>
 </div>
