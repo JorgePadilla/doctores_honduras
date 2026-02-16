@@ -42,10 +42,19 @@
               <% if Current.user&.admin? %>
                 <a href="<%= admin_dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700 bg-sky-50 dark:bg-slate-700/50 border-l-2 border-sky-500">Panel Admin</a>
               <% end %>
-              <a href="<%= profile_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Mi Perfil</a>
+              <% if Current.user.profile_type != "paciente" %>
+                <a href="<%= profile_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Mi Perfil</a>
+              <% end %>
               <a href="<%= dashboard_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Panel de Control</a>
               <% if Current.user.profile_type == "vendor" %>
                 <a href="<%= vendor_products_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Mis Productos</a>
+              <% end %>
+              <% if Current.user.profile_type == "paciente" %>
+                <a href="<%= paciente_appointments_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Mis Citas</a>
+                <a href="<%= paciente_profile_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Mi Perfil</a>
+              <% end %>
+              <% if (Current.user.profile_type == "doctor" && Current.user.subscription&.subscription_plan&.tier.in?(%w[profesional elite])) || Current.user.secretary? %>
+                <a href="<%= agenda_appointments_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Agenda</a>
               <% end %>
               <a href="<%= settings_path %>" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700">Configuración</a>
               <div class="border-t border-gray-200 dark:border-slate-600"></div>
@@ -80,10 +89,19 @@
           <% if Current.user&.admin? %>
             <a href="<%= admin_dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition bg-sky-900/20 border-l-2 border-sky-400 pl-2">Panel Admin</a>
           <% end %>
-          <a href="<%= profile_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mi Perfil</a>
+          <% if Current.user.profile_type != "paciente" %>
+            <a href="<%= profile_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mi Perfil</a>
+          <% end %>
           <a href="<%= dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition">Panel de Control</a>
           <% if Current.user.profile_type == "vendor" %>
             <a href="<%= vendor_products_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mis Productos</a>
+          <% end %>
+          <% if Current.user.profile_type == "paciente" %>
+            <a href="<%= paciente_appointments_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mis Citas</a>
+            <a href="<%= paciente_profile_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mi Perfil</a>
+          <% end %>
+          <% if (Current.user.profile_type == "doctor" && Current.user.subscription&.subscription_plan&.tier.in?(%w[profesional elite])) || Current.user.secretary? %>
+            <a href="<%= agenda_appointments_path %>" class="block py-2 text-white hover:text-primary-200 transition">Agenda</a>
           <% end %>
           <a href="<%= settings_path %>" class="block py-2 text-white hover:text-primary-200 transition">Configuración</a>
           <%= button_to "Cerrar Sesión", session_path, method: :delete, class: "block w-full text-left py-2 text-white hover:text-primary-200 transition" %>

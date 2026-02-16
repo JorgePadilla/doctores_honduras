@@ -1,7 +1,7 @@
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-4xl mx-auto">
     <div class="mb-6">
-      <h1 class="text-4xl font-bold mb-2 text-primary-700 dark:text-sky-400">Editar Perfil de Doctor</h1>
+      <h1 class="text-2xl font-bold mb-2 text-primary-700 dark:text-sky-400">Editar Perfil de Doctor</h1>
       <p class="text-lg text-gray-600 dark:text-slate-400">Actualiza la información de tu perfil</p>
     </div>
 
@@ -31,7 +31,7 @@
       <%= render "profiles/form_image", form: form %>
 
       <div class="mt-8 flex justify-end space-x-4">
-        <a href="<%= profile_path %>" class="px-6 py-2.5 border border-gray-300 dark:border-slate-600 rounded-full text-gray-700 dark:text-slate-300 transition-all hover:shadow-md transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-slate-700">
+        <a href="<%= profile_path %>" class="px-6 py-2.5 border border-sky-500 dark:border-sky-400 rounded-full text-sky-600 dark:text-sky-400 font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/20">
           Cancelar
         </a>
         <%= form.submit "Actualizar Perfil", class: "px-6 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-500" %>

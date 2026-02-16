@@ -30,7 +30,7 @@
   <% end %>
 
   <!-- Upgrade CTA for free tier -->
-  <% if @plan&.free? %>
+  <% if @plan&.free? && @profile_type != "paciente" %>
     <div class="bg-gradient-to-r from-sky-500 to-sky-600 rounded-xl shadow-md p-6 mb-6 text-white">
       <h3 class="text-lg font-bold mb-2">Mejora tu plan</h3>
       <p class="text-sm opacity-90 mb-3">
@@ -74,6 +74,19 @@
               <p class="text-lg font-semibold text-gray-800 dark:text-white"><%= @profile_views_week || 0 %></p>
               <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @doctor_profile && paid_plan?(@plan) %>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-green-300 dark:border-l-green-500 transition-all hover:shadow-lg">
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Agenda Médica</h3>
+          <% upcoming_count = @doctor_profile.appointments.active.upcoming.count %>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Citas próximas:</strong> <%= upcoming_count %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-4"><strong class="dark:text-slate-200">Hoy:</strong> <%= @doctor_profile.appointments.active.for_date(Date.current).count %> citas</p>
+          <div class="flex space-x-3">
+            <%= link_to "Ver agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
+            <%= link_to "Configuración", agenda_settings_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
           </div>
         </div>
       <% end %>
@@ -172,6 +185,64 @@
             <%= link_to "Mis contactos", vendor_leads_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
           <% end %>
         </div>
+      </div>
+
+    <% elsif @profile_type == "paciente" %>
+      <!-- Patient: Upcoming Appointments -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-teal-300 dark:border-l-teal-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Próximas Citas</h3>
+        <% if @upcoming_appointments.any? %>
+          <div class="space-y-3">
+            <% @upcoming_appointments.first(3).each do |apt| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                <div>
+                  <p class="font-medium text-gray-900 dark:text-white text-sm">Dr. <%= apt.doctor_profile.name %></p>
+                  <p class="text-xs text-gray-500 dark:text-slate-400"><%= apt.appointment_date.strftime("%d/%m/%Y") %> &middot; <%= apt.start_time.strftime("%H:%M") %></p>
+                </div>
+                <span class="text-xs px-2 py-1 rounded-full <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>
+              </div>
+            <% end %>
+          </div>
+          <%= link_to "Ver todas mis citas", paciente_appointments_path, class: "inline-block mt-3 text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
+        <% else %>
+          <p class="text-gray-500 dark:text-slate-400 text-sm mb-4">No tienes citas próximas.</p>
+          <%= link_to "Buscar doctores", doctors_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>
+        <% end %>
+      </div>
+
+      <!-- Patient: Past Appointments -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Historial de Citas</h3>
+        <% if @past_appointments.any? %>
+          <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @past_appointments.size %></p>
+          <p class="text-xs text-gray-500 dark:text-slate-400 mb-3">citas anteriores</p>
+          <%= link_to "Ver historial completo", paciente_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
+        <% else %>
+          <p class="text-gray-500 dark:text-slate-400 text-sm">Aún no tienes citas pasadas.</p>
+        <% end %>
+      </div>
+
+      <!-- Patient: Quick Actions -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Explorar</h3>
+        <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">Busca doctores y establecimientos en Honduras.</p>
+        <div class="flex space-x-3">
+          <%= link_to "Buscar doctores", doctors_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>
+          <%= link_to "Establecimientos", establishments_path, class: "py-2.5 px-5 border border-sky-500 dark:border-sky-400 text-sky-600 dark:text-sky-400 rounded-full text-sm font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/30" %>
+        </div>
+      </div>
+
+    <% elsif @user.secretary? %>
+      <!-- Secretary dashboard -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-green-300 dark:border-l-green-500 transition-all hover:shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Agenda Médica</h3>
+        <% @user.secretary_assignments.active.includes(doctor_profile: :specialty).each do |assignment| %>
+          <div class="mb-3">
+            <p class="text-gray-600 dark:text-slate-400 text-sm"><strong class="dark:text-slate-200">Dr. <%= assignment.doctor_profile.name %></strong></p>
+            <p class="text-gray-500 dark:text-slate-500 text-xs"><%= assignment.doctor_profile.specialty&.name %></p>
+          </div>
+        <% end %>
+        <%= link_to "Ir a la agenda", agenda_appointments_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>
       </div>
 
     <% else %>

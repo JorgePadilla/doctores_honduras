@@ -1,0 +1,17 @@
+<%= link_to agenda_appointment_path(appointment), class: "block bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 border-l-4 #{appointment.status_classes[:border]} p-4 hover:shadow-lg transition-all" do %>
+  <div class="flex justify-between items-start">
+    <div class="flex-1">
+      <div class="flex items-center space-x-2 mb-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full <%= appointment.status_classes[:dot] %>"></span>
+        <span class="text-sm font-semibold text-gray-900 dark:text-white"><%= appointment.start_time.strftime("%H:%M") %> - <%= appointment.end_time.strftime("%H:%M") %></span>
+        <span class="text-xs px-2.5 py-0.5 rounded-full font-medium <%= appointment.status_classes[:bg] %> <%= appointment.status_classes[:text] %>"><%= appointment.status_label %></span>
+      </div>
+      <p class="font-semibold text-sky-700 dark:text-sky-400"><%= appointment.patient_name %></p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-0.5"><%= appointment.doctor_branch.name %></p>
+      <% if appointment.reason.present? %>
+        <p class="text-sm text-gray-400 dark:text-slate-500 mt-1 truncate"><%= appointment.reason %></p>
+      <% end %>
+    </div>
+    <svg class="w-5 h-5 text-gray-300 dark:text-slate-600 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+  </div>
+<% end %>

@@ -1,0 +1,65 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-8">Configuración de Agenda</h1>
+
+  <%= form_with(model: @setting, url: agenda_settings_path, method: :patch, class: "space-y-6") do |f| %>
+    <% if @setting.errors.any? %>
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+        <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400">
+          <% @setting.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Duración de cita (minutos)</label>
+        <%= f.select :appointment_duration, DoctorAgendaSetting::DURATION_OPTIONS.map { |d| ["#{d} minutos", d] },
+            {},
+            { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" } %>
+        <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Duración predeterminada para cada cita.</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Tiempo entre citas (minutos)</label>
+        <%= f.number_field :buffer_minutes, min: 0, max: 30, step: 5,
+            class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Minutos de descanso entre citas consecutivas.</p>
+      </div>
+
+      <% if @tier == "elite" %>
+        <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Reservas en línea</h3>
+              <p class="text-sm text-gray-500 dark:text-slate-400 mt-0.5">Permitir que los pacientes reserven citas desde tu perfil público.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <%= f.check_box :public_booking_enabled, class: "sr-only peer" %>
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-sky-300 dark:peer-focus:ring-sky-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-sky-500"></div>
+            </label>
+          </div>
+        </div>
+      <% else %>
+        <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-400 dark:text-slate-500">Reservas en línea</h3>
+              <p class="text-sm text-gray-400 dark:text-slate-500 mt-0.5">Disponible con el plan Elite.</p>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-full">Elite</span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex justify-end">
+      <%= f.submit "Guardar Configuración", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer" %>
+    </div>
+  <% end %>
+
+  <div class="mt-6">
+    <%= link_to "← Volver a la agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+</div>

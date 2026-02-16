@@ -15,6 +15,16 @@ class BranchSchedule < ApplicationRecord
     6 => "Sábado"
   }.freeze
 
+  DEFAULT_HOURS = {
+    0 => { opens_at: nil, closes_at: nil, closed: true },
+    1 => { opens_at: "08:00", closes_at: "17:00", closed: false },
+    2 => { opens_at: "08:00", closes_at: "17:00", closed: false },
+    3 => { opens_at: "08:00", closes_at: "17:00", closed: false },
+    4 => { opens_at: "08:00", closes_at: "17:00", closed: false },
+    5 => { opens_at: "08:00", closes_at: "17:00", closed: false },
+    6 => { opens_at: "08:00", closes_at: "12:00", closed: false }
+  }.freeze
+
   def day_name
     DAY_NAMES[day_of_week]
   end

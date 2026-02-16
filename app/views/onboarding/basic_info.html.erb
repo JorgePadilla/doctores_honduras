@@ -8,6 +8,8 @@
         Complete la información básica de su establecimiento
       <% elsif @profile_type == "vendor" %>
         Complete la información básica de su empresa
+      <% elsif @profile_type == "paciente" %>
+        Complete la información básica de su perfil
       <% end %>
     </p>
   </div>
@@ -20,6 +22,8 @@
         <%= render "onboarding/establishment_basic_form", establishment: @establishment, departments: @departments, cities: @cities, profile_type: @profile_type %>
       <% elsif @profile_type == "vendor" %>
         <%= render "onboarding/vendor_basic_form", supplier: @supplier, departments: @departments, cities: @cities %>
+      <% elsif @profile_type == "paciente" %>
+        <%= render "onboarding/patient_basic_form", patient_profile: @patient_profile, departments: @departments, cities: @cities %>
       <% end %>
     </div>
   </div>

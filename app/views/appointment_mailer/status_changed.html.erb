@@ -1,0 +1,34 @@
+<h2>Actualización de Cita</h2>
+
+<p>Estimado/a <%= @appointment.patient_name %>,</p>
+
+<p>El estado de su cita ha sido actualizado a: <strong><%= @appointment.status_label %></strong></p>
+
+<table style="border-collapse: collapse; width: 100%; max-width: 500px;">
+  <tr>
+    <td style="padding: 8px; font-weight: bold; color: #374151;">Doctor:</td>
+    <td style="padding: 8px; color: #374151;">Dr. <%= @doctor.name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; font-weight: bold; color: #374151;">Fecha:</td>
+    <td style="padding: 8px; color: #374151;"><%= I18n.l(@appointment.appointment_date, format: :long) %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; font-weight: bold; color: #374151;">Hora:</td>
+    <td style="padding: 8px; color: #374151;"><%= @appointment.start_time.strftime("%H:%M") %> - <%= @appointment.end_time.strftime("%H:%M") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; font-weight: bold; color: #374151;">Sucursal:</td>
+    <td style="padding: 8px; color: #374151;"><%= @branch.name %> - <%= @branch.address %></td>
+  </tr>
+</table>
+
+<% if @appointment.cancelada? %>
+  <p>Su cita ha sido cancelada. Si necesita reagendar, por favor contacte al consultorio.</p>
+<% elsif @appointment.confirmada? %>
+  <p>Su cita ha sido confirmada. Por favor, llegue 10 minutos antes.</p>
+<% elsif @appointment.completada? %>
+  <p>Su cita ha sido marcada como completada. Gracias por su visita.</p>
+<% end %>
+
+<p>Saludos,<br>Doctores Honduras</p>

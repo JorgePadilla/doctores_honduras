@@ -1,0 +1,81 @@
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400">Agenda</h1>
+      <% if acting_as_secretary? %>
+        <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Gestionando agenda de Dr. <%= current_doctor_profile.name %></p>
+      <% end %>
+    </div>
+    <div class="flex items-center space-x-3">
+      <%= link_to agenda_notifications_path, class: "relative p-2 text-gray-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <% if Current.user.unread_notifications_count > 0 %>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" data-controller="notification-badge"><%= Current.user.unread_notifications_count %></span>
+        <% end %>
+      <% end %>
+      <%= link_to "Nueva Cita", new_agenda_appointment_path, class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105" %>
+    </div>
+  </div>
+
+  <!-- Calendar Navigation -->
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6" data-controller="calendar">
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center space-x-2">
+        <%= link_to agenda_appointments_path(date: (@view == "day" ? @date - 1.day : @date - 1.week), view: @view), class: "p-2 hover:bg-sky-50 dark:hover:bg-slate-700 rounded-lg transition-colors" do %>
+          <svg class="w-5 h-5 text-gray-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <% end %>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+          <% if @view == "day" %>
+            <%= I18n.l(@date, format: :long) %>
+          <% else %>
+            <%= I18n.l(@week_start, format: :long) %> - <%= I18n.l(@week_start + 6.days, format: :long) %>
+          <% end %>
+        </h2>
+        <%= link_to agenda_appointments_path(date: (@view == "day" ? @date + 1.day : @date + 1.week), view: @view), class: "p-2 hover:bg-sky-50 dark:hover:bg-slate-700 rounded-lg transition-colors" do %>
+          <svg class="w-5 h-5 text-gray-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <% end %>
+        <%= link_to "Hoy", agenda_appointments_path(date: Date.current, view: @view), class: "ml-2 px-3 py-1.5 text-sm border border-sky-500 text-sky-600 dark:text-sky-400 rounded-full hover:bg-sky-50 dark:hover:bg-sky-900/20 font-medium transition-all" %>
+      </div>
+      <div class="flex bg-gray-100 dark:bg-slate-700 rounded-full p-1">
+        <%= link_to "Semana", agenda_appointments_path(date: @date, view: "week"), class: "px-4 py-1.5 rounded-full text-sm font-medium transition-all #{@view == 'week' ? 'bg-white dark:bg-slate-600 text-sky-600 dark:text-sky-400 shadow-sm' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300'}" %>
+        <%= link_to "Día", agenda_appointments_path(date: @date, view: "day"), class: "px-4 py-1.5 rounded-full text-sm font-medium transition-all #{@view == 'day' ? 'bg-white dark:bg-slate-600 text-sky-600 dark:text-sky-400 shadow-sm' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300'}" %>
+      </div>
+    </div>
+
+    <% if @view == "day" %>
+      <!-- Day View -->
+      <% if @appointments.any? %>
+        <div class="space-y-3">
+          <% @appointments.each do |appt| %>
+            <%= render "agenda/appointments/appointment_card", appointment: appt %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-12">
+          <svg class="mx-auto w-12 h-12 text-gray-300 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <p class="text-gray-500 dark:text-slate-400 font-medium">No hay citas para este día</p>
+          <p class="text-sm text-gray-400 dark:text-slate-500 mt-1">Las citas programadas aparecerán aquí</p>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Week View -->
+      <div class="grid grid-cols-7 gap-3">
+        <% (0..6).each do |i| %>
+          <% day = @week_start + i.days %>
+          <div class="text-center">
+            <div class="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase mb-1"><%= I18n.l(day, format: :short) %></div>
+            <div class="text-sm font-bold mb-2 <%= day == Date.current ? 'bg-sky-500 text-white rounded-full w-7 h-7 flex items-center justify-center mx-auto' : 'text-gray-900 dark:text-white' %>"><%= day.day %></div>
+            <div class="space-y-1">
+              <% (@appointments_by_date[day] || []).each do |appt| %>
+                <%= link_to agenda_appointment_path(appt), class: "block p-1.5 rounded-lg text-xs #{appt.status_classes[:week_card]} truncate transition-all" do %>
+                  <span class="font-medium"><%= appt.start_time.strftime("%H:%M") %></span>
+                  <span class="block truncate"><%= appt.patient_name %></span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

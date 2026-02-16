@@ -1,0 +1,11 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <div class="mb-6">
+    <%= link_to "← Volver a mi perfil", paciente_profile_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+
+  <h1 class="text-3xl font-bold text-primary-700 dark:text-sky-400 mb-6">Editar Perfil</h1>
+
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
+    <%= render "paciente/profiles/form", patient_profile: @patient_profile, departments: @departments, cities: @cities %>
+  </div>
+</div>

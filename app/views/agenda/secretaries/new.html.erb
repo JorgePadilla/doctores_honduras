@@ -1,0 +1,22 @@
+<div class="container mx-auto px-4 py-8 max-w-lg">
+  <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-6">Agregar Secretaria</h1>
+
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
+    <p class="text-sm text-gray-600 dark:text-slate-400 mb-6">
+      Ingresa el correo electrónico de la persona que deseas asignar como secretaria.
+      Debe tener una cuenta registrada en Doctores Honduras.
+    </p>
+
+    <%= form_with(model: @assignment, url: agenda_secretaries_path, class: "space-y-6") do |f| %>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Correo electrónico *</label>
+        <%= f.email_field :invited_email, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true, placeholder: "secretaria@ejemplo.com" %>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <%= link_to "Cancelar", agenda_secretaries_path, class: "inline-flex items-center border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-5 py-2 rounded-full font-medium transition-all" %>
+        <%= f.submit "Asignar Secretaria", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -47,6 +47,18 @@
           <p class="text-lg text-gray-600 dark:text-slate-400 mb-4">Subespecialidad: <%= @doctor.subspecialty.name %></p>
         <% end %>
 
+        <% doctor_plan_tier = @doctor.user.subscription&.subscription_plan&.tier || "gratis" %>
+        <% doctor_has_paid_plan = doctor_plan_tier != "gratis" %>
+
+        <% if doctor_plan_tier == "elite" && @doctor.agenda_setting&.public_booking_enabled %>
+          <div class="mb-6">
+            <%= link_to new_doctor_booking_path(@doctor), class: "inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-green-500 hover:bg-green-600" do %>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Reservar Cita
+            <% end %>
+          </div>
+        <% end %>
+
         <% if @doctor.description.present? %>
           <div class="mb-6">
             <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Sobre el médico</h2>
@@ -120,8 +132,6 @@
         <% end %>
 
         <%# Branches (sucursales) - phone and schedules gated by doctor's plan %>
-        <% doctor_plan_tier = @doctor.user.subscription&.subscription_plan&.tier || "gratis" %>
-        <% doctor_has_paid_plan = doctor_plan_tier != "gratis" %>
         <% branches = @doctor.doctor_branches.ordered %>
         <% if branches.any? %>
           <div class="mb-6">

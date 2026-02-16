@@ -1,0 +1,110 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <div class="mb-6">
+    <%= link_to "← Volver al perfil", doctor_path(@doctor_profile), class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 border-l-4 border-sky-300 dark:border-sky-500 p-6">
+    <div class="flex items-center space-x-4 mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
+      <% if @doctor_profile.image_url.present? %>
+        <img src="<%= @doctor_profile.image_url %>" alt="<%= @doctor_profile.name %>" class="w-16 h-16 rounded-full object-cover shadow-md">
+      <% else %>
+        <div class="w-16 h-16 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center shadow-md">
+          <span class="text-sky-600 dark:text-sky-400 text-xl font-bold"><%= @doctor_profile.name.first %></span>
+        </div>
+      <% end %>
+      <div>
+        <h1 class="text-xl font-bold text-primary-700 dark:text-sky-400">Reservar Cita</h1>
+        <p class="text-gray-600 dark:text-slate-300">Dr. <%= @doctor_profile.name %></p>
+        <% if @doctor_profile.specialty %>
+          <p class="text-sm text-gray-500 dark:text-slate-400"><%= @doctor_profile.specialty.name %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <% if Current.user&.profile_type == "paciente" && Current.user.patient_profile %>
+      <div class="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl p-3 mb-4">
+        <p class="text-teal-800 dark:text-teal-300 text-sm">
+          <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          Reservando como <strong><%= Current.user.patient_profile.name %></strong> &mdash; esta cita aparecerá en tu sección "Mis Citas".
+        </p>
+      </div>
+    <% end %>
+
+    <%= form_with(model: @appointment, url: doctor_booking_path(@doctor_profile), class: "space-y-6", data: { controller: "booking" }) do |f| %>
+      <% if @appointment.errors.any? %>
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+          <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400">
+            <% @appointment.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <!-- Step 1: Branch -->
+      <div data-booking-target="step" data-step="1">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">1. Selecciona la sucursal</h2>
+        <div class="space-y-2">
+          <% @branches.each do |branch| %>
+            <label class="block p-4 border border-gray-200 dark:border-slate-600 rounded-xl cursor-pointer hover:border-sky-500 dark:hover:border-sky-400 hover:shadow-md transition-all" data-action="click->booking#selectBranch" data-branch-id="<%= branch.id %>">
+              <div class="flex items-center">
+                <%= f.radio_button :doctor_branch_id, branch.id, class: "text-sky-500 focus:ring-sky-500", data: { booking_target: "branchRadio" } %>
+                <div class="ml-3">
+                  <p class="font-medium text-gray-900 dark:text-white"><%= branch.name %></p>
+                  <p class="text-sm text-gray-500 dark:text-slate-400"><%= branch.address %></p>
+                </div>
+              </div>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Step 2: Date -->
+      <div data-booking-target="step" data-step="2" class="hidden">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">2. Selecciona la fecha</h2>
+        <%= f.text_field :appointment_date,
+            class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500",
+            data: { controller: "datepicker", booking_target: "dateInput", action: "change->booking#selectDate" },
+            placeholder: "Selecciona una fecha", autocomplete: "off" %>
+      </div>
+
+      <!-- Step 3: Time slot -->
+      <div data-booking-target="step" data-step="3" class="hidden">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">3. Selecciona el horario</h2>
+        <div data-booking-target="slotsContainer" class="grid grid-cols-3 md:grid-cols-4 gap-2">
+          <p class="col-span-full text-sm text-gray-500 dark:text-slate-400">Cargando horarios...</p>
+        </div>
+        <%= f.hidden_field :start_time, data: { booking_target: "startTime" } %>
+        <%= f.hidden_field :end_time, data: { booking_target: "endTime" } %>
+      </div>
+
+      <!-- Step 4: Patient info -->
+      <div data-booking-target="step" data-step="4" class="hidden">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">4. Tus datos</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Nombre completo *</label>
+            <%= f.text_field :patient_name, required: true, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Teléfono</label>
+            <%= f.telephone_field :patient_phone, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Correo electrónico</label>
+            <%= f.email_field :patient_email, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Motivo de consulta</label>
+            <%= f.text_area :reason, rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div data-booking-target="submitArea" class="hidden">
+        <%= f.submit "Reservar Cita", class: "w-full bg-sky-500 hover:bg-sky-600 text-white py-3 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+</div>

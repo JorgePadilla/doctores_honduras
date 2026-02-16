@@ -1,5 +1,5 @@
-<div class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 p-6 mb-6">
-  <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100 dark:border-slate-700">
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 border border-gray-200 dark:border-slate-700 p-6 mb-6">
+  <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-200 dark:border-slate-700">
     <div class="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
@@ -13,37 +13,37 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
       <%= form.label :website, "Sitio web", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
-      <%= form.url_field :website, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://ejemplo.com" %>
+      <%= form.url_field :website, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://ejemplo.com" %>
     </div>
 
     <div>
       <%= form.label :facebook_url, "Facebook", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
-      <%= form.url_field :facebook_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://facebook.com/tu-perfil" %>
+      <%= form.url_field :facebook_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://facebook.com/tu-perfil" %>
     </div>
 
     <div>
       <%= form.label :instagram_url, "Instagram", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
-      <%= form.url_field :instagram_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://instagram.com/tu-perfil" %>
+      <%= form.url_field :instagram_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://instagram.com/tu-perfil" %>
     </div>
 
     <div>
       <%= form.label :twitter_url, "Twitter / X", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
-      <%= form.url_field :twitter_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://x.com/tu-perfil" %>
+      <%= form.url_field :twitter_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://x.com/tu-perfil" %>
     </div>
 
     <div>
       <%= form.label :linkedin_url, "LinkedIn", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
-      <%= form.url_field :linkedin_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://linkedin.com/in/tu-perfil" %>
+      <%= form.url_field :linkedin_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://linkedin.com/in/tu-perfil" %>
     </div>
 
     <div>
       <%= form.label :tiktok_url, "TikTok", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
-      <%= form.url_field :tiktok_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://tiktok.com/@tu-perfil" %>
+      <%= form.url_field :tiktok_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://tiktok.com/@tu-perfil" %>
     </div>
 
     <div>
       <%= form.label :youtube_url, "YouTube", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" %>
-      <%= form.url_field :youtube_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://youtube.com/@tu-canal" %>
+      <%= form.url_field :youtube_url, class: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-slate-700 dark:text-white", placeholder: "https://youtube.com/@tu-canal" %>
     </div>
   </div>
 </div>

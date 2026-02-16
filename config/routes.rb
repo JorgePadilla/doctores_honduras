@@ -23,7 +23,36 @@ Rails.application.routes.draw do
   end
   resource :session
   resources :passwords, param: :token
-  resources :doctors, only: [:index, :show]
+  resources :doctors, only: [:index, :show] do
+    resource :booking, only: [:new, :create] do
+      get :slots, on: :collection
+    end
+  end
+
+  # Paciente namespace
+  namespace :paciente do
+    resources :appointments, only: [:index, :show]
+    resource :profile, only: [:show, :edit, :update]
+  end
+
+  # Agenda (doctor + secretary)
+  namespace :agenda do
+    resources :appointments
+    resource  :settings, only: [:show, :update]
+    resources :secretaries, only: [:index, :new, :create, :destroy]
+    resources :slots, only: [:index]
+    resources :patients, only: [:index, :show] do
+      collection { get :search }
+    end
+    resources :notifications, only: [:index] do
+      member do
+        patch :mark_as_read
+      end
+      collection do
+        patch :mark_all_as_read
+      end
+    end
+  end
   resources :establishments, only: [:index, :show], path: 'hospitales-y-clinicas'
   
   # User registration routes

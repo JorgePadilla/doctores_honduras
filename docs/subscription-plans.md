@@ -4,7 +4,7 @@ This document describes the subscription plan system for Doctores Honduras.
 
 ## Overview
 
-The platform uses a **per-profile-type** subscription model. Each profile type (doctor, hospital/clinic, vendor) has its own set of plans with three tiers: **gratis**, **profesional**, and **elite/premium**.
+The platform uses a **per-profile-type** subscription model. Each profile type (doctor, hospital/clinic, vendor, paciente) has its own set of plans. Doctor, hospital/clinic, and vendor have three tiers: **gratis**, **profesional**, and **elite/premium**. Paciente has a single **gratis** tier.
 
 ## Plan Structure
 
@@ -31,6 +31,14 @@ The platform uses a **per-profile-type** subscription model. Each profile type (
 | gratis | Proveedor Gratis | $0/mes | Perfil básico, Hasta 5 productos, Aparecer en directorio |
 | profesional | Proveedor Profesional | $20/mes | Perfil destacado, Productos ilimitados, Contactos de clientes, Estadísticas, Soporte prioritario |
 | premium | Proveedor Premium | $60/mes | Perfil premium, Productos ilimitados, Contactos ilimitados, Estadísticas avanzadas, Posición destacada, Soporte dedicado |
+
+### Paciente Plans
+
+| Tier | Name | Price | Features |
+|------|------|-------|----------|
+| gratis | Paciente Gratis | $0/mes | Busqueda de doctores, Gestion de citas, Historial medico |
+
+Patients have a single free plan. There is no paid upgrade path for patients.
 
 ## How Plans Are Displayed
 
@@ -62,7 +70,7 @@ end
 | interval | string | Billing interval: "month" or "year" |
 | features | text | Comma-separated list of features |
 | description | text | Plan description |
-| profile_type | string | "doctor", "hospital", or "vendor" (nil for legacy) |
+| profile_type | string | "doctor", "hospital", "vendor", or "paciente" (nil for legacy) |
 | tier | string | "gratis", "profesional", "elite", or "premium" |
 | position | integer | Display order (0, 1, 2) |
 | stripe_product_id | string | Stripe product ID |
@@ -175,6 +183,24 @@ if subscription&.subscription_plan&.price&.positive?
 end
 ```
 
+### Agenda Medica (Doctor)
+
+El sistema de agenda permite a los doctores gestionar citas. El acceso depende del tier:
+
+| Feature | Gratis | Profesional | Elite |
+|---------|--------|-------------|-------|
+| Agenda/citas | No | Si | Si |
+| Secretarias | No | Si | Si |
+| Auto-booking paciente | No | No | Si |
+
+- **Profesional**: el doctor y sus secretarias pueden crear, editar y cancelar citas desde `/agenda/appointments`. Pueden configurar duracion de citas y buffer entre citas.
+- **Elite**: ademas de todo lo anterior, el doctor puede activar "Reservas en linea" (`public_booking_enabled`) para que pacientes reserven citas directamente desde el perfil publico del doctor.
+
+Server-side enforcement:
+- `AgendaAuthorization` concern verifica que el doctor tenga tier != "gratis" para acceder a `/agenda/*`
+- `BookingsController` verifica tier == "elite" + `public_booking_enabled` para booking publico
+- Navbar muestra link "Agenda" solo para doctores con plan profesional/elite y secretarias
+
 ## Files Reference
 
 | File | Purpose |
@@ -185,3 +211,6 @@ end
 | `app/controllers/stripe_controller.rb` | Stripe checkout and webhooks |
 | `app/views/settings/subscription.html.erb` | Plan selection UI |
 | `db/seeds/subscription_plans.rb` | Plan seeding |
+| `app/controllers/concerns/agenda_authorization.rb` | Agenda access control by tier |
+| `app/controllers/agenda/base_controller.rb` | Agenda base controller with tier gating |
+| `app/controllers/bookings_controller.rb` | Public booking (elite only) |

@@ -1,0 +1,38 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="mb-6">
+    <%= link_to "← Volver a pacientes", agenda_patients_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+
+  <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-2"><%= @patient_name %></h1>
+
+  <% first_apt = @appointments.first %>
+  <% if first_apt %>
+    <p class="text-sm text-gray-500 dark:text-slate-400 mb-6">
+      <%= first_apt.patient_email %>
+      <% if first_apt.patient_phone.present? %>
+        &middot; <%= first_apt.patient_phone %>
+      <% end %>
+    </p>
+  <% end %>
+
+  <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Historial de Citas (<%= @appointments.count %>)</h2>
+
+  <div class="space-y-3">
+    <% @appointments.each do |apt| %>
+      <%= link_to agenda_appointment_path(apt), class: "block bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-5 border-l-4 #{apt.status_classes[:border]} transition-all hover:shadow-lg" do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-900 dark:text-white font-medium">
+              <%= apt.appointment_date.strftime("%d/%m/%Y") %> &middot; <%= apt.start_time.strftime("%H:%M") %> - <%= apt.end_time.strftime("%H:%M") %>
+            </p>
+            <p class="text-xs text-gray-500 dark:text-slate-400"><%= apt.doctor_branch&.name %></p>
+            <% if apt.reason.present? %>
+              <p class="text-xs text-gray-400 dark:text-slate-500 mt-1"><%= truncate(apt.reason, length: 60) %></p>
+            <% end %>
+          </div>
+          <span class="text-xs px-3 py-1 rounded-full font-medium <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

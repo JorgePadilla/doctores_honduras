@@ -1,0 +1,54 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <div class="mb-6">
+    <%= link_to "← Volver a mis citas", paciente_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 border-l-4 <%= @appointment.status_classes[:border] %> p-6">
+    <div class="flex items-center justify-between mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
+      <div>
+        <h1 class="text-xl font-bold text-primary-700 dark:text-sky-400">Detalle de Cita</h1>
+        <span class="inline-block mt-1 text-xs px-3 py-1 rounded-full font-medium <%= @appointment.status_classes[:bg] %> <%= @appointment.status_classes[:text] %>"><%= @appointment.status_label %></span>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Doctor -->
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Doctor</h3>
+        <p class="text-gray-900 dark:text-white font-semibold">Dr. <%= @appointment.doctor_profile.name %></p>
+        <% if @appointment.doctor_profile.specialty %>
+          <p class="text-sm text-gray-600 dark:text-slate-300"><%= @appointment.doctor_profile.specialty.name %></p>
+        <% end %>
+      </div>
+
+      <!-- Branch -->
+      <% if @appointment.doctor_branch %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Sucursal</h3>
+          <p class="text-gray-900 dark:text-white"><%= @appointment.doctor_branch.name %></p>
+          <p class="text-sm text-gray-600 dark:text-slate-300"><%= @appointment.doctor_branch.address %></p>
+        </div>
+      <% end %>
+
+      <!-- Date & Time -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Fecha</h3>
+          <p class="text-gray-900 dark:text-white"><%= @appointment.appointment_date.strftime("%A %d de %B, %Y") %></p>
+        </div>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Horario</h3>
+          <p class="text-gray-900 dark:text-white"><%= @appointment.start_time.strftime("%H:%M") %> - <%= @appointment.end_time.strftime("%H:%M") %></p>
+        </div>
+      </div>
+
+      <!-- Reason -->
+      <% if @appointment.reason.present? %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Motivo de consulta</h3>
+          <p class="text-gray-900 dark:text-white"><%= @appointment.reason %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

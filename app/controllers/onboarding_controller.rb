@@ -9,7 +9,7 @@ class OnboardingController < ApplicationController
   def save_profile_type
     profile_type = params[:profile_type]
 
-    unless %w[doctor hospital clinic vendor].include?(profile_type)
+    unless %w[doctor hospital clinic vendor paciente].include?(profile_type)
       # Viewer — just mark onboarding done and go to doctors directory
       current_user.update(onboarding_completed: true)
       redirect_to doctors_path, notice: "¡Bienvenido a Doctores Honduras!"
@@ -41,6 +41,10 @@ class OnboardingController < ApplicationController
       @cities = City.order(:name)
     when "vendor"
       @supplier = current_user.supplier || current_user.build_supplier
+      @departments = Department.order(:name)
+      @cities = City.order(:name)
+    when "paciente"
+      @patient_profile = current_user.patient_profile || current_user.build_patient_profile
       @departments = Department.order(:name)
       @cities = City.order(:name)
     end
@@ -76,6 +80,16 @@ class OnboardingController < ApplicationController
       @supplier = current_user.supplier || current_user.build_supplier
       @supplier.assign_attributes(supplier_params)
       if @supplier.save
+        assign_free_plan_and_finish
+      else
+        @departments = Department.order(:name)
+        @cities = City.order(:name)
+        render :basic_info, status: :unprocessable_entity
+      end
+    when "paciente"
+      @patient_profile = current_user.patient_profile || current_user.build_patient_profile
+      @patient_profile.assign_attributes(patient_profile_params)
+      if @patient_profile.save
         assign_free_plan_and_finish
       else
         @departments = Department.order(:name)
@@ -126,5 +140,9 @@ class OnboardingController < ApplicationController
 
   def supplier_params
     params.require(:supplier).permit(:name, :phone, :category, :department_id, :city_id)
+  end
+
+  def patient_profile_params
+    params.require(:patient_profile).permit(:name, :phone, :date_of_birth, :department_id, :city_id)
   end
 end

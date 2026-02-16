@@ -29,6 +29,11 @@ class DashboardController < ApplicationController
         @profile_views_total = @supplier.profile_views.count
         @profile_views_week = @supplier.profile_views.this_week.count
       end
+    when "paciente"
+      @patient_profile = @user.patient_profile
+      @upcoming_appointments = @user.patient_appointments.active.upcoming.includes(doctor_profile: :specialty, doctor_branch: []).order(:appointment_date, :start_time).limit(10)
+      @past_appointments = @user.patient_appointments.where("appointment_date < ? OR (appointment_date = ? AND end_time < ?)", Date.current, Date.current, Time.current).includes(doctor_profile: :specialty, doctor_branch: []).order(appointment_date: :desc, start_time: :desc).limit(10)
+      @completeness = compute_patient_completeness
     else
       @completeness = 0
     end
@@ -57,6 +62,14 @@ class DashboardController < ApplicationController
     fields = [ @supplier.name, @supplier.phone, @supplier.category,
                @supplier.description, @supplier.email, @supplier.website,
                @supplier.department_id ]
+    (fields.count(&:present?).to_f / fields.size * 100).round
+  end
+
+  def compute_patient_completeness
+    return 0 unless @patient_profile
+    fields = [ @patient_profile.name, @patient_profile.phone,
+               @patient_profile.date_of_birth, @patient_profile.department_id,
+               @patient_profile.city_id ]
     (fields.count(&:present?).to_f / fields.size * 100).round
   end
 end

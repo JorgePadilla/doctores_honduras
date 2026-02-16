@@ -1,6 +1,6 @@
 # Database Schema
 
-PostgreSQL database. Schema version: `2026_02_04_000006`.
+PostgreSQL database. Schema version: `2026_02_16_090002`.
 
 ## users
 
@@ -11,7 +11,7 @@ Primary table for all accounts.
 | id | bigint | PK |
 | email | string | unique index, normalized (strip + downcase) |
 | password_digest | string | bcrypt hash |
-| profile_type | string | `doctor`, `hospital`, `clinic`, `vendor`, or NULL (viewer) |
+| profile_type | string | `doctor`, `hospital`, `clinic`, `vendor`, `paciente`, or NULL (viewer) |
 | onboarding_completed | boolean | default false |
 | admin | boolean | |
 | language | string | `es` or `en`, default `es` |
@@ -84,6 +84,21 @@ Medical equipment/supply vendors.
 | hidden | boolean | default false |
 | created_at, updated_at | datetime | |
 
+## patient_profiles
+
+Patient accounts linked to users with profile_type = "paciente".
+
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint | PK |
+| user_id | bigint | FK -> users, unique |
+| name | string | required |
+| phone | string | |
+| date_of_birth | date | |
+| department_id | bigint | FK -> departments |
+| city_id | bigint | FK -> cities |
+| created_at, updated_at | datetime | |
+
 ## products
 
 Supplier product catalog.
@@ -130,7 +145,7 @@ Defines available plans per profile type and tier.
 | price | integer | in cents (0 = free) |
 | interval | string | `month` or `year` |
 | features | text | comma-separated feature list |
-| profile_type | string | `doctor`, `hospital`, `vendor` |
+| profile_type | string | `doctor`, `hospital`, `vendor`, `paciente` |
 | tier | string | `gratis`, `profesional`, `elite`, `premium` |
 | position | integer | display order, default 0 |
 | stripe_price_id | string | unique index |
@@ -258,6 +273,82 @@ Unique index on `(establishment_id, service_id)`.
 
 Unique index on `(establishment_id, specialty_id)`.
 
+## Agenda System
+
+### secretary_assignments
+
+Vincula un User (secretaria) con un DoctorProfile.
+
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint | PK |
+| user_id | bigint | FK -> users |
+| doctor_profile_id | bigint | FK -> doctor_profiles |
+| status | string | `active` (default), `revoked` |
+| invitation_token | string | unique index |
+| invitation_accepted_at | datetime | |
+| invited_email | string | |
+| created_at, updated_at | datetime | |
+
+Unique index on `(user_id, doctor_profile_id)`.
+
+### doctor_agenda_settings
+
+Configuracion de agenda por doctor. One per DoctorProfile.
+
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint | PK |
+| doctor_profile_id | bigint | FK -> doctor_profiles, unique |
+| appointment_duration | integer | default 30 (15, 20, 30, 45, 60) |
+| buffer_minutes | integer | default 0 (0-30) |
+| public_booking_enabled | boolean | default false, requires elite tier |
+| created_at, updated_at | datetime | |
+
+### appointments
+
+Citas medicas.
+
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint | PK |
+| doctor_profile_id | bigint | FK -> doctor_profiles |
+| doctor_branch_id | bigint | FK -> doctor_branches |
+| patient_name | string | required |
+| patient_phone | string | |
+| patient_email | string | indexed |
+| appointment_date | date | required |
+| start_time | time | required |
+| end_time | time | required |
+| status | string | `pendiente` (default), `confirmada`, `cancelada`, `completada` |
+| reason | text | |
+| doctor_notes | text | |
+| booking_source | string | `manual` (default), `public_booking` |
+| created_by_id | bigint | FK -> users, optional |
+| patient_user_id | bigint | FK -> users, optional (links to patient account) |
+| created_at, updated_at | datetime | |
+
+Indices: `(doctor_branch_id, appointment_date, start_time)`, `(doctor_profile_id, appointment_date)`, `status`, `patient_email`, `patient_user_id`.
+
+Custom validations: `within_branch_schedule` (appointment times must be within branch operating hours), `no_overlapping_appointments` (no two active appointments can overlap on same branch/date).
+
+### appointment_notifications
+
+Notificaciones in-app para citas.
+
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint | PK |
+| user_id | bigint | FK -> users |
+| appointment_id | bigint | FK -> appointments |
+| notification_type | string | `nueva_cita`, `cambio_estado` |
+| message | text | |
+| read | boolean | default false |
+| read_at | datetime | |
+| created_at, updated_at | datetime | |
+
+Index on `(user_id, read)`.
+
 ## Other tables
 
 ### articles
@@ -316,10 +407,14 @@ Role-based tables (Rolify pattern). `users_roles` is a join table (no PK) with `
 User 1--1 DoctorProfile
 User 1--* Establishment
 User 1--1 Supplier
+User 1--1 PatientProfile
 User 1--1 Subscription --> SubscriptionPlan
 User 1--* Session
 User 1--1 NotificationPreference
 User 1--* PaymentHistory
+User 1--* SecretaryAssignment
+User 1--* AppointmentNotification
+User 1--* Appointment (as patient_user)
 
 DoctorProfile *--* Establishment  (via doctor_establishments)
 DoctorProfile *--* Service        (via doctor_services)
@@ -327,6 +422,15 @@ DoctorProfile *--1 Specialty
 DoctorProfile *--1 Subspecialty
 DoctorProfile *--1 Department
 DoctorProfile *--1 City
+DoctorProfile 1--* SecretaryAssignment
+DoctorProfile 1--1 DoctorAgendaSetting
+DoctorProfile 1--* Appointment
+DoctorProfile 1--* DoctorBranch
+
+DoctorBranch 1--* BranchSchedule
+DoctorBranch 1--* Appointment
+
+Appointment 1--* AppointmentNotification
 
 Establishment *--* Specialty      (via establishment_specialties)
 Establishment *--* Service        (via establishment_services)

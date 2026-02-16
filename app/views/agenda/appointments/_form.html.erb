@@ -1,0 +1,98 @@
+<%= form_with(model: appointment, url: form_url, class: "space-y-6", data: { controller: "slot-picker" }) do |f| %>
+  <% if appointment.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+      <h3 class="text-red-800 dark:text-red-300 font-medium mb-2">Corrige los siguientes errores:</h3>
+      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400">
+        <% appointment.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Sucursal -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Sucursal *</label>
+        <%= f.select :doctor_branch_id, options_from_collection_for_select(branches, :id, :name, appointment.doctor_branch_id),
+            { prompt: "Selecciona una sucursal" },
+            { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500",
+              data: { slot_picker_target: "branchSelect", action: "change->slot-picker#loadSlots" } } %>
+      </div>
+
+      <!-- Fecha -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Fecha *</label>
+        <%= f.text_field :appointment_date, value: appointment.appointment_date&.to_s,
+            class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500",
+            data: { controller: "datepicker", slot_picker_target: "dateInput", action: "change->slot-picker#loadSlots" },
+            placeholder: "Selecciona una fecha", autocomplete: "off" %>
+      </div>
+    </div>
+
+    <!-- Horarios disponibles -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Horario *</label>
+      <div data-slot-picker-target="slotsContainer" class="grid grid-cols-4 md:grid-cols-6 gap-2">
+        <p class="col-span-full text-sm text-gray-500 dark:text-slate-400">Selecciona sucursal y fecha para ver horarios disponibles.</p>
+      </div>
+      <%= f.hidden_field :start_time, data: { slot_picker_target: "startTime" } %>
+      <%= f.hidden_field :end_time, data: { slot_picker_target: "endTime" } %>
+    </div>
+
+    <div class="border-t border-gray-200 dark:border-slate-700 pt-6" data-controller="patient-search">
+      <h3 class="text-sm font-semibold text-primary-700 dark:text-sky-400 mb-4">Datos del paciente</h3>
+      <%= f.hidden_field :patient_user_id, data: { patient_search_target: "patientUserIdField" } %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Nombre del paciente (with auto-suggest) -->
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Nombre del paciente *</label>
+          <%= f.text_field :patient_name, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true, autocomplete: "off", data: { patient_search_target: "input", action: "input->patient-search#search" } %>
+          <div data-patient-search-target="dropdown" class="hidden absolute z-20 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"></div>
+        </div>
+
+        <!-- Telefono -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Teléfono</label>
+          <%= f.telephone_field :patient_phone, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", data: { patient_search_target: "phoneField" } %>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Correo electrónico</label>
+          <%= f.email_field :patient_email, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", data: { patient_search_target: "emailField" } %>
+        </div>
+
+        <% if appointment.persisted? %>
+          <!-- Status -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Estado</label>
+            <%= f.select :status, Appointment::STATUSES.map { |s| [s.capitalize, s] },
+                {},
+                { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Motivo -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Motivo de la consulta</label>
+      <%= f.text_area :reason, rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+    </div>
+
+    <!-- Notas del doctor -->
+    <% if !appointment.new_record? %>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Notas del doctor</label>
+        <%= f.text_area :doctor_notes, rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Cancelar", agenda_appointments_path, class: "inline-flex items-center border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-5 py-2 rounded-full font-medium transition-all" %>
+    <%= f.submit appointment.persisted? ? "Actualizar Cita" : "Crear Cita", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer" %>
+  </div>
+<% end %>

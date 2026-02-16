@@ -1,0 +1,47 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400">Secretarias</h1>
+    <%= link_to "Agregar Secretaria", new_agenda_secretary_path, class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105" %>
+  </div>
+
+  <% if @assignments.any? %>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
+      <% @assignments.each do |assignment| %>
+        <div class="flex items-center justify-between p-5 border-b border-gray-200 dark:border-slate-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center">
+              <span class="text-sky-600 dark:text-sky-400 text-sm font-bold"><%= assignment.user.email.first.upcase %></span>
+            </div>
+            <div>
+              <p class="font-medium text-gray-900 dark:text-white"><%= assignment.user.email %></p>
+              <p class="text-sm text-gray-500 dark:text-slate-400">
+                <% if assignment.active? %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Activa</span>
+                <% else %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">Revocada</span>
+                <% end %>
+                <span class="ml-1">Asignada <%= time_ago_in_words(assignment.created_at) %> atrás</span>
+              </p>
+            </div>
+          </div>
+          <% if assignment.active? %>
+            <%= button_to "Revocar", agenda_secretary_path(assignment), method: :delete,
+                class: "text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm font-medium transition-colors",
+                data: { turbo_confirm: "¿Revocar acceso de esta secretaria?" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-12 text-center">
+      <svg class="mx-auto w-12 h-12 text-gray-300 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      <p class="text-gray-500 dark:text-slate-400 font-medium mb-2">No tienes secretarias asignadas</p>
+      <p class="text-sm text-gray-400 dark:text-slate-500 mb-4">Agrega secretarias para que te ayuden a gestionar tu agenda</p>
+      <%= link_to "Agregar tu primera secretaria", new_agenda_secretary_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+    </div>
+  <% end %>
+
+  <div class="mt-6">
+    <%= link_to "← Volver a la agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+</div>

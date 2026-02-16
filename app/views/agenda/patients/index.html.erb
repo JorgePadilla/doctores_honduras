@@ -1,0 +1,36 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400">Mis Pacientes</h1>
+    <%= link_to "← Agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+
+  <% if @patients.any? %>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
+      <div class="divide-y divide-gray-200 dark:divide-slate-700">
+        <% @patients.each do |patient| %>
+          <%= link_to agenda_patient_path(patient.patient_name), class: "block p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" do %>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-semibold text-gray-900 dark:text-white"><%= patient.patient_name %></p>
+                <p class="text-sm text-gray-500 dark:text-slate-400">
+                  <%= patient.patient_email %>
+                  <% if patient.patient_phone.present? %>
+                    &middot; <%= patient.patient_phone %>
+                  <% end %>
+                </p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm font-medium text-sky-600 dark:text-sky-400"><%= patient.appointment_count %> cita(s)</p>
+                <p class="text-xs text-gray-400 dark:text-slate-500">Última: <%= patient.last_visit&.strftime("%d/%m/%Y") %></p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-gray-50 dark:bg-slate-800 rounded-xl p-6 text-center">
+      <p class="text-gray-500 dark:text-slate-400 text-sm">Aún no tienes pacientes registrados.</p>
+    </div>
+  <% end %>
+</div>

@@ -60,6 +60,26 @@
     <% end %>
   </div>
 
+  <!-- Paciente -->
+  <div class="text-center mb-8">
+    <%= form_with url: onboarding_save_profile_type_path, method: :post, class: "inline-block w-full max-w-md" do |f| %>
+      <%= f.hidden_field :profile_type, value: "paciente" %>
+      <button type="submit" class="w-full text-left bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border-2 border-gray-200 dark:border-slate-700 hover:border-teal-500 dark:hover:border-teal-500 transition-all hover:shadow-md transform hover:scale-105 cursor-pointer group">
+        <div class="p-6">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center group-hover:bg-teal-200 dark:group-hover:bg-teal-900/50 transition-colors shrink-0">
+              <svg class="w-6 h-6 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white ml-4">Paciente</h3>
+          </div>
+          <p class="text-gray-600 dark:text-slate-400 text-sm">Busca doctores y gestiona tus citas médicas desde tu cuenta personal.</p>
+        </div>
+      </button>
+    <% end %>
+  </div>
+
   <!-- Viewer link -->
   <div class="text-center">
     <%= form_with url: onboarding_save_profile_type_path, method: :post, class: "inline" do |f| %>

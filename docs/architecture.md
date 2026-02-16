@@ -20,8 +20,8 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 
 | Model | Table | Key fields | Relationships |
 |---|---|---|---|
-| `User` | `users` | email, password_digest, profile_type, onboarding_completed, admin, language | has_one :doctor_profile, has_many :establishments, has_one :supplier, has_one :subscription, has_many :sessions |
-| `DoctorProfile` | `doctor_profiles` | name, description, image_url, medical_license, hidden, video_consultation_url | belongs_to :user, :specialty, :subspecialty, :department, :city; has_many :establishments (through doctor_establishments), :services (through doctor_services) |
+| `User` | `users` | email, password_digest, profile_type, onboarding_completed, admin, language | has_one :doctor_profile, has_many :establishments, has_one :supplier, has_one :patient_profile, has_one :subscription, has_many :sessions, has_many :secretary_assignments, has_many :appointment_notifications, has_many :patient_appointments |
+| `DoctorProfile` | `doctor_profiles` | name, description, image_url, medical_license, hidden, video_consultation_url | belongs_to :user, :specialty, :subspecialty, :department, :city; has_many :establishments (through doctor_establishments), :services (through doctor_services), :secretary_assignments, :appointments; has_one :agenda_setting |
 | `Establishment` | `establishments` | name, est_type, address, phone, map_link, logo_url, building_image_url, description, website, email | belongs_to :user, :department, :city; has_many :doctor_profiles (through doctor_establishments), :specialties (through establishment_specialties), :services (through establishment_services) |
 | `Supplier` | `suppliers` | name, address, phone, email, description, logo_url, category, website, featured, hidden | belongs_to :user, :department, :city; has_many :products, :lead_contacts |
 | `Product` | `products` | name, sku, description, price, category, image_url, active, featured | belongs_to :supplier |
@@ -38,6 +38,7 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 - **doctor**: gratis, profesional, elite
 - **hospital** (also used by clinic): gratis, profesional, premium
 - **vendor**: gratis, profesional, premium
+- **paciente**: gratis
 
 ### Geography
 
@@ -60,6 +61,16 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 - `doctor_services` -- DoctorProfile <-> Service (unique index)
 - `establishment_services` -- Establishment <-> Service (unique index)
 - `establishment_specialties` -- Establishment <-> Specialty (unique index)
+
+### Agenda system
+
+| Model | Table | Key fields | Relationships |
+|---|---|---|---|
+| `SecretaryAssignment` | `secretary_assignments` | status (active/revoked), invitation_token, invited_email | belongs_to :user, :doctor_profile |
+| `DoctorAgendaSetting` | `doctor_agenda_settings` | appointment_duration, buffer_minutes, public_booking_enabled | belongs_to :doctor_profile |
+| `Appointment` | `appointments` | patient_name, appointment_date, start_time, end_time, status, booking_source, patient_user_id | belongs_to :doctor_profile, :doctor_branch, :created_by (User), :patient_user (User, optional) |
+| `PatientProfile` | `patient_profiles` | name, phone, date_of_birth | belongs_to :user (unique), :department, :city (optional) |
+| `AppointmentNotification` | `appointment_notifications` | notification_type, message, read | belongs_to :user, :appointment |
 
 ### Supporting
 
@@ -104,6 +115,34 @@ All inherit from `Vendor::BaseController` which enforces `profile_type == "vendo
 | `Vendor::ProductsController` | CRUD products. Free plan capped at 5 products (`check_product_limit`). |
 | `Vendor::LeadsController` | View/update lead contacts. Requires paid plan (`require_paid_plan`). |
 
+### Agenda namespace (`Agenda::`)
+
+All inherit from `Agenda::BaseController` which enforces authentication + `require_agenda_access` (tier != gratis). Uses `AgendaAuthorization` concern to resolve `current_doctor_profile` for both doctors and secretaries.
+
+| Controller | Purpose |
+|---|---|
+| `Agenda::AppointmentsController` | CRUD appointments with calendar view (week/day) |
+| `Agenda::SettingsController` | Agenda config: duration, buffer, public booking toggle (elite only) |
+| `Agenda::SecretariesController` | Add/remove secretaries by email (doctor only) |
+| `Agenda::SlotsController` | JSON endpoint returning available time slots for branch+date |
+| `Agenda::NotificationsController` | List and mark-as-read in-app notifications |
+| `Agenda::PatientsController` | Patient list (index), patient history (show), patient search (JSON search endpoint for auto-suggest) |
+
+### Paciente namespace (`Paciente::`)
+
+All inherit from `Paciente::BaseController` which enforces authentication + `profile_type == "paciente"`.
+
+| Controller | Purpose |
+|---|---|
+| `Paciente::AppointmentsController` | View upcoming and past appointments (index, show) |
+| `Paciente::ProfilesController` | View and edit patient profile |
+
+### Public booking
+
+| Controller | Purpose |
+|---|---|
+| `BookingsController` | Public appointment booking (no auth required). Double-gated: requires doctor's tier == elite + public_booking_enabled. If logged in as paciente, auto-links appointment via `patient_user_id` and pre-fills patient info. Routes: `GET /doctors/:id/booking/new`, `POST /doctors/:id/booking`, `GET /doctors/:id/booking/slots` |
+
 ### Stripe
 
 | Controller | Purpose |
@@ -127,6 +166,18 @@ Uploads files to AWS S3 and returns the public URL. Uses a bucket-level policy f
 Required env vars: `AWS_BUCKET`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`.
 
 Called from `DoctorProfile#upload_image_to_s3` as a `before_save` callback when `image_file` is present.
+
+### SlotGenerator
+
+`app/services/slot_generator.rb`
+
+Generates available time slots for a doctor branch on a specific date. Reads `BranchSchedule` for the day, generates slots based on `DoctorAgendaSetting` duration + buffer, and filters out occupied slots (non-cancelled appointments).
+
+### AppointmentNotifier
+
+`app/services/appointment_notifier.rb`
+
+Creates in-app `AppointmentNotification` records and sends emails via `AppointmentMailer` when appointments are created or their status changes. Notifies the doctor, all active secretaries, and the patient (by email).
 
 ## Internationalization
 

@@ -72,7 +72,12 @@ new_plans = [
     description: "Ideal para proveedores que buscan expandir su alcance" },
   { profile_type: "vendor", tier: "premium", name: "Proveedor Premium", price: 6000, interval: "month", position: 2,
     features: "Perfil premium, Productos ilimitados, Contactos ilimitados, Estadísticas avanzadas, Posición destacada, Soporte dedicado",
-    description: "La mejor opción para proveedores: máxima visibilidad y leads" }
+    description: "La mejor opción para proveedores: máxima visibilidad y leads" },
+
+  # Patient plan
+  { profile_type: "paciente", tier: "gratis", name: "Paciente Gratis", price: 0, interval: "month", position: 0,
+    features: "Búsqueda de doctores, Gestión de citas, Historial médico",
+    description: "Plan gratuito para pacientes" }
 ]
 
 new_plans.each do |plan_attrs|

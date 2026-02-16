@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_16_090002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,47 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "appointment_notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "appointment_id", null: false
+    t.string "notification_type", null: false
+    t.text "message", null: false
+    t.boolean "read", default: false, null: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["appointment_id"], name: "index_appointment_notifications_on_appointment_id"
+    t.index ["user_id", "read"], name: "index_appointment_notifications_on_user_id_and_read"
+    t.index ["user_id"], name: "index_appointment_notifications_on_user_id"
+  end
+
+  create_table "appointments", force: :cascade do |t|
+    t.bigint "doctor_profile_id", null: false
+    t.bigint "doctor_branch_id", null: false
+    t.string "patient_name", null: false
+    t.string "patient_phone"
+    t.string "patient_email"
+    t.date "appointment_date", null: false
+    t.time "start_time", null: false
+    t.time "end_time", null: false
+    t.string "status", default: "pendiente", null: false
+    t.text "reason"
+    t.text "doctor_notes"
+    t.string "booking_source", default: "manual", null: false
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "patient_user_id"
+    t.index ["created_by_id"], name: "index_appointments_on_created_by_id"
+    t.index ["doctor_branch_id", "appointment_date", "start_time"], name: "idx_appointments_branch_date_time"
+    t.index ["doctor_branch_id"], name: "index_appointments_on_doctor_branch_id"
+    t.index ["doctor_profile_id", "appointment_date"], name: "idx_appointments_doctor_date"
+    t.index ["doctor_profile_id"], name: "index_appointments_on_doctor_profile_id"
+    t.index ["patient_email"], name: "index_appointments_on_patient_email"
+    t.index ["patient_user_id"], name: "index_appointments_on_patient_user_id"
+    t.index ["status"], name: "index_appointments_on_status"
   end
 
   create_table "articles", force: :cascade do |t|
@@ -76,6 +117,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_departments_on_name", unique: true
+  end
+
+  create_table "doctor_agenda_settings", force: :cascade do |t|
+    t.bigint "doctor_profile_id", null: false
+    t.integer "appointment_duration", default: 30, null: false
+    t.integer "buffer_minutes", default: 0, null: false
+    t.boolean "public_booking_enabled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_profile_id"], name: "index_doctor_agenda_settings_on_doctor_profile_id", unique: true
   end
 
   create_table "doctor_branches", force: :cascade do |t|
@@ -233,6 +284,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
     t.index ["user_id"], name: "index_notification_preferences_on_user_id"
   end
 
+  create_table "patient_profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "phone"
+    t.date "date_of_birth"
+    t.bigint "department_id"
+    t.bigint "city_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_patient_profiles_on_city_id"
+    t.index ["department_id"], name: "index_patient_profiles_on_department_id"
+    t.index ["user_id"], name: "index_patient_profiles_on_user_id", unique: true
+  end
+
   create_table "payment_histories", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "amount"
@@ -295,6 +360,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
     t.datetime "updated_at", null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
+  create_table "secretary_assignments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "doctor_profile_id", null: false
+    t.string "status", default: "active", null: false
+    t.string "invitation_token"
+    t.datetime "invitation_accepted_at"
+    t.string "invited_email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_profile_id"], name: "index_secretary_assignments_on_doctor_profile_id"
+    t.index ["invitation_token"], name: "index_secretary_assignments_on_invitation_token", unique: true
+    t.index ["user_id", "doctor_profile_id"], name: "index_secretary_assignments_on_user_id_and_doctor_profile_id", unique: true
+    t.index ["user_id"], name: "index_secretary_assignments_on_user_id"
   end
 
   create_table "services", force: :cascade do |t|
@@ -409,9 +489,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "appointment_notifications", "appointments"
+  add_foreign_key "appointment_notifications", "users"
+  add_foreign_key "appointments", "doctor_branches"
+  add_foreign_key "appointments", "doctor_profiles"
+  add_foreign_key "appointments", "users", column: "created_by_id"
+  add_foreign_key "appointments", "users", column: "patient_user_id"
   add_foreign_key "articles", "users", column: "author_id"
   add_foreign_key "branch_schedules", "doctor_branches"
   add_foreign_key "cities", "departments"
+  add_foreign_key "doctor_agenda_settings", "doctor_profiles"
   add_foreign_key "doctor_branches", "cities"
   add_foreign_key "doctor_branches", "departments"
   add_foreign_key "doctor_branches", "doctor_profiles"
@@ -433,9 +520,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_12_000008) do
   add_foreign_key "establishments", "users"
   add_foreign_key "lead_contacts", "suppliers"
   add_foreign_key "notification_preferences", "users"
+  add_foreign_key "patient_profiles", "cities"
+  add_foreign_key "patient_profiles", "departments"
+  add_foreign_key "patient_profiles", "users"
   add_foreign_key "payment_histories", "users"
   add_foreign_key "products", "suppliers"
   add_foreign_key "provider_profiles", "users"
+  add_foreign_key "secretary_assignments", "doctor_profiles"
+  add_foreign_key "secretary_assignments", "users"
   add_foreign_key "services", "specialties"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "subscription_plans"

@@ -1,0 +1,76 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400">Detalle de Cita</h1>
+    <div class="flex items-center space-x-3">
+      <%= link_to "Editar", edit_agenda_appointment_path(@appointment), class: "inline-flex items-center border border-sky-500 text-sky-600 dark:text-sky-400 bg-transparent hover:bg-sky-50 dark:hover:bg-sky-900/20 px-5 py-2 rounded-full font-medium transition-all" %>
+      <% unless @appointment.cancelada? %>
+        <%= button_to "Cancelar Cita", agenda_appointment_path(@appointment), method: :delete,
+            class: "inline-flex items-center bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg",
+            data: { turbo_confirm: "¿Estás seguro de cancelar esta cita?" } %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 border-l-4 <%= @appointment.status_classes[:border] %> p-6 space-y-6">
+    <!-- Status badge -->
+    <div class="flex items-center space-x-3">
+      <span class="inline-block w-3 h-3 rounded-full <%= @appointment.status_classes[:dot] %>"></span>
+      <span class="text-lg font-semibold px-3 py-1 rounded-full <%= @appointment.status_classes[:bg] %> <%= @appointment.status_classes[:text] %>">
+        <%= @appointment.status_label %>
+      </span>
+      <span class="text-sm text-gray-500 dark:text-slate-400">
+        <%= @appointment.booking_source == "public_booking" ? "Reserva en línea" : "Cita manual" %>
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Paciente</h3>
+        <p class="text-sky-700 dark:text-sky-400 font-semibold text-lg"><%= @appointment.patient_name %></p>
+        <% if @appointment.patient_phone.present? %>
+          <p class="text-sm text-gray-600 dark:text-slate-300 mt-1"><%= @appointment.patient_phone %></p>
+        <% end %>
+        <% if @appointment.patient_email.present? %>
+          <p class="text-sm text-gray-600 dark:text-slate-300"><%= @appointment.patient_email %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Fecha y Hora</h3>
+        <p class="text-gray-900 dark:text-white font-semibold"><%= I18n.l(@appointment.appointment_date, format: :long) %></p>
+        <p class="text-sm text-gray-600 dark:text-slate-300 mt-1"><%= @appointment.start_time.strftime("%H:%M") %> - <%= @appointment.end_time.strftime("%H:%M") %> (<%= @appointment.duration_minutes %> min)</p>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Sucursal</h3>
+        <p class="text-gray-900 dark:text-white font-semibold"><%= @appointment.doctor_branch.name %></p>
+        <p class="text-sm text-gray-600 dark:text-slate-300 mt-1"><%= @appointment.doctor_branch.address %></p>
+      </div>
+
+      <% if @appointment.created_by %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Creada por</h3>
+          <p class="text-gray-900 dark:text-white"><%= @appointment.created_by.email %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @appointment.reason.present? %>
+      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Motivo</h3>
+        <p class="text-gray-700 dark:text-slate-300"><%= @appointment.reason %></p>
+      </div>
+    <% end %>
+
+    <% if @appointment.doctor_notes.present? %>
+      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Notas del doctor</h3>
+        <p class="text-gray-700 dark:text-slate-300"><%= @appointment.doctor_notes %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to "← Volver a la agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+  </div>
+</div>
