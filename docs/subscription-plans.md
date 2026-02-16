@@ -13,8 +13,8 @@ The platform uses a **per-profile-type** subscription model. Each profile type (
 | Tier | Name | Price | Features |
 |------|------|-------|----------|
 | gratis | Doctor Gratis | $0/mes | Perfil básico, Aparecer en directorio, Búsqueda de doctores, Sucursales (sin horarios ni teléfono) |
-| profesional | Doctor Profesional | $12/mes | Perfil destacado, Estadísticas de visitas, Notificaciones, Soporte prioritario, Sucursales con horarios y teléfono |
-| elite | Doctor Elite | $29/mes | Perfil premium, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada, Sucursales con horarios y teléfono |
+| profesional | Doctor Profesional | $12/mes | Perfil destacado, Agenda Médica (gestión manual), Asignar secretaria para agendar citas, Estadísticas de visitas, Notificaciones, Soporte prioritario, Sucursales con horarios y teléfono |
+| elite | Doctor Elite | $29/mes | Perfil premium, Agenda Médica, Reservas en línea (autoservicio paciente), Asignar secretaria para agendar citas, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada, Sucursales con horarios y teléfono |
 
 ### Hospital/Clinic Plans
 
@@ -189,12 +189,12 @@ El sistema de agenda permite a los doctores gestionar citas. El acceso depende d
 
 | Feature | Gratis | Profesional | Elite |
 |---------|--------|-------------|-------|
-| Agenda/citas | No | Si | Si |
-| Secretarias | No | Si | Si |
-| Auto-booking paciente | No | No | Si |
+| Agenda/citas | No | Si (gestión manual) | Si |
+| Asignar secretaria para agendar | No | Si | Si |
+| Reservas en línea (autoservicio) | No | No | Si |
 
-- **Profesional**: el doctor y sus secretarias pueden crear, editar y cancelar citas desde `/agenda/appointments`. Pueden configurar duracion de citas y buffer entre citas.
-- **Elite**: ademas de todo lo anterior, el doctor puede activar "Reservas en linea" (`public_booking_enabled`) para que pacientes reserven citas directamente desde el perfil publico del doctor.
+- **Profesional** (sin autoservicio): el doctor y sus secretarias pueden crear, editar y cancelar citas manualmente desde `/agenda/appointments`. Pueden configurar duración de citas y buffer entre citas. Los pacientes **no** pueden reservar por su cuenta.
+- **Elite** (autoservicio + secretarias): además de todo lo anterior, el doctor puede activar "Reservas en línea" (`public_booking_enabled`) para que pacientes reserven citas directamente desde el perfil público del doctor. También puede asignar secretarias para gestión manual.
 
 Server-side enforcement:
 - `AgendaAuthorization` concern verifica que el doctor tenga tier != "gratis" para acceder a `/agenda/*`
