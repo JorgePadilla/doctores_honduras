@@ -66,7 +66,7 @@ class EstablishmentsController < ApplicationController
       user_agent: request.user_agent
     )
 
-    @doctors = @establishment.doctor_profiles.order(name: :asc)
+    @doctors = @establishment.doctor_profiles.includes(:specialty, :subspecialty).order(name: :asc)
     @specialties = @establishment.specialties.order(name: :asc)
     @services = @establishment.services.order(name: :asc)
   end
