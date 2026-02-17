@@ -147,7 +147,7 @@ class ProfilesController < ApplicationController
 
       # If adding new branches would exceed the free limit of 1, remove extras
       max_allowed = 1
-      destroys = permitted_params[:doctor_branches_attributes].count { |_k, b| b.is_a?(Hash) || b.is_a?(ActionController::Parameters) ? (b[:_destroy] == "1" || b[:_destroy] == true) : false }
+      destroys = permitted_params[:doctor_branches_attributes].to_h.count { |_k, b| (b[:_destroy] == "1" || b[:_destroy] == true) }
       total_after = existing_count - destroys + new_count
 
       if total_after > max_allowed
