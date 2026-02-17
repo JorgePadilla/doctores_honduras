@@ -7,6 +7,8 @@ class SlotGenerator
   end
 
   def generate
+    @branch.ensure_default_schedules!
+
     schedule = @branch.branch_schedules.find_by(day_of_week: @date.wday)
     return [] unless schedule
 

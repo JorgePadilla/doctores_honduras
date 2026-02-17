@@ -11,4 +11,20 @@ class DoctorBranch < ApplicationRecord
   validates :address, presence: true
 
   scope :ordered, -> { order(:position) }
+
+  # Auto-create default schedules (Mon-Sat) if the branch has none.
+  # Similar pattern to DoctorAgendaSetting auto-build in SlotGenerator.
+  def ensure_default_schedules!
+    return if branch_schedules.any?
+
+    BranchSchedule::DEFAULT_HOURS.each do |day_num, defaults|
+      next if defaults[:closed]
+
+      branch_schedules.create!(
+        day_of_week: day_num,
+        opens_at: defaults[:opens_at],
+        closes_at: defaults[:closes_at]
+      )
+    end
+  end
 end

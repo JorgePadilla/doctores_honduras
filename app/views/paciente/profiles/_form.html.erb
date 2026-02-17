@@ -22,7 +22,12 @@
 
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Fecha de nacimiento</label>
-      <%= f.date_field :date_of_birth, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+      <%= f.text_field :date_of_birth,
+            value: patient_profile.date_of_birth&.to_s,
+            data: { controller: "datepicker", datepicker_mode_value: "past" },
+            placeholder: "Selecciona una fecha",
+            autocomplete: "off",
+            class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
     </div>
 
     <div>

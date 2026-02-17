@@ -19,20 +19,36 @@ const Spanish = {
 }
 
 export default class extends Controller {
+  static values = {
+    minDate: { type: String, default: "" },
+    maxDate: { type: String, default: "" },
+    mode: { type: String, default: "future" }
+  }
+
   connect() {
-    this.fp = flatpickr(this.element, {
+    const config = {
       locale: Spanish,
       dateFormat: "Y-m-d",
       altInput: true,
       altFormat: "j \\de F, Y",
-      minDate: "today",
       disableMobile: true,
       onChange: (_selectedDates, dateStr) => {
         this.element.value = dateStr
         this.element.dispatchEvent(new Event("change", { bubbles: true }))
         this.element.dispatchEvent(new Event("input", { bubbles: true }))
       }
-    })
+    }
+
+    if (this.modeValue === "past") {
+      config.maxDate = "today"
+    } else if (this.modeValue === "future") {
+      config.minDate = "today"
+    }
+
+    if (this.minDateValue) config.minDate = this.minDateValue
+    if (this.maxDateValue) config.maxDate = this.maxDateValue
+
+    this.fp = flatpickr(this.element, config)
   }
 
   disconnect() {
