@@ -131,7 +131,7 @@ class OnboardingController < ApplicationController
   end
 
   def doctor_profile_params
-    params.require(:doctor_profile).permit(:name, :specialty_id, :department_id, :city_id)
+    params.require(:doctor_profile).permit(:prefix, :name, :specialty_id, :department_id, :city_id)
   end
 
   def establishment_params

@@ -52,7 +52,7 @@
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500 transition-all hover:shadow-lg">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Mi Perfil Médico</h3>
         <% if @doctor_profile %>
-          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Nombre:</strong> <%= @doctor_profile.name %></p>
+          <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Nombre:</strong> <%= @doctor_profile.display_name %></p>
           <p class="text-gray-600 dark:text-slate-400 text-sm mb-1"><strong class="dark:text-slate-200">Especialidad:</strong> <%= @doctor_profile.specialty&.name || "No especificada" %></p>
           <p class="text-gray-600 dark:text-slate-400 text-sm mb-4"><strong class="dark:text-slate-200">Ubicación:</strong> <%= [@doctor_profile.city&.name, @doctor_profile.department&.name].compact.join(", ") %></p>
           <%= link_to "Editar perfil", edit_profile_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
@@ -196,7 +196,7 @@
             <% @upcoming_appointments.first(3).each do |apt| %>
               <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
                 <div>
-                  <p class="font-medium text-gray-900 dark:text-white text-sm">Dr. <%= apt.doctor_profile.name %></p>
+                  <p class="font-medium text-gray-900 dark:text-white text-sm"><%= apt.doctor_profile.display_name %></p>
                   <p class="text-xs text-gray-500 dark:text-slate-400"><%= apt.appointment_date.strftime("%d/%m/%Y") %> &middot; <%= apt.start_time.strftime("%H:%M") %></p>
                 </div>
                 <span class="text-xs px-2 py-1 rounded-full <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>
@@ -238,7 +238,7 @@
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Agenda Médica</h3>
         <% @user.secretary_assignments.active.includes(doctor_profile: :specialty).each do |assignment| %>
           <div class="mb-3">
-            <p class="text-gray-600 dark:text-slate-400 text-sm"><strong class="dark:text-slate-200">Dr. <%= assignment.doctor_profile.name %></strong></p>
+            <p class="text-gray-600 dark:text-slate-400 text-sm"><strong class="dark:text-slate-200"><%= assignment.doctor_profile.display_name %></strong></p>
             <p class="text-gray-500 dark:text-slate-500 text-xs"><%= assignment.doctor_profile.specialty&.name %></p>
           </div>
         <% end %>

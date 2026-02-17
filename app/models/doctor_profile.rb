@@ -1,5 +1,6 @@
 class DoctorProfile < ApplicationRecord
   AVAILABLE_LANGUAGES = ["Español", "Inglés", "Francés", "Portugués", "Alemán", "Italiano", "Mandarín", "Otro"].freeze
+  PREFIXES = ["Dr.", "Dra.", "Lic.", "Ing.", "Téc.", "Enf.", "Msc.", "PhD."].freeze
 
   belongs_to :user
   belongs_to :specialty, optional: true
@@ -27,6 +28,7 @@ class DoctorProfile < ApplicationRecord
   attr_accessor :image_file
 
   validates :name, presence: true
+  validates :prefix, inclusion: { in: PREFIXES }, allow_blank: true
   validates :department_id, presence: true
   validates :city_id, presence: true
 
@@ -35,6 +37,10 @@ class DoctorProfile < ApplicationRecord
 
   # Callback to handle file upload
   before_save :upload_image_to_s3, if: :image_file_present?
+
+  def display_name
+    prefix.present? ? "#{prefix} #{name}" : name
+  end
 
   private
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_16_090002) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_17_050734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -203,6 +203,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_16_090002) do
     t.string "tiktok_url"
     t.string "youtube_url"
     t.text "languages", default: [], array: true
+    t.string "prefix"
     t.index ["city_id"], name: "index_doctor_profiles_on_city_id"
     t.index ["department_id"], name: "index_doctor_profiles_on_department_id"
     t.index ["specialty_id"], name: "index_doctor_profiles_on_specialty_id"
