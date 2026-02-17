@@ -81,7 +81,13 @@ class DoctorsController < ApplicationController
       doctor_branches: [:department, :city, :branch_schedules],
       doctor_educations: [],
       doctor_certifications: []
-    ).find(params[:id])
+    ).find_by(id: params[:id])
+
+    unless @doctor
+      flash[:alert] = "Doctor no encontrado."
+      redirect_to doctors_path
+      return
+    end
 
     # Check if profile is hidden and user is not admin
     if @doctor.hidden? && !Current.user&.admin?

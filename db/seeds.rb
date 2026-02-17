@@ -110,7 +110,7 @@ if Supplier.count == 0
         description: description,
         price: rand(10.0..500.0).round(2),
         category: category,
-        image_url: "https://source.unsplash.com/random/300x200/?medical,#{category.downcase.gsub(' ', '-')}"
+        image_url: "https://placehold.co/300x200/0EA5E9/FFFFFF?text=#{ERB::Util.url_encode(category)}"
       )
     end
   end

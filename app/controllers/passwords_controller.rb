@@ -1,5 +1,6 @@
 class PasswordsController < ApplicationController
   allow_unauthenticated_access
+  before_action :redirect_if_authenticated, only: [ :new ]
   before_action :set_user_by_token, only: %i[ edit update ]
 
   def new

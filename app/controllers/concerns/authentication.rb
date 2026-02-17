@@ -50,4 +50,8 @@ module Authentication
       Current.session.destroy
       cookies.delete(:session_token)
     end
+
+    def redirect_if_authenticated
+      redirect_to root_path if authenticated?
+    end
 end

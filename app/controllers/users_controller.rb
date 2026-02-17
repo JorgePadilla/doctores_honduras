@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  skip_before_action :require_authentication, only: [:new, :create]
+  skip_before_action :require_authentication, only: [ :new, :create ]
+  before_action :redirect_if_authenticated, only: [ :new ]
 
   def new
     @user = User.new
@@ -11,7 +12,7 @@ class UsersController < ApplicationController
     if @user.save
       session = @user.sessions.create!
       cookies.signed.permanent[:session_token] = { value: session.id, httponly: true }
-      
+
       # Create notification preferences
       @user.create_notification_preference if @user.notification_preference.nil?
 

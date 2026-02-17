@@ -12,8 +12,13 @@ class Vendor::BaseController < ApplicationController
   helper_method :current_supplier
 
   def require_vendor_profile
-    unless Current.user.profile_type == "vendor" && Current.user.supplier.present?
+    unless Current.user.profile_type == "vendor"
       redirect_to dashboard_path, alert: "Acceso no autorizado."
+      return
+    end
+
+    unless Current.user.supplier.present?
+      redirect_to onboarding_basic_info_path, alert: "Por favor completa la configuración de tu empresa."
     end
   end
 end

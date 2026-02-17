@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
+  allow_unauthenticated_access only: [ :index, :show ]
   before_action :set_supplier
-  
+
   def index
     @page = (params[:page] || 1).to_i
     @per_page = 10
@@ -20,12 +21,20 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = @supplier.products.find(params[:id])
+    @product = @supplier.products.find_by(id: params[:id])
+    unless @product
+      flash[:alert] = "Producto no encontrado."
+      redirect_to supplier_products_path(@supplier)
+    end
   end
-  
+
   private
-  
+
   def set_supplier
-    @supplier = Supplier.find(params[:supplier_id])
+    @supplier = Supplier.find_by(id: params[:supplier_id])
+    unless @supplier
+      flash[:alert] = "Proveedor no encontrado."
+      redirect_to suppliers_path
+    end
   end
 end

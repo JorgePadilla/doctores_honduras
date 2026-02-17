@@ -19,7 +19,12 @@ class SuppliersController < ApplicationController
   end
 
   def show
-    @supplier = Supplier.find(params[:id])
+    @supplier = Supplier.find_by(id: params[:id])
+    unless @supplier
+      flash[:alert] = "Proveedor no encontrado."
+      redirect_to suppliers_path
+      return
+    end
 
     ProfileViewTracker.track(
       viewable: @supplier,

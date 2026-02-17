@@ -1,6 +1,5 @@
 class EstablishmentsController < ApplicationController
-  include Authentication
-  before_action :require_authentication
+  allow_unauthenticated_access only: [ :index, :show ]
   before_action :set_establishment, only: [ :show ]
 
   def index

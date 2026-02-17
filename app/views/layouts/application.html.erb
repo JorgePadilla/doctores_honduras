@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>" data-controller="dark-mode">
   <head>
-    <title><%= content_for(:title) || "Doctores Honduras - #{t('navigation.doctors')} #{t('navigation.establishments')}" %></title>
+    <title><%= content_for(:title) || "Doctores Honduras - Doctores Hospitales y Clínicas" %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -106,5 +106,32 @@
     <main class="container mx-auto px-4 py-8">
       <%= yield %>
     </main>
+
+    <footer class="bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 mt-12">
+      <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Doctores Honduras</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Directorio de médicos, hospitales y clínicas en Honduras. Encuentra al especialista que necesitas.</p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Enlaces</h3>
+            <ul class="space-y-2 text-sm">
+              <li><%= link_to "Doctores", doctors_path, class: "text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400" %></li>
+              <li><%= link_to "Hospitales y Clínicas", establishments_path, class: "text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400" %></li>
+              <li><%= link_to "Proveedores", suppliers_path, class: "text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400" %></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Contacto</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">info@doctoreshonduras.com</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Honduras, C.A.</p>
+          </div>
+        </div>
+        <div class="mt-8 pt-4 border-t border-gray-200 dark:border-slate-700 text-center text-sm text-gray-500 dark:text-gray-400">
+          &copy; <%= Date.current.year %> Doctores Honduras. Todos los derechos reservados.
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

@@ -8,8 +8,6 @@ Rails.application.routes.draw do
   
   # Payment route for subscription
   get 'payment', to: 'payments#show', as: :payment
-  get "products/index"
-  get "products/show"
   resources :suppliers, path: "proveedores", only: [ :index, :show ] do
     resources :products, only: [ :index, :show ], path: "productos"
     resources :lead_contacts, only: [ :new, :create ], path: "contacto"
@@ -21,7 +19,7 @@ Rails.application.routes.draw do
     resources :products, path: "productos"
     resources :leads, only: [ :index, :show, :update ], path: "contactos"
   end
-  resource :session
+  resource :session, only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
   resources :doctors, only: [:index, :show] do
     resource :booking, only: [:new, :create] do
