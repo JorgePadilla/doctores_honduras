@@ -4,11 +4,16 @@
     <p class="text-xl text-gray-600 dark:text-slate-400">Encuentra el especialista que necesitas en Honduras</p>
   </header>
 
-  <div class="max-w-5xl mx-auto mb-8">
+  <div class="max-w-5xl mx-auto mb-8" data-controller="live-search">
     <div class="bg-white dark:bg-slate-800 rounded-full shadow-md dark:shadow-slate-900/50 p-2 transition-all hover:shadow-lg border border-transparent dark:border-slate-700">
-      <form action="/doctors" method="get" class="flex items-center">
+      <form action="/doctors" method="get" data-turbo-frame="doctors-list" class="flex items-center">
         <div class="flex-grow pl-4">
-          <input type="text" name="q" value="<%= params[:q] %>" placeholder="Busca por nombre, especialidad, ciudad o departamento" class="w-full py-3 px-2 text-gray-700 dark:text-slate-200 focus:outline-none bg-transparent dark:placeholder-slate-400">
+          <input type="text" name="q" value="<%= params[:q] %>"
+                 placeholder="Busca por nombre, especialidad, ciudad o departamento"
+                 class="w-full py-3 px-2 text-gray-700 dark:text-slate-200 focus:outline-none bg-transparent dark:placeholder-slate-400"
+                 data-live-search-target="input"
+                 data-action="input->live-search#search"
+                 autocomplete="off">
         </div>
         <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
           Buscar
