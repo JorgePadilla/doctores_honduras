@@ -1,0 +1,5 @@
+<%# Unified appointment status badge. Local: appointment %>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium <%= appointment.status_classes[:bg] %> <%= appointment.status_classes[:text] %>">
+  <span class="w-1.5 h-1.5 rounded-full <%= appointment.status_classes[:dot] %>"></span>
+  <%= appointment.status_label %>
+</span>

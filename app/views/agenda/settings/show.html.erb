@@ -1,5 +1,7 @@
 <div class="container mx-auto px-4 py-8 max-w-3xl">
-  <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-8">Configuración de Agenda</h1>
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Configuración de Agenda</h1>
+
+  <%= render "agenda/nav", active: :ajustes %>
 
   <%= form_with(model: @setting, url: agenda_settings_path, method: :patch, class: "space-y-6") do |f| %>
     <% if @setting.errors.any? %>
@@ -59,7 +61,4 @@
     </div>
   <% end %>
 
-  <div class="mt-6">
-    <%= link_to "← Volver a la agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
-  </div>
 </div>

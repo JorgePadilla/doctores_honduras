@@ -1,11 +1,13 @@
 <div class="container mx-auto px-4 py-8 max-w-3xl">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400">Notificaciones</h1>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Notificaciones</h1>
     <% if @notifications.any?(&:unread?) %>
       <%= button_to "Marcar todas como leídas", mark_all_as_read_agenda_notifications_path, method: :patch,
           class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
     <% end %>
   </div>
+
+  <%= render "agenda/nav", active: nil %>
 
   <% if @notifications.any? %>
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
@@ -39,7 +41,4 @@
     </div>
   <% end %>
 
-  <div class="mt-6">
-    <%= link_to "← Volver a la agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
-  </div>
 </div>

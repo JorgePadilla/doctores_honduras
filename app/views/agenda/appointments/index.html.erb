@@ -1,34 +1,44 @@
-<div class="container mx-auto px-4 py-8 max-w-6xl">
-  <div class="flex justify-between items-center mb-8">
+<% start_hour, end_hour = agenda_hour_bounds(@branches) %>
+<% grid_h = agenda_grid_height_px(start_hour, end_hour) %>
+<% hour_px = AgendaHelper::HOUR_PX %>
+
+<div class="max-w-6xl mx-auto">
+  <!-- Header -->
+  <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400">Agenda</h1>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Agenda</h1>
       <% if acting_as_secretary? %>
         <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Gestionando agenda de <%= current_doctor_profile.display_name %></p>
       <% end %>
     </div>
-    <div class="flex items-center space-x-3">
+    <div class="flex items-center gap-2">
       <%= link_to agenda_notifications_path, class: "relative p-2 text-gray-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors" do %>
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
         <% if Current.user.unread_notifications_count > 0 %>
           <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" data-controller="notification-badge"><%= Current.user.unread_notifications_count %></span>
         <% end %>
       <% end %>
-      <%= link_to "Nueva Cita", new_agenda_appointment_path, class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105" %>
+      <%= link_to new_agenda_appointment_path, class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105" do %>
+        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Nueva Cita
+      <% end %>
     </div>
   </div>
 
-  <!-- Calendar Navigation -->
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6" data-controller="calendar">
-    <div class="flex justify-between items-center mb-6">
-      <div class="flex items-center space-x-2">
+  <%= render "agenda/nav", active: :citas %>
+
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-4 sm:p-6" data-controller="calendar" data-calendar-view-value="<%= @view %>">
+    <!-- Navigation -->
+    <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
+      <div class="flex items-center gap-1">
         <%= link_to agenda_appointments_path(date: (@view == "day" ? @date - 1.day : @date - 1.week), view: @view), class: "p-2 hover:bg-sky-50 dark:hover:bg-slate-700 rounded-lg transition-colors" do %>
           <svg class="w-5 h-5 text-gray-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         <% end %>
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <h2 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white px-1 min-w-0">
           <% if @view == "day" %>
             <%= I18n.l(@date, format: :long) %>
           <% else %>
-            <%= I18n.l(@week_start, format: :long) %> - <%= I18n.l(@week_start + 6.days, format: :long) %>
+            <%= I18n.l(@week_start, format: :long) %> – <%= I18n.l(@week_start + 6.days, format: :long) %>
           <% end %>
         </h2>
         <%= link_to agenda_appointments_path(date: (@view == "day" ? @date + 1.day : @date + 1.week), view: @view), class: "p-2 hover:bg-sky-50 dark:hover:bg-slate-700 rounded-lg transition-colors" do %>
@@ -42,39 +52,95 @@
       </div>
     </div>
 
-    <% if @view == "day" %>
-      <!-- Day View -->
-      <% if @appointments.any? %>
-        <div class="space-y-3">
-          <% @appointments.each do |appt| %>
-            <%= render "agenda/appointments/appointment_card", appointment: appt %>
+    <% if @branches.empty? %>
+      <div class="text-center py-12">
+        <svg class="mx-auto w-12 h-12 text-gray-300 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2M5 21H3m4-14h.01M11 7h.01M7 11h.01M11 11h.01"/></svg>
+        <p class="text-gray-600 dark:text-slate-300 font-medium">Aún no tienes sucursales configuradas</p>
+        <p class="text-sm text-gray-400 dark:text-slate-500 mt-1">Agrega una sucursal con horarios en tu perfil para poder agendar citas.</p>
+      </div>
+
+    <% elsif @view == "day" %>
+      <!-- DAY VIEW -->
+      <div class="flex">
+        <div class="w-14 flex-shrink-0">
+          <% (start_hour...end_hour).each do |h| %>
+            <div style="height:<%= hour_px %>px" class="relative">
+              <span class="absolute -top-2 right-2 text-xs text-gray-400 dark:text-slate-500"><%= format("%02d:00", h) %></span>
+            </div>
           <% end %>
         </div>
-      <% else %>
-        <div class="text-center py-12">
-          <svg class="mx-auto w-12 h-12 text-gray-300 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <p class="text-gray-500 dark:text-slate-400 font-medium">No hay citas para este día</p>
-          <p class="text-sm text-gray-400 dark:text-slate-500 mt-1">Las citas programadas aparecerán aquí</p>
+        <div class="relative flex-1 border-l border-gray-200 dark:border-slate-700 cursor-pointer" style="height:<%= grid_h %>px"
+             data-calendar-target="track" data-date="<%= @date %>" data-start-hour="<%= start_hour %>" data-hour-px="<%= hour_px %>"
+             data-action="click->calendar#newAt">
+          <% (0..(end_hour - start_hour)).each do |i| %>
+            <div class="absolute left-0 right-0 border-t border-gray-100 dark:border-slate-700/60" style="top:<%= i * hour_px %>px"></div>
+          <% end %>
+          <% if @date == Date.current && (npx = now_line_px(start_hour, end_hour)) %>
+            <div class="absolute left-0 right-0 z-20 flex items-center" style="top:<%= npx %>px">
+              <span class="w-2 h-2 rounded-full bg-red-500 -ml-1"></span>
+              <span class="flex-1 h-px bg-red-500"></span>
+            </div>
+          <% end %>
+          <% @appointments.each do |appt| %>
+            <%= link_to agenda_appointment_path(appt),
+                style: "top:#{appt_top_px(appt, start_hour)}px; height:#{appt_height_px(appt)}px",
+                class: "absolute left-1.5 right-1.5 z-10 rounded-lg border-l-4 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-2 py-1 overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
+              <p class="text-xs font-semibold truncate"><%= appt.start_time.strftime("%H:%M") %> · <%= appt.patient_name %></p>
+              <p class="text-xs opacity-80 truncate"><%= appt.reason.presence || appt.doctor_branch.name %></p>
+            <% end %>
+          <% end %>
         </div>
-      <% end %>
+      </div>
+
     <% else %>
-      <!-- Week View -->
-      <div class="grid grid-cols-7 gap-3">
-        <% (0..6).each do |i| %>
-          <% day = @week_start + i.days %>
-          <div class="text-center">
-            <div class="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase mb-1"><%= I18n.l(day, format: :short) %></div>
-            <div class="text-sm font-bold mb-2 <%= day == Date.current ? 'bg-sky-500 text-white rounded-full w-7 h-7 flex items-center justify-center mx-auto' : 'text-gray-900 dark:text-white' %>"><%= day.day %></div>
-            <div class="space-y-1">
-              <% (@appointments_by_date[day] || []).each do |appt| %>
-                <%= link_to agenda_appointment_path(appt), class: "block p-1.5 rounded-lg text-xs #{appt.status_classes[:week_card]} truncate transition-all" do %>
-                  <span class="font-medium"><%= appt.start_time.strftime("%H:%M") %></span>
-                  <span class="block truncate"><%= appt.patient_name %></span>
-                <% end %>
+      <!-- WEEK VIEW -->
+      <div class="overflow-x-auto">
+        <div class="min-w-[44rem]">
+          <!-- Day headers -->
+          <div class="flex border-b border-gray-200 dark:border-slate-700">
+            <div class="w-14 flex-shrink-0"></div>
+            <% (0..6).each do |i| %>
+              <% day = @week_start + i.days %>
+              <% today = day == Date.current %>
+              <%= link_to agenda_appointments_path(date: day, view: "day"), class: "flex-1 text-center py-2 hover:bg-sky-50 dark:hover:bg-slate-700/50 transition-colors rounded-t-lg" do %>
+                <div class="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase"><%= I18n.l(day, format: :short).split.first %></div>
+                <div class="mt-1 mx-auto text-sm font-bold <%= today ? 'bg-sky-500 text-white rounded-full w-7 h-7 flex items-center justify-center' : 'text-gray-900 dark:text-white' %>"><%= day.day %></div>
+              <% end %>
+            <% end %>
+          </div>
+          <!-- Grid -->
+          <div class="flex" style="height:<%= grid_h %>px">
+            <div class="w-14 flex-shrink-0">
+              <% (start_hour...end_hour).each do |h| %>
+                <div style="height:<%= hour_px %>px" class="relative">
+                  <span class="absolute -top-2 right-2 text-xs text-gray-400 dark:text-slate-500"><%= format("%02d:00", h) %></span>
+                </div>
               <% end %>
             </div>
+            <% (0..6).each do |i| %>
+              <% day = @week_start + i.days %>
+              <% today = day == Date.current %>
+              <div class="relative flex-1 border-l border-gray-200 dark:border-slate-700 cursor-pointer <%= today ? 'bg-sky-50/40 dark:bg-sky-900/10' : '' %>"
+                   data-calendar-target="track" data-date="<%= day %>" data-start-hour="<%= start_hour %>" data-hour-px="<%= hour_px %>"
+                   data-action="click->calendar#newAt">
+                <% (0..(end_hour - start_hour)).each do |j| %>
+                  <div class="absolute left-0 right-0 border-t border-gray-100 dark:border-slate-700/60" style="top:<%= j * hour_px %>px"></div>
+                <% end %>
+                <% if today && (npx = now_line_px(start_hour, end_hour)) %>
+                  <div class="absolute left-0 right-0 z-20 h-px bg-red-500" style="top:<%= npx %>px"></div>
+                <% end %>
+                <% (@appointments_by_date[day] || []).each do |appt| %>
+                  <%= link_to agenda_appointment_path(appt),
+                      style: "top:#{appt_top_px(appt, start_hour)}px; height:#{appt_height_px(appt)}px",
+                      class: "absolute left-0.5 right-0.5 z-10 rounded-md border-l-2 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-1 py-0.5 overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
+                    <p class="text-[11px] font-semibold leading-tight truncate"><%= appt.start_time.strftime("%H:%M") %></p>
+                    <p class="text-[11px] leading-tight truncate"><%= appt.patient_name %></p>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
           </div>
-        <% end %>
+        </div>
       </div>
     <% end %>
   </div>

@@ -1,8 +1,7 @@
 <div class="container mx-auto px-4 py-8 max-w-4xl">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400">Mis Pacientes</h1>
-    <%= link_to "← Agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
-  </div>
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Mis Pacientes</h1>
+
+  <%= render "agenda/nav", active: :pacientes %>
 
   <% if @patients.any? %>
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">

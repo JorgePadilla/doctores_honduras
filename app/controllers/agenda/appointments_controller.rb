@@ -19,7 +19,7 @@ class Agenda::AppointmentsController < Agenda::BaseController
   end
 
   def new
-    @appointment = current_doctor_profile.appointments.build
+    @appointment = current_doctor_profile.appointments.build(appointment_date: params[:date].presence)
     @branches = current_doctor_profile.doctor_branches.ordered
   end
 

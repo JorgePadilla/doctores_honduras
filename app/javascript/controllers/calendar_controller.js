@@ -1,11 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Click an empty area of a day column to start a new appointment prefilled with
+// that date. Clicks on an existing appointment (a link) are ignored.
 export default class extends Controller {
-  // Calendar controller provides navigation context
-  // Most navigation is handled via server-rendered links
-  // This controller can be extended for client-side interactivity
+  newAt(event) {
+    if (event.target.closest("a")) return // clicked an existing appointment
 
-  connect() {
-    // Calendar connected
+    const track = event.currentTarget
+    const date = track.dataset.date
+    if (!date) return
+
+    window.location = `/agenda/appointments/new?date=${encodeURIComponent(date)}`
   }
 }
