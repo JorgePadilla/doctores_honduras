@@ -1,11 +1,15 @@
 class Ahoy::Store < Ahoy::DatabaseStore
   # Enrich each visit with geolocation from the local MaxMind GeoLite2 DB, inline
-  # (no background worker needed). Falls back gracefully when the DB file is absent.
+  # (no background worker needed). Uses the real client IP from X-Forwarded-For
+  # (Railway's proxy makes remote_ip private). Falls back gracefully if no DB / no geo.
   def track_visit(data)
-    ip = ahoy.request&.remote_ip
-    super(data.merge(IpGeolocator.lookup(ip)))
+    super(data.merge(IpGeolocator.from_request(ahoy.request)))
   end
 end
+
+# Associate visits/events with the logged-in user (the app uses Current.user, not a
+# `current_user` controller method, so Ahoy's default lookup wouldn't find it).
+Ahoy.user_method = ->(_controller) { Current.user }
 
 # Enable ahoy.js so we can track client-side events (clicks) in addition to visits.
 Ahoy.api = true
