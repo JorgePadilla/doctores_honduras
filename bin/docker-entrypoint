@@ -12,6 +12,22 @@ if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   echo "[entrypoint] AWS_REGION=${AWS_REGION:-(not set)}"
   echo "[entrypoint] AWS_ACCESS_KEY_ID is ${AWS_ACCESS_KEY_ID:+set}${AWS_ACCESS_KEY_ID:-not set}"
   echo "[entrypoint] AWS_SECRET_ACCESS_KEY is ${AWS_SECRET_ACCESS_KEY:+set}${AWS_SECRET_ACCESS_KEY:-not set}"
+
+  # Download MaxMind GeoLite2 City DB for analytics geolocation (license-restricted,
+  # not committed). Uses the runtime env var MAXMIND_LICENSE_KEY. Skipped gracefully
+  # if the key is absent or the download fails — the app just runs without geo.
+  if [ ! -f db/GeoLite2-City.mmdb ] && [ -n "$MAXMIND_LICENSE_KEY" ]; then
+    echo "[entrypoint] Downloading GeoLite2-City.mmdb..."
+    if curl -fsSL "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" -o /tmp/geolite.tar.gz; then
+      tar -xzf /tmp/geolite.tar.gz -C /tmp && \
+      cp /tmp/GeoLite2-City_*/GeoLite2-City.mmdb db/GeoLite2-City.mmdb && \
+      echo "[entrypoint] GeoLite2 DB ready ($(du -h db/GeoLite2-City.mmdb | cut -f1))."
+      rm -rf /tmp/geolite.tar.gz /tmp/GeoLite2-City_*
+    else
+      echo "[entrypoint] GeoLite2 download failed — continuing without geo."
+    fi
+  fi
+
   ./bin/rails db:prepare
 fi
 
