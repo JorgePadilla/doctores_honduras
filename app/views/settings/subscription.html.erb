@@ -39,12 +39,12 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <% @plans&.each do |plan| %>
-          <div class="border dark:border-slate-600 rounded-lg overflow-hidden <%= @subscription&.subscription_plan_id == plan.id ? 'border-primary-500 shadow-lg ring-2 ring-primary-500' : (plan.name == 'Plan Premium' ? 'border-primary-300 shadow-md' : '') %>">
+          <div class="border dark:border-slate-600 rounded-lg overflow-hidden flex flex-col h-full <%= @subscription&.subscription_plan_id == plan.id ? 'border-primary-500 shadow-lg ring-2 ring-primary-500' : (plan.name == 'Plan Premium' ? 'border-primary-300 shadow-md' : '') %>">
             <div class="p-4 <%= @subscription&.subscription_plan_id == plan.id ? 'bg-primary-100 dark:bg-sky-900/30' : (plan.name == 'Plan Premium' ? 'bg-primary-50 dark:bg-sky-900/20' : 'bg-gray-50 dark:bg-slate-700') %> border-b dark:border-slate-600">
               <h4 class="text-lg font-medium dark:text-white"><%= plan.name %></h4>
               <p class="text-2xl font-bold mt-1 dark:text-white">$<%= sprintf('%.2f', plan.price / 100.0) %><span class="text-sm text-gray-500 dark:text-slate-400">/mes</span></p>
             </div>
-            <div class="p-4 dark:bg-slate-800">
+            <div class="p-4 dark:bg-slate-800 flex flex-col flex-grow">
               <ul class="space-y-2">
                 <% plan.features.to_s.split(',').each do |feature| %>
                   <li class="flex items-start text-gray-700 dark:text-slate-300">
@@ -56,7 +56,7 @@
                 <% end %>
               </ul>
 
-              <div class="mt-4">
+              <div class="mt-auto pt-4">
                 <% if @subscription&.subscription_plan_id == plan.id %>
                   <div class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 flex items-center justify-center">
                     <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
