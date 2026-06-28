@@ -1,4 +1,8 @@
 class Product < ApplicationRecord
+  include HasUploadableImage
+
+  has_uploadable_image :image, folder: "products", crop: true
+
   belongs_to :supplier
 
   validates :name, presence: true

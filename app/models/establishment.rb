@@ -1,4 +1,9 @@
 class Establishment < ApplicationRecord
+  include HasUploadableImage
+
+  has_uploadable_image :logo, folder: "establishments/logos", crop: false
+  has_uploadable_image :building_image, folder: "establishments/buildings", crop: true
+
   belongs_to :user, optional: true
   belongs_to :department, optional: true
   belongs_to :city, optional: true

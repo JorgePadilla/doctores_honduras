@@ -1,4 +1,8 @@
 class Supplier < ApplicationRecord
+  include HasUploadableImage
+
+  has_uploadable_image :logo, folder: "suppliers", crop: false
+
   belongs_to :user, optional: true
   belongs_to :department, optional: true
   belongs_to :city, optional: true

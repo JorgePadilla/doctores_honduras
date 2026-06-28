@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_17_050734) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_28_172906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -90,6 +90,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_17_050734) do
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image_url"
+    t.string "image_thumb_url"
     t.index ["author_id"], name: "index_articles_on_author_id"
   end
 
@@ -204,6 +206,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_17_050734) do
     t.string "youtube_url"
     t.text "languages", default: [], array: true
     t.string "prefix"
+    t.string "image_thumb_url"
     t.index ["city_id"], name: "index_doctor_profiles_on_city_id"
     t.index ["department_id"], name: "index_doctor_profiles_on_department_id"
     t.index ["specialty_id"], name: "index_doctor_profiles_on_specialty_id"
@@ -258,6 +261,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_17_050734) do
     t.text "description"
     t.string "website"
     t.string "email"
+    t.string "logo_thumb_url"
+    t.string "building_image_thumb_url"
     t.index ["user_id"], name: "index_establishments_on_user_id"
   end
 
@@ -322,6 +327,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_17_050734) do
     t.datetime "updated_at", null: false
     t.boolean "active", default: true
     t.boolean "featured", default: false
+    t.string "image_thumb_url"
     t.index ["supplier_id"], name: "index_products_on_supplier_id"
   end
 
@@ -464,6 +470,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_17_050734) do
     t.bigint "city_id"
     t.boolean "featured", default: false
     t.boolean "hidden", default: false
+    t.string "logo_thumb_url"
     t.index ["user_id"], name: "index_suppliers_on_user_id"
   end
 

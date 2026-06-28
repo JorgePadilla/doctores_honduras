@@ -42,7 +42,7 @@ class Vendor::ProductsController < Vendor::BaseController
   end
 
   def product_params
-    params.require(:product).permit(:name, :sku, :description, :price, :category, :image_url, :active, :featured)
+    params.require(:product).permit(:name, :sku, :description, :price, :category, :image_file, :active, :featured)
   end
 
   def check_product_limit

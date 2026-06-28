@@ -1,5 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Max longest edge the browser downscales to before upload. The server makes the
+// final 1000px/400px WebP variants, so this just keeps uploads small and fast.
+const MAX_EDGE = 1600
+const QUALITY = 0.85
+
 export default class extends Controller {
   static targets = ["dropzone", "input", "preview", "previewImage", "fileName", "currentImage"]
 
@@ -10,8 +15,7 @@ export default class extends Controller {
   }
 
   fileSelected(e) {
-    const files = e.target.files
-    this.handleFiles(files)
+    this.handleFiles(e.target.files)
   }
 
   highlight(e) {
@@ -33,13 +37,13 @@ export default class extends Controller {
     this.handleFiles(e.dataTransfer.files)
   }
 
-  handleFiles(files) {
+  async handleFiles(files) {
     if (files.length === 0) return
 
-    const file = files[0]
+    let file = files[0]
 
     if (!file.type.match('image.*')) {
-      alert('Por favor selecciona una imagen válida (JPEG, PNG, GIF)')
+      alert('Por favor selecciona una imagen válida (JPEG, PNG, GIF o WebP)')
       return
     }
 
@@ -48,11 +52,59 @@ export default class extends Controller {
       return
     }
 
+    // Instant preview from the original while we optimize in the background.
+    this.showPreview(file)
+
+    try {
+      const optimized = await this.resizeAndConvert(file)
+      if (optimized) file = optimized
+    } catch (err) {
+      console.warn('[image-upload] client optimization failed, uploading original', err)
+    }
+
     const dataTransfer = new DataTransfer()
     dataTransfer.items.add(file)
     this.inputTarget.files = dataTransfer.files
+    this.fileNameTarget.textContent = file.name
+  }
 
-    this.showPreview(file)
+  // Downscale + re-encode to WebP (or JPEG fallback) using a canvas.
+  // Returns a new File, or null to keep the original.
+  async resizeAndConvert(file) {
+    if (file.type === 'image/svg+xml') return null
+
+    const img = await this.loadImage(file)
+    const scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height))
+    const width = Math.round(img.width * scale)
+    const height = Math.round(img.height * scale)
+
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+    canvas.getContext('2d').drawImage(img, 0, 0, width, height)
+    URL.revokeObjectURL(img.src)
+
+    const supportsWebp = canvas.toDataURL('image/webp').startsWith('data:image/webp')
+    const type = supportsWebp ? 'image/webp' : 'image/jpeg'
+    const ext = supportsWebp ? 'webp' : 'jpg'
+
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, type, QUALITY))
+    if (!blob) return null
+
+    // Skip if conversion didn't actually help (e.g. already-small WebP).
+    if (scale === 1 && blob.size >= file.size) return null
+
+    const baseName = file.name.replace(/\.[^.]+$/, '') || 'image'
+    return new File([blob], `${baseName}.${ext}`, { type })
+  }
+
+  loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.onload = () => resolve(img)
+      img.onerror = reject
+      img.src = URL.createObjectURL(file)
+    })
   }
 
   showPreview(file) {

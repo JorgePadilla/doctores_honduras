@@ -37,8 +37,8 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+# Image processing (resize/crop/convert to WebP) via libvips for S3 uploads
+gem "image_processing", "~> 1.2"
 
 # We'll use Rails' built-in pagination methods instead of a gem
 

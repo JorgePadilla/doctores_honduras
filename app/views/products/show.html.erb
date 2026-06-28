@@ -50,7 +50,7 @@
 
           <div class="flex items-center mb-4">
             <% if @supplier.logo_url.present? %>
-              <img src="<%= @supplier.logo_url %>" alt="<%= @supplier.name %>" class="w-12 h-12 object-contain mr-4 rounded-full">
+              <img src="<%= @supplier.logo_thumb_url.presence || @supplier.logo_url %>" alt="<%= @supplier.name %>" loading="lazy" class="w-12 h-12 object-contain mr-4 rounded-full">
             <% else %>
               <div class="w-12 h-12 bg-gray-200 dark:bg-slate-700 rounded-full flex items-center justify-center mr-4">
                 <span class="text-gray-500 dark:text-slate-400 font-bold"><%= @supplier.name.first %></span>

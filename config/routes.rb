@@ -52,6 +52,10 @@ Rails.application.routes.draw do
     end
   end
   resources :establishments, only: [:index, :show], path: 'hospitales-y-clinicas'
+
+  # Establishment owner (hospital/clinic) profile editing — operates on the current user's
+  # own establishment, mirroring vendor/paciente profile resources.
+  resource :establishment_profile, only: [:edit, :update], path: 'mi-establecimiento'
   
   # User registration routes
   get "signup" => "users#new"

@@ -25,7 +25,7 @@ class Vendor::ProfilesController < Vendor::BaseController
   def supplier_params
     params.require(:supplier).permit(
       :name, :phone, :address, :email, :description,
-      :category, :website, :logo_url, :department_id, :city_id
+      :category, :website, :logo_file, :department_id, :city_id
     )
   end
 end

@@ -23,7 +23,7 @@
         <div class="flex flex-col md:flex-row">
           <div class="md:w-1/4 p-4">
             <% if supplier.logo_url.present? %>
-              <img src="<%= supplier.logo_url %>" alt="<%= supplier.name %>" class="w-full h-auto rounded-lg object-cover">
+              <img src="<%= supplier.logo_thumb_url.presence || supplier.logo_url %>" alt="<%= supplier.name %>" loading="lazy" class="w-full h-auto rounded-lg object-cover">
             <% else %>
               <div class="w-full h-full bg-gray-200 dark:bg-slate-700 rounded-lg flex items-center justify-center" style="min-height: 120px;">
                 <span class="text-gray-500 dark:text-slate-400">Sin imagen</span>
