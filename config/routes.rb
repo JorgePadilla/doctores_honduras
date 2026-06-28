@@ -74,6 +74,9 @@ Rails.application.routes.draw do
 
   # Dashboard routes for authenticated users
   get "dashboard" => "dashboard#index", as: :dashboard
+
+  # Doctor analytics ("Estadísticas") — gated to Profesional/Elite
+  get "estadisticas" => "doctor/analytics#index", as: :estadisticas
   
   # Settings routes
   get "settings" => "settings#index", as: :settings
@@ -117,6 +120,7 @@ Rails.application.routes.draw do
     get 'users', to: 'dashboard#users'
     get 'doctors', to: 'dashboard#doctors'
     get 'subscriptions', to: 'dashboard#subscriptions'
+    get 'analytics', to: 'analytics#index'
     post 'doctors/:id/toggle_visibility', to: 'dashboard#toggle_doctor_visibility', as: 'toggle_doctor_visibility'
   end
 

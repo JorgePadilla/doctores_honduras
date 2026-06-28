@@ -53,6 +53,9 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <%# Ahoy.js (classic, same-origin) — tracks the visit and exposes window.ahoy for click events %>
+    <%= javascript_include_tag "ahoy", defer: true %>
   </head>
 
   <body class="min-h-screen bg-gray-50 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-200">

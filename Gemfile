@@ -76,3 +76,7 @@ gem "stripe", "~> 9.0"
 gem "aws-sdk-s3", require: false
 
 gem "view_component", "~> 3.21"
+
+# Visitor analytics (visits + events) and IP geolocation (MaxMind GeoLite2 local DB)
+gem "ahoy_matey", "~> 5.0"
+gem "maxmind-db", "~> 1.2"

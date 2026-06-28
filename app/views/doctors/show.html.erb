@@ -32,6 +32,10 @@
           <div class="mt-4 flex flex-wrap gap-2">
             <% social_links.each do |link| %>
               <a href="<%= link[:url] %>" target="_blank" rel="noopener noreferrer"
+                 data-controller="analytics"
+                 data-analytics-name-value="Contact Click"
+                 data-analytics-props-value="<%= { kind: link[:label], viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
+                 data-action="click->analytics#track"
                  class="inline-flex items-center px-3 py-1.5 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors">
                 <%= link[:label] %>
               </a>
@@ -52,7 +56,9 @@
 
         <% if doctor_plan_tier == "elite" && @doctor.agenda_setting&.public_booking_enabled %>
           <div class="mb-6">
-            <%= link_to new_doctor_booking_path(@doctor), class: "inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-green-500 hover:bg-green-600" do %>
+            <%= link_to new_doctor_booking_path(@doctor),
+                data: { controller: "analytics", analytics_name_value: "Booking Started", analytics_props_value: { viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json, action: "click->analytics#track" },
+                class: "inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-green-500 hover:bg-green-600" do %>
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
               Reservar Cita
             <% end %>

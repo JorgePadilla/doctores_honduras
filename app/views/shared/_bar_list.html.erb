@@ -1,0 +1,28 @@
+<%#
+  Horizontal bar list (shared by admin + doctor analytics). Locals:
+    title - card heading
+    data  - Hash/Array of [label, count] (already sorted, top-N)
+    empty - optional empty-state text
+%>
+<% data = (data || {}).to_a %>
+<% max = data.map { |_l, c| c }.max || 1 %>
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
+  <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4"><%= title %></h2>
+  <% if data.any? %>
+    <div class="space-y-3">
+      <% data.each do |label, count| %>
+        <div>
+          <div class="flex justify-between text-sm mb-1 gap-2">
+            <span class="text-gray-700 dark:text-slate-300 truncate"><%= label.to_s.presence || "—" %></span>
+            <span class="font-medium text-gray-900 dark:text-white flex-shrink-0"><%= number_with_delimiter(count) %></span>
+          </div>
+          <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-2">
+            <div class="bg-sky-500 h-2 rounded-full" style="width: <%= (count.to_f / max * 100).round %>%"></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-sm text-gray-500 dark:text-slate-400"><%= local_assigns[:empty] || "Sin datos en el período." %></p>
+  <% end %>
+</div>

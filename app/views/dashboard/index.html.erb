@@ -75,6 +75,11 @@
               <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
           </div>
+          <% if paid_plan?(@plan) %>
+            <%= link_to "Ver estadísticas detalladas →", estadisticas_path, class: "mt-4 inline-block text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
+          <% else %>
+            <%= link_to "Desbloquear estadísticas con un plan de pago →", settings_subscription_path, class: "mt-4 inline-block text-sm font-medium text-amber-600 dark:text-amber-400 hover:underline" %>
+          <% end %>
         </div>
       <% end %>
 

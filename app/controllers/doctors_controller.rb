@@ -5,6 +5,13 @@ class DoctorsController < ApplicationController
     @page = (params[:page] || 1).to_i
     @per_page = 10
 
+    # Track meaningful searches (admin traffic insight). Debounced live-search may
+    # fire a few per session; acceptable for now.
+    if params[:q].to_s.length >= 2 || params[:service].present? ||
+       (params[:specialty].present? && params[:specialty] != "Todas las especialidades")
+      ahoy.track "Search", { scope: "doctors", query: params[:q], specialty: params[:specialty], service: params[:service] }.compact_blank
+    end
+
     # Load all specialties and services for filter dropdowns
     @specialties = Specialty.order(:name).pluck(:name).uniq
     @services = Service.order(:name).pluck(:name).uniq
@@ -99,6 +106,7 @@ class DoctorsController < ApplicationController
     ProfileViewTracker.track(
       viewable: @doctor,
       viewer: Current.user,
+      ahoy: ahoy,
       ip_address: request.remote_ip,
       user_agent: request.user_agent
     )

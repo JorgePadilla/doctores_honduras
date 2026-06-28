@@ -1,5 +1,9 @@
 class ProfileViewTracker
-  def self.track(viewable:, viewer: nil, ip_address: nil, user_agent: nil)
+  # `ahoy` is the controller's Ahoy tracker. When passed, a rich "Profile View"
+  # event is recorded against the current visit (geo/referrer/device/UTM) in
+  # addition to the deduped ProfileView row (which remains the history-inclusive
+  # visit counter shown on the dashboard).
+  def self.track(viewable:, viewer: nil, ahoy: nil, ip_address: nil, user_agent: nil)
     return if should_skip?(viewable, viewer)
     return if recently_viewed?(viewable, viewer, ip_address)
 
@@ -9,6 +13,10 @@ class ProfileViewTracker
       ip_address: ip_address,
       user_agent: user_agent&.truncate(255)
     )
+
+    ahoy&.track("Profile View", viewable_type: viewable.class.name, viewable_id: viewable.id)
+  rescue => e
+    Rails.logger.error "ProfileViewTracker error: #{e.class} - #{e.message}"
   end
 
   private

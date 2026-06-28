@@ -26,6 +26,7 @@ class BookingsController < ApplicationController
 
     if @appointment.save
       AppointmentNotifier.notify_new_appointment(@appointment)
+      ahoy.track "Booking Completed", viewable_type: "DoctorProfile", viewable_id: @doctor_profile.id
       redirect_to doctor_path(@doctor_profile), notice: "Cita reservada exitosamente. Recibirás un correo de confirmación."
     else
       @branches = @doctor_profile.doctor_branches.ordered

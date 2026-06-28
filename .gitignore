@@ -7,6 +7,9 @@
 # Ignore macOS Finder metadata.
 .DS_Store
 
+# MaxMind GeoLite2 DB (license-restricted, large) — provided at deploy, not committed.
+/db/GeoLite2-City.mmdb
+
 # Ignore bundler config.
 /.bundle
 

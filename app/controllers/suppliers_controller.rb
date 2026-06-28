@@ -29,6 +29,7 @@ class SuppliersController < ApplicationController
     ProfileViewTracker.track(
       viewable: @supplier,
       viewer: Current.user,
+      ahoy: ahoy,
       ip_address: request.remote_ip,
       user_agent: request.user_agent
     )
