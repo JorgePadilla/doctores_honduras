@@ -59,3 +59,12 @@ h3 {
 .dark h3 {
   color: #7dd3fc;
 }
+
+/* Hide the scrollbar while keeping scrollability (agenda week view, etc.) */
+.no-scrollbar {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE / old Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;              /* Chrome / Safari */
+}
