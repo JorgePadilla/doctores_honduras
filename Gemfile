@@ -20,6 +20,9 @@ gem "jbuilder"
 # Spanish (and other) translations for Rails validation/error messages, dates, etc.
 gem "rails-i18n"
 
+# CSV (stdlib until Ruby 3.4) — used for analytics export
+gem "csv"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
