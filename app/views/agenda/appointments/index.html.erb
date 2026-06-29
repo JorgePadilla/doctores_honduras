@@ -72,7 +72,7 @@
         <div class="relative flex-1 border-l border-gray-200 dark:border-slate-700 cursor-pointer" style="height:<%= grid_h %>px"
              data-calendar-target="track" data-date="<%= @date %>" data-start-hour="<%= start_hour %>" data-hour-px="<%= hour_px %>"
              data-action="click->calendar#newAt">
-          <% (1..(end_hour - start_hour)).each do |i| %>
+          <% (0..(end_hour - start_hour)).each do |i| %>
             <div class="absolute left-0 right-0 border-t border-gray-100 dark:border-slate-700/60" style="top:<%= i * hour_px %>px"></div>
           <% end %>
           <% if @date == Date.current && (npx = now_line_px(start_hour, end_hour)) %>
@@ -85,9 +85,13 @@
             <% appt = item[:appt] %>
             <%= link_to agenda_appointment_path(appt),
                 style: "top:#{appt_top_px(appt, start_hour)}px; height:#{appt_height_px(appt)}px; #{lane_style(item[:lane], item[:lanes], 6)}",
-                class: "absolute z-10 rounded-lg border-l-4 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-2 py-1 overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
-              <p class="text-xs font-semibold truncate"><%= appt.start_time.strftime("%H:%M") %> · <%= appt.patient_name %></p>
-              <p class="text-xs opacity-80 truncate"><%= appt.reason.presence || appt.doctor_branch.name %></p>
+                class: "absolute z-10 rounded-lg border-l-4 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-2 py-0.5 leading-tight overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
+              <% if appt.duration_minutes >= 45 %>
+                <p class="text-xs font-semibold truncate"><%= appt.start_time.strftime("%H:%M") %> · <%= appt.patient_name %></p>
+                <p class="text-xs opacity-80 truncate"><%= appt.reason.presence || appt.doctor_branch.name %></p>
+              <% else %>
+                <p class="text-xs truncate"><span class="font-semibold"><%= appt.start_time.strftime("%H:%M") %></span> <%= appt.patient_name %></p>
+              <% end %>
             <% end %>
           <% end %>
         </div>
@@ -98,7 +102,7 @@
       <div class="overflow-x-auto">
         <div class="min-w-[44rem]">
           <!-- Day headers -->
-          <div class="flex border-b border-gray-200 dark:border-slate-700">
+          <div class="flex">
             <div class="w-14 flex-shrink-0"></div>
             <% (0..6).each do |i| %>
               <% day = @week_start + i.days %>
@@ -124,7 +128,7 @@
               <div class="relative flex-1 border-l border-gray-200 dark:border-slate-700 cursor-pointer <%= today ? 'bg-sky-50/40 dark:bg-sky-900/10' : '' %>"
                    data-calendar-target="track" data-date="<%= day %>" data-start-hour="<%= start_hour %>" data-hour-px="<%= hour_px %>"
                    data-action="click->calendar#newAt">
-                <% (1..(end_hour - start_hour)).each do |j| %>
+                <% (0..(end_hour - start_hour)).each do |j| %>
                   <div class="absolute left-0 right-0 border-t border-gray-100 dark:border-slate-700/60" style="top:<%= j * hour_px %>px"></div>
                 <% end %>
                 <% if today && (npx = now_line_px(start_hour, end_hour)) %>
