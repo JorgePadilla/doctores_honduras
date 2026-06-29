@@ -58,7 +58,7 @@
     <%= javascript_include_tag "ahoy", defer: true %>
   </head>
 
-  <body class="min-h-screen bg-gray-50 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-200">
+  <body class="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-200">
     <%= render "shared/navbar" %>
     
     <% if flash.any? %>
@@ -106,7 +106,7 @@
       </div>
     <% end %>
     
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-8 grow w-full">
       <%= yield %>
     </main>
 

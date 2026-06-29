@@ -72,7 +72,7 @@
         <div class="relative flex-1 border-l border-gray-200 dark:border-slate-700 cursor-pointer" style="height:<%= grid_h %>px"
              data-calendar-target="track" data-date="<%= @date %>" data-start-hour="<%= start_hour %>" data-hour-px="<%= hour_px %>"
              data-action="click->calendar#newAt">
-          <% (0..(end_hour - start_hour)).each do |i| %>
+          <% (1..(end_hour - start_hour)).each do |i| %>
             <div class="absolute left-0 right-0 border-t border-gray-100 dark:border-slate-700/60" style="top:<%= i * hour_px %>px"></div>
           <% end %>
           <% if @date == Date.current && (npx = now_line_px(start_hour, end_hour)) %>
@@ -124,7 +124,7 @@
               <div class="relative flex-1 border-l border-gray-200 dark:border-slate-700 cursor-pointer <%= today ? 'bg-sky-50/40 dark:bg-sky-900/10' : '' %>"
                    data-calendar-target="track" data-date="<%= day %>" data-start-hour="<%= start_hour %>" data-hour-px="<%= hour_px %>"
                    data-action="click->calendar#newAt">
-                <% (0..(end_hour - start_hour)).each do |j| %>
+                <% (1..(end_hour - start_hour)).each do |j| %>
                   <div class="absolute left-0 right-0 border-t border-gray-100 dark:border-slate-700/60" style="top:<%= j * hour_px %>px"></div>
                 <% end %>
                 <% if today && (npx = now_line_px(start_hour, end_hour)) %>
