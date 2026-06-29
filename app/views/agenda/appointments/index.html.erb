@@ -81,10 +81,11 @@
               <span class="flex-1 h-px bg-red-500"></span>
             </div>
           <% end %>
-          <% @appointments.each do |appt| %>
+          <% layout_appointments(@appointments).each do |item| %>
+            <% appt = item[:appt] %>
             <%= link_to agenda_appointment_path(appt),
-                style: "top:#{appt_top_px(appt, start_hour)}px; height:#{appt_height_px(appt)}px",
-                class: "absolute left-1.5 right-1.5 z-10 rounded-lg border-l-4 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-2 py-1 overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
+                style: "top:#{appt_top_px(appt, start_hour)}px; height:#{appt_height_px(appt)}px; #{lane_style(item[:lane], item[:lanes], 6)}",
+                class: "absolute z-10 rounded-lg border-l-4 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-2 py-1 overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
               <p class="text-xs font-semibold truncate"><%= appt.start_time.strftime("%H:%M") %> · <%= appt.patient_name %></p>
               <p class="text-xs opacity-80 truncate"><%= appt.reason.presence || appt.doctor_branch.name %></p>
             <% end %>
@@ -129,12 +130,12 @@
                 <% if today && (npx = now_line_px(start_hour, end_hour)) %>
                   <div class="absolute left-0 right-0 z-20 h-px bg-red-500" style="top:<%= npx %>px"></div>
                 <% end %>
-                <% (@appointments_by_date[day] || []).each do |appt| %>
+                <% layout_appointments(@appointments_by_date[day] || []).each do |item| %>
+                  <% appt = item[:appt] %>
                   <%= link_to agenda_appointment_path(appt),
-                      style: "top:#{appt_top_px(appt, start_hour)}px; height:#{appt_height_px(appt)}px",
-                      class: "absolute left-0.5 right-0.5 z-10 rounded-md border-l-2 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-1 py-0.5 overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
-                    <p class="text-[11px] font-semibold leading-tight truncate"><%= appt.start_time.strftime("%H:%M") %></p>
-                    <p class="text-[11px] leading-tight truncate"><%= appt.patient_name %></p>
+                      style: "top:#{appt_top_px(appt, start_hour)}px; height:#{appt_height_px(appt)}px; #{lane_style(item[:lane], item[:lanes], 2)}",
+                      class: "absolute z-10 rounded-md border-l-2 #{appt.status_classes[:border]} #{appt.status_classes[:bg]} #{appt.status_classes[:text]} px-1 py-0.5 leading-none overflow-hidden hover:shadow-md hover:z-30 transition-all" do %>
+                    <p class="text-[11px] leading-tight truncate"><span class="font-semibold"><%= appt.start_time.strftime("%H:%M") %></span> <%= appt.patient_name %></p>
                   <% end %>
                 <% end %>
               </div>
