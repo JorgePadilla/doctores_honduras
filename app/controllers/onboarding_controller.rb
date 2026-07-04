@@ -9,6 +9,11 @@ class OnboardingController < ApplicationController
   def save_profile_type
     profile_type = params[:profile_type]
 
+    if profile_type_section_hidden?(profile_type)
+      redirect_to onboarding_profile_type_path, alert: "Esa opción no está disponible en este momento."
+      return
+    end
+
     unless %w[doctor hospital clinic vendor paciente].include?(profile_type)
       # Viewer — just mark onboarding done and go to doctors directory
       current_user.update(onboarding_completed: true)
@@ -109,6 +114,16 @@ class OnboardingController < ApplicationController
 
   def redirect_if_onboarding_completed
     redirect_to dashboard_path if current_user&.onboarding_completed
+  end
+
+  # Hospital/Clinic and Vendor onboarding options mirror the public sections
+  # (Hospitales y Clínicas / Proveedores) and disappear when an admin hides them.
+  def profile_type_section_hidden?(profile_type)
+    case profile_type
+    when "hospital", "clinic" then !section_visible?("establishments")
+    when "vendor"             then !section_visible?("suppliers")
+    else false
+    end
   end
 
   def assign_free_plan_and_finish

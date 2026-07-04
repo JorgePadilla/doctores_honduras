@@ -24,6 +24,7 @@
     <% end %>
 
     <!-- Hospital / Clinic -->
+    <% if section_visible?("establishments") %>
     <%= form_with url: onboarding_save_profile_type_path, method: :post, class: "block h-full" do |f| %>
       <%= f.hidden_field :profile_type, value: "hospital" %>
       <button type="submit" class="w-full h-full text-left bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border-2 border-gray-200 dark:border-slate-700 hover:border-green-500 dark:hover:border-green-500 transition-all hover:shadow-md transform hover:scale-105 cursor-pointer group">
@@ -40,8 +41,10 @@
         </div>
       </button>
     <% end %>
+    <% end %>
 
     <!-- Vendor -->
+    <% if section_visible?("suppliers") %>
     <%= form_with url: onboarding_save_profile_type_path, method: :post, class: "block h-full" do |f| %>
       <%= f.hidden_field :profile_type, value: "vendor" %>
       <button type="submit" class="w-full h-full text-left bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border-2 border-gray-200 dark:border-slate-700 hover:border-purple-500 dark:hover:border-purple-500 transition-all hover:shadow-md transform hover:scale-105 cursor-pointer group">
@@ -57,6 +60,7 @@
           <p class="text-gray-600 dark:text-slate-400 text-sm">Para proveedores de equipos y suministros médicos que desean mostrar sus productos.</p>
         </div>
       </button>
+    <% end %>
     <% end %>
   </div>
 
