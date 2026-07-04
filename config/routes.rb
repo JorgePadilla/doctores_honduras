@@ -121,6 +121,8 @@ Rails.application.routes.draw do
     get 'doctors', to: 'dashboard#doctors'
     get 'subscriptions', to: 'dashboard#subscriptions'
     get 'analytics', to: 'analytics#index'
+    get 'settings', to: 'settings#index'
+    patch 'settings', to: 'settings#update'
     post 'doctors/:id/toggle_visibility', to: 'dashboard#toggle_doctor_visibility', as: 'toggle_doctor_visibility'
   end
 

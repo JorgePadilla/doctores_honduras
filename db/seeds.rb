@@ -1,10 +1,11 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-# Always seed subscription plans, departments, and services (idempotent)
+# Always seed subscription plans, departments, services, and site settings (idempotent)
 load File.join(Rails.root, 'db', 'seeds', 'subscription_plans.rb')
 load File.join(Rails.root, 'db', 'seeds', 'services.rb')
 load File.join(Rails.root, 'db', 'seeds', 'departments.rb')
+load File.join(Rails.root, 'db', 'seeds', 'site_settings.rb')
 
 # Create suppliers
 puts "Creating suppliers..."

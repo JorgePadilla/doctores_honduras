@@ -1,5 +1,6 @@
 class SuppliersController < ApplicationController
   allow_unauthenticated_access only: [ :index, :show ]
+  before_action -> { require_visible_section("suppliers") }
 
   def index
     @page = (params[:page] || 1).to_i

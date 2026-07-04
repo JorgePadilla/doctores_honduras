@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   allow_unauthenticated_access only: [ :index, :show ]
+  before_action -> { require_visible_section("suppliers") }
   before_action :set_supplier
 
   def index

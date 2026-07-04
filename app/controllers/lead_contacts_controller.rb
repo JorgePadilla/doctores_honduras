@@ -1,5 +1,6 @@
 class LeadContactsController < ApplicationController
   skip_before_action :require_authentication
+  before_action -> { require_visible_section("suppliers") }
 
   def new
     @supplier = Supplier.find(params[:supplier_id])

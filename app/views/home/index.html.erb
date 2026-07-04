@@ -14,9 +14,11 @@
       <a href="/doctors" class="py-3 px-6 rounded-full inline-block text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
         Buscar médicos
       </a>
-      <a href="/proveedores" class="py-3 px-6 rounded-full inline-block text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
-        Ver proveedores
-      </a>
+      <% if section_visible?("suppliers") %>
+        <a href="/proveedores" class="py-3 px-6 rounded-full inline-block text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
+          Ver proveedores
+        </a>
+      <% end %>
     </div>
   </section>
 
@@ -25,10 +27,12 @@
       <h3 class="mb-3 text-sky-600 dark:text-sky-400">Especialistas Verificados</h3>
       <p class="text-gray-600 dark:text-slate-400">Todos nuestros médicos son verificados y cuentan con las credenciales necesarias para ejercer.</p>
     </div>
-    <div class="card border-l-4 border-sky-300 dark:border-sky-500 pl-6">
-      <h3 class="mb-3 text-sky-600 dark:text-sky-400">Proveedores Médicos</h3>
-      <p class="text-gray-600 dark:text-slate-400">Encuentra los mejores proveedores de equipos y suministros médicos para profesionales y pacientes.</p>
-    </div>
+    <% if section_visible?("suppliers") %>
+      <div class="card border-l-4 border-sky-300 dark:border-sky-500 pl-6">
+        <h3 class="mb-3 text-sky-600 dark:text-sky-400">Proveedores Médicos</h3>
+        <p class="text-gray-600 dark:text-slate-400">Encuentra los mejores proveedores de equipos y suministros médicos para profesionales y pacientes.</p>
+      </div>
+    <% end %>
     <div class="card border-l-4 border-sky-300 dark:border-sky-500 pl-6">
       <h3 class="mb-3 text-sky-600 dark:text-sky-400">Reseñas y Calificaciones</h3>
       <p class="text-gray-600 dark:text-slate-400">Lee opiniones de otros pacientes para elegir el médico que mejor se adapte a tus necesidades.</p>

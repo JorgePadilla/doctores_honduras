@@ -12,8 +12,12 @@
       <div class="hidden md:flex space-x-6">
         <a href="/" class="text-white hover:text-primary-200 transition">Inicio</a>
         <a href="/doctors" class="text-white hover:text-primary-200 transition">Doctores</a>
-        <a href="/hospitales-y-clinicas" class="text-white hover:text-primary-200 transition">Hospitales y Clínicas</a>
-        <a href="/proveedores" class="text-white hover:text-primary-200 transition">Proveedores</a>
+        <% if section_visible?("establishments") %>
+          <a href="/hospitales-y-clinicas" class="text-white hover:text-primary-200 transition">Hospitales y Clínicas</a>
+        <% end %>
+        <% if section_visible?("suppliers") %>
+          <a href="/proveedores" class="text-white hover:text-primary-200 transition">Proveedores</a>
+        <% end %>
       </div>
 
       <!-- Authentication Links + Dark Mode Toggle -->
@@ -81,8 +85,12 @@
     <div id="mobile-menu" class="md:hidden hidden pb-4">
       <a href="/" class="block py-2 text-white hover:text-primary-200 transition">Inicio</a>
       <a href="/doctors" class="block py-2 text-white hover:text-primary-200 transition">Doctores</a>
-      <a href="/hospitales-y-clinicas" class="block py-2 text-white hover:text-primary-200 transition">Hospitales y Clínicas</a>
-      <a href="/proveedores" class="block py-2 text-white hover:text-primary-200 transition">Proveedores</a>
+      <% if section_visible?("establishments") %>
+        <a href="/hospitales-y-clinicas" class="block py-2 text-white hover:text-primary-200 transition">Hospitales y Clínicas</a>
+      <% end %>
+      <% if section_visible?("suppliers") %>
+        <a href="/proveedores" class="block py-2 text-white hover:text-primary-200 transition">Proveedores</a>
+      <% end %>
       <% if Current.user %>
         <div class="mt-4 pt-4 border-t border-primary-300 dark:border-slate-600">
           <div class="block py-2 text-white font-medium"><%= Current.user.email %></div>
