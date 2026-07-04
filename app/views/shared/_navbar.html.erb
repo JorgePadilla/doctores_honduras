@@ -25,22 +25,16 @@
         <!-- Dark Mode Toggle -->
         <button data-action="dark-mode#toggle" class="p-2 rounded-lg hover:bg-sky-600 dark:hover:bg-slate-700 transition-colors" title="Cambiar tema">
           <!-- Sun icon (shown in dark mode) -->
-          <svg data-dark-mode-target="sunIcon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
-          </svg>
+          <%= icon(:sun, class: "w-5 h-5 hidden", data: { dark_mode_target: "sunIcon" }) %>
           <!-- Moon icon (shown in light mode) -->
-          <svg data-dark-mode-target="moonIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-          </svg>
+          <%= icon(:moon, class: "w-5 h-5", data: { dark_mode_target: "moonIcon" }) %>
         </button>
 
         <% if Current.user %>
           <div class="relative dropdown">
             <button id="user-menu-button" class="flex items-center text-white hover:text-primary-200 transition focus:outline-none">
               <span><%= Current.user.email %></span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
+              <%= icon(:chevron_down, class: "h-5 w-5 ml-1") %>
             </button>
             <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg dark:shadow-slate-900/50 py-1 z-50 border border-transparent dark:border-slate-700" style="display: none;">
               <% if Current.user&.admin? %>
@@ -72,10 +66,8 @@
 
       <!-- Mobile Menu Button -->
       <div class="md:hidden">
-        <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+        <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none" aria-label="Menú">
+          <%= icon(:bars_3, class: "h-6 w-6") %>
         </button>
       </div>
     </div>

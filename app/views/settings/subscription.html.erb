@@ -48,9 +48,7 @@
               <ul class="space-y-2">
                 <% plan.features.to_s.split(',').each do |feature| %>
                   <li class="flex items-start text-gray-700 dark:text-slate-300">
-                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
+                    <%= icon(:check, class: "h-5 w-5 text-green-500 mr-2") %>
                     <%= feature.strip %>
                   </li>
                 <% end %>
@@ -59,27 +57,21 @@
               <div class="mt-auto pt-4">
                 <% if @subscription&.subscription_plan_id == plan.id %>
                   <div class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 flex items-center justify-center">
-                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
+                    <%= icon(:check, class: "h-5 w-5 mr-2") %>
                     Plan Actual
                   </div>
                 <% else %>
                   <% if plan.price > 0 %>
                     <%= button_to stripe_checkout_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 hover:bg-sky-600" do %>
                       <span class="flex items-center justify-center">
-                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
+                        <%= icon(:credit_card, class: "h-5 w-5 mr-2") %>
                         Suscribirse
                       </span>
                     <% end %>
                   <% else %>
                     <%= button_to settings_subscribe_path(plan_id: plan.id), method: :post, class: "w-full py-2 px-4 border border-transparent text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 hover:bg-sky-600" do %>
                       <span class="flex items-center justify-center">
-                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
+                        <%= icon(:plus, class: "h-5 w-5 mr-2") %>
                         Elegir gratis
                       </span>
                     <% end %>

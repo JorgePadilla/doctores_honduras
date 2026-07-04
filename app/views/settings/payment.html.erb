@@ -27,9 +27,7 @@
         <!-- Credit Card Information -->
         <div class="bg-white dark:bg-slate-700 p-5 border border-gray-200 dark:border-slate-600 rounded-lg shadow-sm">
           <h3 class="text-lg font-medium mb-4 flex items-center dark:text-white">
-            <svg class="h-6 w-6 text-sky-600 dark:text-sky-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-            </svg>
+            <%= icon(:credit_card, class: "h-6 w-6 text-sky-600 dark:text-sky-400 mr-2") %>
             Información de Tarjeta
           </h3>
 
@@ -62,9 +60,7 @@
         <!-- Billing Information -->
         <div class="bg-white dark:bg-slate-700 p-5 border border-gray-200 dark:border-slate-600 rounded-lg shadow-sm">
           <h3 class="text-lg font-medium mb-4 flex items-center dark:text-white">
-            <svg class="h-6 w-6 text-sky-600 dark:text-sky-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
+            <%= icon(:user, class: "h-6 w-6 text-sky-600 dark:text-sky-400 mr-2") %>
             Información de Facturación
           </h3>
 
@@ -118,17 +114,13 @@
           <div class="mt-6 flex flex-col sm:flex-row sm:justify-between items-center">
             <a href="<%= settings_subscription_path %>" class="w-full sm:w-auto mb-3 sm:mb-0 py-2 px-4 border border-gray-300 dark:border-slate-600 shadow-sm text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 text-center">
               <span class="flex items-center justify-center">
-                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
+                <%= icon(:arrow_left, class: "h-5 w-5 mr-2") %>
                 Cancelar
               </span>
             </a>
             <%= f.button type: "submit", class: "w-full sm:w-auto py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" do %>
               <span class="flex items-center justify-center">
-                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
+                <%= icon(:credit_card, class: "h-5 w-5 mr-2") %>
                 Completar Pago
               </span>
             <% end %>
@@ -138,9 +130,7 @@
 
       <!-- Secure Payment Notice -->
       <div class="mt-6 flex items-center justify-center">
-        <svg class="h-5 w-5 text-gray-400 dark:text-slate-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-        </svg>
+        <%= icon(:lock_closed, class: "h-5 w-5 text-gray-400 dark:text-slate-500 mr-2") %>
         <p class="text-sm text-gray-500 dark:text-slate-400">Pago seguro con encriptación SSL</p>
       </div>
     </div>
