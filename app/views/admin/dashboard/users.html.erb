@@ -3,7 +3,7 @@
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div class="flex items-center gap-3">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gestión de Usuarios</h1>
-      <span class="px-3 py-1 text-xs font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
+      <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
     </div>
     <span class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= Current.user.email %></span>
   </div>
@@ -34,11 +34,11 @@
       <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
         <thead>
           <tr>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Usuario</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Tipo</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Perfil</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Registro</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Última Sesión</th>
+            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Usuario</th>
+            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Tipo</th>
+            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Perfil</th>
+            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Registro</th>
+            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Última Sesión</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 dark:divide-slate-700">
@@ -57,11 +57,11 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <% if user.admin? %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 dark:bg-sky-900/30 text-sky-800 dark:text-sky-300">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-sky-100 dark:bg-sky-900/30 text-sky-800 dark:text-sky-300">
                       Administrador
                     </span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-slate-600 text-gray-800 dark:text-slate-300">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-slate-600 text-gray-800 dark:text-slate-300">
                       Usuario
                     </span>
                   <% end %>
@@ -69,15 +69,15 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                   <% case user.profile_type %>
                   <% when "doctor" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Doctor</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Doctor</span>
                   <% when "hospital", "clinic" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300"><%= user.profile_type.capitalize %></span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300"><%= user.profile_type.capitalize %></span>
                   <% when "vendor" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">Proveedor</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">Proveedor</span>
                   <% when "paciente" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">Paciente</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">Paciente</span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Sin perfil</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Sin perfil</span>
                   <% end %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">

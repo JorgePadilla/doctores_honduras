@@ -25,7 +25,7 @@
       <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5">
         <div class="h-2.5 rounded-full <%= @completeness >= 70 ? 'bg-green-500' : @completeness >= 40 ? 'bg-yellow-500' : 'bg-red-500' %>" style="width: <%= @completeness %>%"></div>
       </div>
-      <p class="text-xs text-gray-500 dark:text-slate-400 mt-2">Completa tu perfil para mejorar tu visibilidad en el directorio.</p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-2">Completa tu perfil para mejorar tu visibilidad en el directorio.</p>
     </div>
   <% end %>
 
@@ -68,11 +68,11 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @profile_views_total || 0 %></p>
-              <p class="text-xs text-gray-500 dark:text-slate-400">visitas totales</p>
+              <p class="text-sm text-gray-500 dark:text-slate-400">visitas totales</p>
             </div>
             <div class="text-right">
               <p class="text-lg font-semibold text-gray-800 dark:text-white"><%= @profile_views_week || 0 %></p>
-              <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
+              <p class="text-sm text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
           </div>
           <% if paid_plan?(@plan) %>
@@ -127,11 +127,11 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @profile_views_total || 0 %></p>
-              <p class="text-xs text-gray-500 dark:text-slate-400">visitas totales</p>
+              <p class="text-sm text-gray-500 dark:text-slate-400">visitas totales</p>
             </div>
             <div class="text-right">
               <p class="text-lg font-semibold text-gray-800 dark:text-white"><%= @profile_views_week || 0 %></p>
-              <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
+              <p class="text-sm text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
           </div>
         </div>
@@ -163,11 +163,11 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @profile_views_total || 0 %></p>
-              <p class="text-xs text-gray-500 dark:text-slate-400">visitas totales</p>
+              <p class="text-sm text-gray-500 dark:text-slate-400">visitas totales</p>
             </div>
             <div class="text-right">
               <p class="text-lg font-semibold text-gray-800 dark:text-white"><%= @profile_views_week || 0 %></p>
-              <p class="text-xs text-gray-500 dark:text-slate-400">esta semana</p>
+              <p class="text-sm text-gray-500 dark:text-slate-400">esta semana</p>
             </div>
           </div>
         </div>
@@ -205,9 +205,9 @@
               <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
                 <div>
                   <p class="font-medium text-gray-900 dark:text-white text-sm"><%= apt.doctor_profile.display_name %></p>
-                  <p class="text-xs text-gray-500 dark:text-slate-400"><%= apt.appointment_date.strftime("%d/%m/%Y") %> &middot; <%= apt.start_time.strftime("%H:%M") %></p>
+                  <p class="text-sm text-gray-500 dark:text-slate-400"><%= apt.appointment_date.strftime("%d/%m/%Y") %> &middot; <%= apt.start_time.strftime("%H:%M") %></p>
                 </div>
-                <span class="text-xs px-2 py-1 rounded-full <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>
+                <span class="text-sm px-2 py-1 rounded-full <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>
               </div>
             <% end %>
           </div>
@@ -223,7 +223,7 @@
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Historial de Citas</h3>
         <% if @past_appointments.any? %>
           <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @past_appointments.size %></p>
-          <p class="text-xs text-gray-500 dark:text-slate-400 mb-3">citas anteriores</p>
+          <p class="text-sm text-gray-500 dark:text-slate-400 mb-3">citas anteriores</p>
           <%= link_to "Ver historial completo", paciente_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
         <% else %>
           <p class="text-gray-500 dark:text-slate-400 text-sm">Aún no tienes citas pasadas.</p>
@@ -247,7 +247,7 @@
         <% @user.secretary_assignments.active.includes(doctor_profile: :specialty).each do |assignment| %>
           <div class="mb-3">
             <p class="text-gray-600 dark:text-slate-400 text-sm"><strong class="dark:text-slate-200"><%= assignment.doctor_profile.display_name %></strong></p>
-            <p class="text-gray-500 dark:text-slate-500 text-xs"><%= assignment.doctor_profile.specialty&.name %></p>
+            <p class="text-gray-500 dark:text-slate-500 text-sm"><%= assignment.doctor_profile.specialty&.name %></p>
           </div>
         <% end %>
         <%= link_to "Ir a la agenda", agenda_appointments_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>

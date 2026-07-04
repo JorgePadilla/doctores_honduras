@@ -4,7 +4,7 @@
       <div class="flex items-center space-x-2 mb-2">
         <span class="inline-block w-2.5 h-2.5 rounded-full <%= appointment.status_classes[:dot] %>"></span>
         <span class="text-sm font-semibold text-gray-900 dark:text-white"><%= appointment.start_time.strftime("%H:%M") %> - <%= appointment.end_time.strftime("%H:%M") %></span>
-        <span class="text-xs px-2.5 py-0.5 rounded-full font-medium <%= appointment.status_classes[:bg] %> <%= appointment.status_classes[:text] %>"><%= appointment.status_label %></span>
+        <span class="text-sm px-2.5 py-0.5 rounded-full font-medium <%= appointment.status_classes[:bg] %> <%= appointment.status_classes[:text] %>"><%= appointment.status_label %></span>
       </div>
       <p class="font-semibold text-sky-700 dark:text-sky-400"><%= appointment.patient_name %></p>
       <p class="text-sm text-gray-500 dark:text-slate-400 mt-0.5"><%= appointment.doctor_branch.name %></p>

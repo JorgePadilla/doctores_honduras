@@ -3,7 +3,7 @@
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div class="flex items-center gap-3">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Estadísticas</h1>
-      <span class="px-3 py-1 text-xs font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400"><%= @tier.capitalize %></span>
+      <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400"><%= @tier.capitalize %></span>
     </div>
     <div class="flex flex-wrap items-center gap-2">
       <div class="flex gap-1 bg-gray-100 dark:bg-slate-800 rounded-lg p-1">
@@ -33,7 +33,7 @@
           <span class="mb-1 inline-flex items-center text-sm font-medium <%= trend >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>"><%= trend >= 0 ? "▲" : "▼" %> <%= trend.abs %>%</span>
         <% end %>
       </div>
-      <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">vs. <%= @analytics.views_last_week %> la semana anterior</p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">vs. <%= @analytics.views_last_week %> la semana anterior</p>
     </div>
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
       <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Visitas en el período</p>
@@ -41,12 +41,12 @@
         <p class="text-3xl font-bold text-sky-600 dark:text-sky-400"><%= @analytics.views_in_range %></p>
         <span class="mb-1"><%= delta_badge(@analytics.views_in_range, @previous.views_in_range) %></span>
       </div>
-      <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">últimos <%= @days %> días · vs. período anterior</p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">últimos <%= @days %> días · vs. período anterior</p>
     </div>
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
       <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Visitas totales</p>
       <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1"><%= @analytics.total_views %></p>
-      <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">histórico</p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">histórico</p>
     </div>
   </div>
 
@@ -62,17 +62,17 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
       <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Conversión a contacto</p>
       <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1"><%= @analytics.conversion_rate %>%</p>
-      <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">de las vistas hacen clic</p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">de las vistas hacen clic</p>
     </div>
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
       <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Tasa de reserva</p>
       <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1"><%= @analytics.booking_rate %>%</p>
-      <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">de las vistas reservan</p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">de las vistas reservan</p>
     </div>
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
       <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Cuándo te visitan</p>
       <p class="text-lg font-bold text-gray-900 dark:text-white mt-1"><%= @analytics.busiest_weekday || "—" %></p>
-      <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Hora pico: <%= @analytics.busiest_hour || "—" %></p>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Hora pico: <%= @analytics.busiest_hour || "—" %></p>
     </div>
   </div>
 
@@ -89,7 +89,7 @@
           </div>
         <% end %>
       </div>
-      <div class="flex justify-between text-[10px] text-gray-400 dark:text-slate-500 mt-2">
+      <div class="flex justify-between text-xs text-gray-400 dark:text-slate-500 mt-2">
         <span><%= series.first&.first %></span>
         <span><%= series[series.length / 2]&.first %></span>
         <span><%= series.last&.first %></span>
@@ -120,11 +120,11 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="text-center p-4 rounded-lg bg-gray-50 dark:bg-slate-700/40">
           <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= @analytics.bookings_started %></p>
-          <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Reservas iniciadas</p>
+          <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Reservas iniciadas</p>
         </div>
         <div class="text-center p-4 rounded-lg bg-gray-50 dark:bg-slate-700/40">
           <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= @analytics.bookings_completed %></p>
-          <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Reservas completadas</p>
+          <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Reservas completadas</p>
         </div>
       </div>
     </div>
@@ -137,7 +137,7 @@
     </div>
   <% end %>
 
-  <p class="mt-6 text-xs text-gray-400 dark:text-slate-500">
+  <p class="mt-6 text-sm text-gray-400 dark:text-slate-500">
     Los datos de ubicación, origen y dispositivo se recopilan de forma agregada y anónima desde que se activó la analítica.
   </p>
 </div>

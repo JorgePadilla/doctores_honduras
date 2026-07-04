@@ -3,7 +3,7 @@
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div class="flex items-center gap-3">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Panel de Control</h1>
-      <span class="px-3 py-1 text-xs font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
+      <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
     </div>
     <span class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= Current.user.email %></span>
   </div>
@@ -34,7 +34,7 @@
           <div class="min-w-0">
             <p class="text-sm font-medium text-gray-500 dark:text-slate-400 truncate"><%= s[:label] %></p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1"><%= s[:value] %></p>
-            <p class="text-xs text-gray-500 dark:text-slate-400 mt-1"><%= s[:sub] %></p>
+            <p class="text-sm text-gray-500 dark:text-slate-400 mt-1"><%= s[:sub] %></p>
           </div>
           <div class="p-3 rounded-full <%= accent_classes[s[:accent]] %> flex-shrink-0">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,10 +87,10 @@
               </div>
               <div class="ml-4">
                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white"><%= a[:title] %></h3>
-                <p class="text-xs text-gray-600 dark:text-slate-400"><%= a[:desc] %></p>
+                <p class="text-sm text-gray-600 dark:text-slate-400"><%= a[:desc] %></p>
               </div>
             </div>
-            <%= link_to a[:cta], a[:path], class: "mt-3 inline-flex items-center px-3 py-1 text-xs font-medium rounded-lg #{action_link[a[:accent]]}" %>
+            <%= link_to a[:cta], a[:path], class: "mt-3 inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg #{action_link[a[:accent]]}" %>
           </div>
         <% end %>
       </div>
@@ -135,7 +135,7 @@
             </svg>
             <div class="ml-2">
               <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">Acciones Pendientes</p>
-              <p class="text-xs text-yellow-600 dark:text-yellow-400">
+              <p class="text-sm text-yellow-600 dark:text-yellow-400">
                 <% if @hidden_profiles > 0 %><%= @hidden_profiles %> perfiles ocultos<% end %>
                 <% if @incomplete_profiles > 0 %><% if @hidden_profiles > 0 %> y <% end %><%= @incomplete_profiles %> incompletos<% end %>
               </p>
@@ -150,7 +150,7 @@
             </svg>
             <div class="ml-2">
               <p class="text-sm font-medium text-green-800 dark:text-green-300">Todo en orden</p>
-              <p class="text-xs text-green-600 dark:text-green-400">No hay acciones pendientes</p>
+              <p class="text-sm text-green-600 dark:text-green-400">No hay acciones pendientes</p>
             </div>
           </div>
         </div>
@@ -172,11 +172,11 @@
               </div>
               <div class="ml-3 min-w-0">
                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><%= user.email %></p>
-                <p class="text-xs text-gray-500 dark:text-slate-400">Registrado: <%= time_ago_in_words(user.created_at) %> atrás</p>
+                <p class="text-sm text-gray-500 dark:text-slate-400">Registrado: <%= time_ago_in_words(user.created_at) %> atrás</p>
               </div>
             </div>
             <% if user.admin? %>
-              <span class="ml-2 px-2.5 py-0.5 text-xs font-medium bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 rounded-full flex-shrink-0">Admin</span>
+              <span class="ml-2 px-2.5 py-0.5 text-sm font-medium bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 rounded-full flex-shrink-0">Admin</span>
             <% end %>
           </div>
         <% end %>
@@ -200,11 +200,11 @@
               <% end %>
               <div class="ml-3 min-w-0">
                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><%= doctor.name %></p>
-                <p class="text-xs text-gray-500 dark:text-slate-400 truncate"><%= doctor.specialty&.name %></p>
+                <p class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= doctor.specialty&.name %></p>
               </div>
             </div>
             <% if doctor.hidden? %>
-              <span class="ml-2 px-2.5 py-0.5 text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-full flex-shrink-0">Oculto</span>
+              <span class="ml-2 px-2.5 py-0.5 text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-full flex-shrink-0">Oculto</span>
             <% end %>
           </div>
         <% end %>
