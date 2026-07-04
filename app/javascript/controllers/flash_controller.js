@@ -1,29 +1,33 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="flash"
+// Toast flash message: slides in on connect, auto-dismisses after `delay` ms,
+// and can be dismissed manually via data-action="click->flash#dismiss".
 export default class extends Controller {
-  static targets = ["message"]
+  static values = { delay: { type: Number, default: 5000 } }
 
   connect() {
-    // Auto-remove flash message after animation completes
-    if (this.element.classList.contains('flash-auto-dismiss')) {
-      setTimeout(() => {
-        this.remove()
-      }, 5000) // 5 seconds total (4.7s animation delay + 0.3s animation)
+    // Slide/fade in on the next frame (element starts at opacity-0 translate-x-4).
+    requestAnimationFrame(() => {
+      this.element.classList.remove("opacity-0", "translate-x-4")
+    })
+
+    if (this.delayValue > 0) {
+      this.timeout = setTimeout(() => this.remove(), this.delayValue)
     }
   }
 
-  remove() {
-    this.element.classList.add('animate-slide-out-up')
+  disconnect() {
+    if (this.timeout) clearTimeout(this.timeout)
+  }
 
-    // Remove element after animation completes
-    setTimeout(() => {
-      this.element.remove()
-    }, 300)
+  remove() {
+    if (this.timeout) clearTimeout(this.timeout)
+    this.element.classList.add("opacity-0", "translate-x-4")
+    setTimeout(() => this.element.remove(), 300)
   }
 
   dismiss(event) {
-    event.preventDefault()
+    if (event) event.preventDefault()
     this.remove()
   }
 }

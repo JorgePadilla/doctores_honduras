@@ -141,6 +141,8 @@ class SettingsController < ApplicationController
         Rails.logger.error("Error al crear historial de pago: #{e.message}")
       end
 
+      Notification.notify(user: @user, type: "pago_exitoso", title: "Suscripción activada",
+        message: "Te suscribiste al plan #{plan.name}.", url: settings_subscription_path, icon: "credit_card")
       flash[:success] = "Te has suscrito exitosamente al #{plan.name}."
       redirect_to settings_subscription_path
     else
@@ -164,6 +166,8 @@ class SettingsController < ApplicationController
     subscription.status = "canceled"
 
     if subscription.save
+      Notification.notify(user: @user, type: "suscripcion_cancelada", title: "Suscripción cancelada",
+        message: "Cancelaste tu suscripción; tienes acceso hasta el #{subscription.current_period_end.strftime('%d/%m/%Y')}.", url: settings_subscription_path, icon: "credit_card")
       flash[:success] = "Tu suscripción ha sido cancelada. Tendrás acceso a las características premium hasta el #{subscription.current_period_end.strftime('%d/%m/%Y')}."
       redirect_to settings_subscription_path
     else

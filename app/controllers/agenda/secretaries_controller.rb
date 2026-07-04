@@ -28,6 +28,7 @@ class Agenda::SecretariesController < Agenda::BaseController
     if existing
       if existing.status == "revoked"
         existing.update!(status: "active", invitation_accepted_at: Time.current)
+        notify_secretary(existing.user)
         redirect_to agenda_secretaries_path, notice: "Secretaria reactivada exitosamente."
       else
         redirect_to new_agenda_secretary_path, alert: "Este usuario ya está asignado como secretaria."
@@ -43,6 +44,7 @@ class Agenda::SecretariesController < Agenda::BaseController
     )
 
     if @assignment.save
+      notify_secretary(user)
       redirect_to agenda_secretaries_path, notice: "Secretaria asignada exitosamente."
     else
       render :new, status: :unprocessable_entity
@@ -53,5 +55,18 @@ class Agenda::SecretariesController < Agenda::BaseController
     assignment = current_doctor_profile.secretary_assignments.find(params[:id])
     assignment.revoke!
     redirect_to agenda_secretaries_path, notice: "Acceso de secretaria revocado."
+  end
+
+  private
+
+  def notify_secretary(user)
+    Notification.notify(
+      user: user,
+      type: "invitacion_secretaria",
+      title: "Nueva asignación",
+      message: "#{current_doctor_profile.display_name} te asignó como secretaria de su agenda.",
+      url: agenda_appointments_path,
+      icon: "user"
+    )
   end
 end

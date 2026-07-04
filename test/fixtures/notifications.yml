@@ -1,0 +1,14 @@
+one:
+  user: one
+  notification_type: nueva_cita
+  title: Nueva cita
+  message: Tienes una nueva cita
+  read: false
+
+two:
+  user: one
+  notification_type: pago_exitoso
+  title: Pago recibido
+  message: Recibimos tu pago
+  read: true
+  read_at: 2026-01-01 12:00:00

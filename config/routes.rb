@@ -42,15 +42,14 @@ Rails.application.routes.draw do
     resources :patients, only: [ :index, :show ] do
       collection { get :search }
     end
-    resources :notifications, only: [ :index ] do
-      member do
-        patch :mark_as_read
-      end
-      collection do
-        patch :mark_all_as_read
-      end
-    end
   end
+
+  # Global in-app notification center (bell in the navbar)
+  resources :notifications, only: [ :index ] do
+    member     { patch :mark_as_read }
+    collection { patch :mark_all_as_read }
+  end
+
   resources :establishments, only: [ :index, :show ], path: "hospitales-y-clinicas"
 
   # Establishment owner (hospital/clinic) profile editing — operates on the current user's

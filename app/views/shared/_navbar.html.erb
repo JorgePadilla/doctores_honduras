@@ -31,6 +31,47 @@
         </button>
 
         <% if Current.user %>
+          <!-- Notifications bell + dropdown -->
+          <% unread_count = Current.user.unread_notifications_count %>
+          <div class="relative">
+            <button id="notifications-button" class="relative p-2 rounded-lg text-white hover:bg-sky-600 dark:hover:bg-slate-700 transition-colors focus:outline-none" aria-label="Notificaciones" title="Notificaciones">
+              <%= icon(:bell, class: "w-5 h-5") %>
+              <% if unread_count > 0 %>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center"><%= unread_count > 9 ? "9+" : unread_count %></span>
+              <% end %>
+            </button>
+            <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 max-w-[90vw] bg-white dark:bg-slate-800 rounded-xl shadow-lg dark:shadow-slate-900/50 z-50 border border-gray-100 dark:border-slate-700 overflow-hidden" style="display: none;">
+              <div class="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 dark:border-slate-700">
+                <span class="text-sm font-semibold text-gray-900 dark:text-white">Notificaciones</span>
+                <% if unread_count > 0 %>
+                  <%= button_to "Marcar leídas", mark_all_as_read_notifications_path, method: :patch, class: "text-xs text-sky-600 dark:text-sky-400 hover:underline" %>
+                <% end %>
+              </div>
+              <div class="max-h-96 overflow-y-auto">
+                <% recent_notifs = Current.user.notifications.recent.to_a %>
+                <% if recent_notifs.any? %>
+                  <% recent_notifs.first(8).each do |n| %>
+                    <%= button_to mark_as_read_notification_path(n), method: :patch, class: "w-full text-left flex items-start gap-2.5 px-4 py-2.5 hover:bg-sky-50 dark:hover:bg-slate-700/60 transition-colors #{n.read? ? 'opacity-60' : ''}" do %>
+                      <span class="w-7 h-7 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                        <%= icon((n.icon.presence || "bell").to_sym, class: "w-4 h-4 text-sky-600 dark:text-sky-400") %>
+                      </span>
+                      <span class="flex-1 min-w-0">
+                        <span class="flex items-center gap-1.5">
+                          <% unless n.read? %><span class="w-1.5 h-1.5 bg-sky-500 rounded-full shrink-0"></span><% end %>
+                          <span class="text-sm font-medium text-gray-900 dark:text-white truncate"><%= n.title.presence || n.message %></span>
+                        </span>
+                        <span class="block text-xs text-gray-500 dark:text-slate-400 truncate"><%= n.message %></span>
+                        <span class="block text-xs text-gray-400 dark:text-slate-500 mt-0.5"><%= time_ago_in_words(n.created_at) %></span>
+                      </span>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <p class="px-4 py-6 text-center text-sm text-gray-500 dark:text-slate-400">No tienes notificaciones</p>
+                <% end %>
+              </div>
+              <%= link_to "Ver todas", notifications_path, class: "block px-4 py-2.5 text-center text-sm text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-slate-700 border-t border-gray-100 dark:border-slate-700" %>
+            </div>
+          </div>
           <div class="relative dropdown">
             <button id="user-menu-button" class="flex items-center text-white hover:text-primary-200 transition focus:outline-none">
               <span><%= Current.user.email %></span>
@@ -92,6 +133,12 @@
             <a href="<%= profile_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mi Perfil</a>
           <% end %>
           <a href="<%= dashboard_path %>" class="block py-2 text-white hover:text-primary-200 transition">Panel de Control</a>
+          <a href="<%= notifications_path %>" class="flex items-center justify-between py-2 text-white hover:text-primary-200 transition">
+            <span>Notificaciones</span>
+            <% if Current.user.unread_notifications_count > 0 %>
+              <span class="bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center"><%= Current.user.unread_notifications_count > 9 ? "9+" : Current.user.unread_notifications_count %></span>
+            <% end %>
+          </a>
           <% if Current.user.profile_type == "vendor" %>
             <a href="<%= vendor_products_path %>" class="block py-2 text-white hover:text-primary-200 transition">Mis Productos</a>
           <% end %>
@@ -168,6 +215,25 @@
 
       // Agregar el evento de clic en el documento
       document.addEventListener('click', handleDocumentClick);
+    }
+
+    // Notifications dropdown toggle
+    const notifButton = document.getElementById('notifications-button');
+    const notifDropdown = document.getElementById('notifications-dropdown');
+    if (notifButton && notifDropdown) {
+      let notifOpen = false;
+      notifButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        notifOpen = !notifOpen;
+        notifDropdown.style.display = notifOpen ? 'block' : 'none';
+      });
+      document.addEventListener('click', function(e) {
+        if (notifOpen && !notifButton.contains(e.target) && !notifDropdown.contains(e.target)) {
+          notifDropdown.style.display = 'none';
+          notifOpen = false;
+        }
+      });
     }
   }
 

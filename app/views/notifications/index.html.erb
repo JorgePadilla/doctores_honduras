@@ -1,0 +1,37 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Notificaciones</h1>
+    <% if @notifications.any?(&:unread?) %>
+      <%= button_to "Marcar todas como leídas", mark_all_as_read_notifications_path, method: :patch,
+          class: "text-sm text-sky-600 dark:text-sky-400 hover:underline font-medium" %>
+    <% end %>
+  </div>
+
+  <% if @notifications.any? %>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden divide-y divide-gray-100 dark:divide-slate-700">
+      <% @notifications.each do |n| %>
+        <%= button_to mark_as_read_notification_path(n), method: :patch,
+            class: "w-full text-left flex items-start gap-3 p-4 transition-colors #{n.read? ? 'opacity-60 hover:bg-gray-50 dark:hover:bg-slate-700/40' : 'bg-sky-50/40 dark:bg-slate-700/30 hover:bg-sky-50 dark:hover:bg-slate-700/60'}" do %>
+          <span class="w-9 h-9 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center shrink-0 mt-0.5">
+            <%= icon((n.icon.presence || "bell").to_sym, class: "w-5 h-5 text-sky-600 dark:text-sky-400") %>
+          </span>
+          <span class="flex-1 min-w-0">
+            <span class="flex items-center gap-2">
+              <% unless n.read? %><span class="w-2 h-2 bg-sky-500 rounded-full shrink-0"></span><% end %>
+              <span class="text-sm font-semibold text-gray-900 dark:text-white"><%= n.title.presence || n.message %></span>
+            </span>
+            <% if n.title.present? %>
+              <span class="block text-sm text-gray-600 dark:text-slate-400 mt-0.5"><%= n.message %></span>
+            <% end %>
+            <span class="block text-xs text-gray-400 dark:text-slate-500 mt-1"><%= time_ago_in_words(n.created_at) %> atrás</span>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-12 text-center">
+      <%= icon(:bell, class: "mx-auto w-12 h-12 text-gray-300 dark:text-slate-600 mb-4") %>
+      <p class="text-gray-500 dark:text-slate-400 font-medium">No tienes notificaciones</p>
+    </div>
+  <% end %>
+</div>

@@ -12,6 +12,14 @@ class LeadContactsController < ApplicationController
     @lead_contact = @supplier.lead_contacts.build(lead_contact_params)
 
     if @lead_contact.save
+      Notification.notify(
+        user: @supplier.user,
+        type: "nuevo_lead",
+        title: "Nuevo contacto",
+        message: "#{@lead_contact.name} te envi\u00F3 un mensaje de contacto.",
+        url: vendor_leads_path,
+        icon: "envelope"
+      )
       redirect_to supplier_path(@supplier), notice: "Mensaje enviado correctamente. El proveedor se pondr\u00E1 en contacto contigo."
     else
       render :new, status: :unprocessable_entity

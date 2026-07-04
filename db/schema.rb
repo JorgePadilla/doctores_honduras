@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_04_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_04_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -83,20 +83,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_04_120000) do
     t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
     t.index ["visitor_token", "started_at"], name: "index_ahoy_visits_on_visitor_token_and_started_at"
-  end
-
-  create_table "appointment_notifications", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "appointment_id", null: false
-    t.string "notification_type", null: false
-    t.text "message", null: false
-    t.boolean "read", default: false, null: false
-    t.datetime "read_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["appointment_id"], name: "index_appointment_notifications_on_appointment_id"
-    t.index ["user_id", "read"], name: "index_appointment_notifications_on_user_id_and_read"
-    t.index ["user_id"], name: "index_appointment_notifications_on_user_id"
   end
 
   create_table "appointments", force: :cascade do |t|
@@ -333,6 +319,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_04_120000) do
     t.index ["user_id"], name: "index_notification_preferences_on_user_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "notification_type", null: false
+    t.text "message", null: false
+    t.boolean "read", default: false, null: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "title"
+    t.string "url"
+    t.string "icon"
+    t.string "notifiable_type"
+    t.bigint "notifiable_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["user_id", "read"], name: "index_notifications_on_user_id_and_read"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "patient_profiles", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "name", null: false
@@ -548,8 +552,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_04_120000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "appointment_notifications", "appointments"
-  add_foreign_key "appointment_notifications", "users"
   add_foreign_key "appointments", "doctor_branches"
   add_foreign_key "appointments", "doctor_profiles"
   add_foreign_key "appointments", "users", column: "created_by_id"
@@ -579,6 +581,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_04_120000) do
   add_foreign_key "establishments", "users"
   add_foreign_key "lead_contacts", "suppliers"
   add_foreign_key "notification_preferences", "users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "patient_profiles", "cities"
   add_foreign_key "patient_profiles", "departments"
   add_foreign_key "patient_profiles", "users"

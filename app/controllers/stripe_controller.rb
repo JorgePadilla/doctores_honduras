@@ -174,6 +174,15 @@ class StripeController < ApplicationController
         description: "Pago de suscripción #{subscription.subscription_plan&.name || 'Plan'}"
       )
     end
+
+    Notification.notify(
+      user: subscription.user,
+      type: "pago_exitoso",
+      title: "Pago recibido",
+      message: "Recibimos tu pago de la suscripción #{subscription.subscription_plan&.name || 'Plan'}.",
+      url: settings_subscription_path,
+      icon: "credit_card"
+    )
   end
 
   def handle_invoice_payment_failed(invoice)
@@ -187,7 +196,14 @@ class StripeController < ApplicationController
     # Update subscription status
     subscription.update(status: "past_due")
 
-    # Notify the user (you could send an email here)
+    Notification.notify(
+      user: subscription.user,
+      type: "pago_fallido",
+      title: "Pago fallido",
+      message: "No pudimos procesar tu pago. Actualiza tu método de pago para mantener tu suscripción.",
+      url: settings_subscription_path,
+      icon: "credit_card"
+    )
   end
 
   def handle_subscription_deleted(stripe_subscription)

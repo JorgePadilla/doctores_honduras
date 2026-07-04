@@ -8,7 +8,7 @@ class User < ApplicationRecord
   has_many :establishments, dependent: :destroy
   has_many :secretary_assignments, dependent: :destroy
   has_many :managed_doctor_profiles, through: :secretary_assignments, source: :doctor_profile
-  has_many :appointment_notifications, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   normalizes :email, with: ->(e) { e.strip.downcase }
 
@@ -64,6 +64,6 @@ class User < ApplicationRecord
   end
 
   def unread_notifications_count
-    appointment_notifications.unread.count
+    notifications.unread.count
   end
 end

@@ -4,7 +4,7 @@ class Appointment < ApplicationRecord
   belongs_to :created_by, class_name: "User", optional: true
   belongs_to :patient_user, class_name: "User", optional: true
 
-  has_many :appointment_notifications, dependent: :destroy
+  has_many :notifications, as: :notifiable, dependent: :destroy
 
   STATUSES = %w[pendiente confirmada cancelada completada].freeze
   BOOKING_SOURCES = %w[manual public_booking].freeze
