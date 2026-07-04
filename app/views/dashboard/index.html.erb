@@ -114,7 +114,9 @@
           <p class="text-gray-600 dark:text-slate-400 text-sm mb-4"><strong class="dark:text-slate-200">Dirección:</strong> <%= @establishment.address %></p>
           <div class="flex items-center gap-4">
             <%= link_to "Editar establecimiento", edit_establishment_profile_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
-            <%= link_to "Ver en directorio", establishment_path(@establishment), class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
+            <% if section_visible?("establishments") %>
+              <%= link_to "Ver en directorio", establishment_path(@establishment), class: "text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 text-sm font-medium" %>
+            <% end %>
           </div>
         <% else %>
           <p class="text-gray-500 dark:text-slate-400 text-sm">Aún no has registrado tu establecimiento.</p>
@@ -236,7 +238,9 @@
         <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">Busca doctores y establecimientos en Honduras.</p>
         <div class="flex space-x-3">
           <%= link_to "Buscar doctores", doctors_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>
-          <%= link_to "Establecimientos", establishments_path, class: "py-2.5 px-5 border border-sky-500 dark:border-sky-400 text-sky-600 dark:text-sky-400 rounded-full text-sm font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/30" %>
+          <% if section_visible?("establishments") %>
+            <%= link_to "Establecimientos", establishments_path, class: "py-2.5 px-5 border border-sky-500 dark:border-sky-400 text-sky-600 dark:text-sky-400 rounded-full text-sm font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/30" %>
+          <% end %>
         </div>
       </div>
 
@@ -260,7 +264,9 @@
         <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">Busca doctores y establecimientos en Honduras.</p>
         <div class="flex space-x-3">
           <%= link_to "Ver doctores", doctors_path, class: "py-2.5 px-5 bg-sky-500 text-white rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-sky-600" %>
-          <%= link_to "Ver establecimientos", establishments_path, class: "py-2.5 px-5 border border-sky-500 dark:border-sky-400 text-sky-600 dark:text-sky-400 rounded-full text-sm font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/30" %>
+          <% if section_visible?("establishments") %>
+            <%= link_to "Ver establecimientos", establishments_path, class: "py-2.5 px-5 border border-sky-500 dark:border-sky-400 text-sky-600 dark:text-sky-400 rounded-full text-sm font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/30" %>
+          <% end %>
         </div>
       </div>
     <% end %>

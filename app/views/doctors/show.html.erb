@@ -173,7 +173,7 @@
           </div>
         <% end %>
 
-        <% if @establishments.any? %>
+        <% if section_visible?("establishments") && @establishments.any? %>
           <div class="mb-6">
             <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Consultorios</h2>
 

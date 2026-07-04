@@ -6,8 +6,8 @@ class CreateEstablishmentServices < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     # Add a unique index to prevent duplicate relationships
-    add_index :establishment_services, [:establishment_id, :service_id], unique: true, name: 'idx_unique_establishment_service'
+    add_index :establishment_services, [ :establishment_id, :service_id ], unique: true, name: 'idx_unique_establishment_service'
   end
 end

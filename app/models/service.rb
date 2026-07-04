@@ -8,6 +8,6 @@ class Service < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
-  scope :for_specialty, ->(specialty_id) { where(specialty_id: [specialty_id, nil]) }
+  scope :for_specialty, ->(specialty_id) { where(specialty_id: [ specialty_id, nil ]) }
   scope :general, -> { where(specialty_id: nil) }
 end

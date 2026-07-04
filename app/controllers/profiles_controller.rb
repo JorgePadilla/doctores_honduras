@@ -6,20 +6,20 @@ class ProfilesController < ApplicationController
 
   def show
     case @user.profile_type
-    when 'doctor'
+    when "doctor"
       @doctor_profile = DoctorProfile.includes(
         :specialty, :subspecialty, :city, :department, :services,
-        doctor_branches: [:department, :city, :branch_schedules],
+        doctor_branches: [ :department, :city, :branch_schedules ],
         doctor_educations: [],
         doctor_certifications: []
       ).find_by(user_id: @user.id)
       redirect_to new_profile_path unless @doctor_profile
-    when 'hospital', 'clinic'
+    when "hospital", "clinic"
       @establishment = @user.establishments.first
       redirect_to dashboard_path unless @establishment
-    when 'vendor'
+    when "vendor"
       redirect_to vendor_profile_path
-      return
+      nil
     else
       redirect_to new_profile_path
     end
@@ -37,17 +37,17 @@ class ProfilesController < ApplicationController
     @doctor_profile = DoctorProfile.new(doctor_profile_params)
     @doctor_profile.user = @user
 
-    @user.update(profile_type: 'doctor') if @user.profile_type.blank?
+    @user.update(profile_type: "doctor") if @user.profile_type.blank?
 
     if @doctor_profile.save
-      flash[:success] = 'Perfil de doctor creado exitosamente.'
+      flash[:success] = "Perfil de doctor creado exitosamente."
       redirect_to profile_path
     else
       @specialties = Specialty.order(:name)
       @subspecialties = []
       @departments = Department.order(:name)
       @cities = City.order(:name)
-      flash.now[:alert] = 'Error al crear el perfil. Por favor verifica los campos.'
+      flash.now[:alert] = "Error al crear el perfil. Por favor verifica los campos."
       render :new, status: :unprocessable_entity
     end
   end
@@ -55,7 +55,7 @@ class ProfilesController < ApplicationController
   def edit
     @doctor_profile = DoctorProfile.includes(
       :services,
-      doctor_branches: [:department, :city, :branch_schedules],
+      doctor_branches: [ :department, :city, :branch_schedules ],
       doctor_educations: [],
       doctor_certifications: []
     ).find_by(user_id: @user.id)
@@ -80,7 +80,7 @@ class ProfilesController < ApplicationController
     filtered_params = strip_paid_branch_fields(filtered_params) unless paid_plan?
 
     if @doctor_profile.update(filtered_params)
-      flash[:success] = 'Perfil actualizado exitosamente.'
+      flash[:success] = "Perfil actualizado exitosamente."
       redirect_to profile_path
     else
       @specialties = Specialty.order(:name)
@@ -90,7 +90,7 @@ class ProfilesController < ApplicationController
       @doctor_profile.doctor_branches.build if @doctor_profile.doctor_branches.empty?
       @doctor_profile.doctor_educations.build if @doctor_profile.doctor_educations.empty?
       @doctor_profile.doctor_certifications.build if @doctor_profile.doctor_certifications.empty?
-      flash.now[:alert] = 'Error al actualizar el perfil. Por favor verifica los campos.'
+      flash.now[:alert] = "Error al actualizar el perfil. Por favor verifica los campos."
       render :edit, status: :unprocessable_entity
     end
   end

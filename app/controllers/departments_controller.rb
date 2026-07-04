@@ -1,5 +1,5 @@
 class DepartmentsController < ApplicationController
-  skip_before_action :require_authentication, only: [:cities]
+  skip_before_action :require_authentication, only: [ :cities ]
 
   def cities
     department = Department.find(params[:id])

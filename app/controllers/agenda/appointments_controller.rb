@@ -1,5 +1,5 @@
 class Agenda::AppointmentsController < Agenda::BaseController
-  before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  before_action :set_appointment, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Date.current

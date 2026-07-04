@@ -23,9 +23,9 @@ module DoctoresHonduras
     #
     config.time_zone = "America/Tegucigalpa"
     # config.eager_load_paths << Rails.root.join("extras")
-    
+
     # Set default locale to Spanish
     config.i18n.default_locale = :es
-    config.i18n.available_locales = [:es, :en]
+    config.i18n.available_locales = [ :es, :en ]
   end
 end

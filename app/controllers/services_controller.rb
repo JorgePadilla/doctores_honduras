@@ -1,5 +1,5 @@
 class ServicesController < ApplicationController
-  before_action :require_authentication, only: [:find_or_create]
+  before_action :require_authentication, only: [ :find_or_create ]
 
   def find_or_create
     name = params[:name]&.strip

@@ -2,7 +2,7 @@ class PopulateCityAndStateForDoctorProfiles < ActiveRecord::Migration[8.0]
   def up
     # Get all doctor profiles
     doctor_profiles = DoctorProfile.all
-    
+
     # List of departments (states) in Honduras
     departments = [
       "Atlántida",
@@ -24,7 +24,7 @@ class PopulateCityAndStateForDoctorProfiles < ActiveRecord::Migration[8.0]
       "Valle",
       "Yoro"
     ]
-    
+
     # Map of major cities to their departments
     city_to_department = {
       "Tegucigalpa" => "Francisco Morazán",
@@ -57,18 +57,18 @@ class PopulateCityAndStateForDoctorProfiles < ActiveRecord::Migration[8.0]
       "Nueva Ocotepeque" => "Ocotepeque",
       "Puerto Lempira" => "Gracias a Dios"
     }
-    
+
     doctor_profiles.each do |profile|
       # Skip if already has city and state
       next if profile.city.present? && profile.state.present?
-      
+
       # Parse the location field to extract city and state
       location = profile.address || ""
-      
+
       # Try to extract city and state from location
       city = nil
       state = nil
-      
+
       # Check if the location contains any of the known cities
       city_to_department.each do |city_name, department_name|
         if location.include?(city_name)
@@ -77,11 +77,11 @@ class PopulateCityAndStateForDoctorProfiles < ActiveRecord::Migration[8.0]
           break
         end
       end
-      
+
       # If city/state not found, use default values
       city ||= "Tegucigalpa"
       state ||= "Francisco Morazán"
-      
+
       # Update the profile
       profile.update_columns(
         city: city,
@@ -89,7 +89,7 @@ class PopulateCityAndStateForDoctorProfiles < ActiveRecord::Migration[8.0]
       )
     end
   end
-  
+
   def down
     # This migration is not reversible
   end

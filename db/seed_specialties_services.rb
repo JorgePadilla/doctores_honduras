@@ -70,27 +70,27 @@ puts "Found #{establishments.count} establishments"
 if establishments.any?
   centro_medico = establishments.first
   puts "Associating specialties and services with #{centro_medico.name}"
-  
-  centro_medico_specialties = ["Ortodoncia", "Nutrición", "Pediatría", "Psicología-Podiatría", "Medicina Estética", "Laparoscopía", "Ortopedia y Traumatología"]
+
+  centro_medico_specialties = [ "Ortodoncia", "Nutrición", "Pediatría", "Psicología-Podiatría", "Medicina Estética", "Laparoscopía", "Ortopedia y Traumatología" ]
   centro_medico_services = [
-    "Farmacia", 
-    "Medicina General a recién nacido, niños, adulto y tercera edad", 
-    "Extracciones / Restauraciones", 
-    "Examen de Citología", 
-    "Lesiones que afectan los músculos, huesos y articulaciones", 
-    "Ultrasonidos", 
-    "Tratamiento Faciales y Corporales", 
-    "Trombosis venosa", 
-    "Prevención de pie Diabético", 
-    "Atención a mujer embarazada", 
-    "Radiografías", 
-    "Limpiezas dentales", 
-    "Control de peso (Obesidad y Desnutrición)", 
-    "Enfermedades Pulmonares", 
-    "Fracturas en Huesos", 
-    "Evaluaciones psicológicas", 
-    "Estimulación temprana", 
-    "Laboratorio", 
+    "Farmacia",
+    "Medicina General a recién nacido, niños, adulto y tercera edad",
+    "Extracciones / Restauraciones",
+    "Examen de Citología",
+    "Lesiones que afectan los músculos, huesos y articulaciones",
+    "Ultrasonidos",
+    "Tratamiento Faciales y Corporales",
+    "Trombosis venosa",
+    "Prevención de pie Diabético",
+    "Atención a mujer embarazada",
+    "Radiografías",
+    "Limpiezas dentales",
+    "Control de peso (Obesidad y Desnutrición)",
+    "Enfermedades Pulmonares",
+    "Fracturas en Huesos",
+    "Evaluaciones psicológicas",
+    "Estimulación temprana",
+    "Laboratorio",
     "Terapia Física y Rehabilitación"
   ]
 
@@ -113,20 +113,20 @@ if establishments.any?
   # For other establishments, assign random specialties and services
   establishments[1..].each_with_index do |establishment, index|
     puts "Associating specialties and services with #{establishment.name}"
-    
+
     # Assign 3-7 random specialties
     num_specialties = rand(3..7)
     establishment_specialties = created_specialties.sample(num_specialties)
-    
+
     establishment_specialties.each do |specialty|
       EstablishmentSpecialty.find_or_create_by!(establishment: establishment, specialty: specialty)
       puts "  - Added specialty: #{specialty.name}"
     end
-    
+
     # Assign 5-10 random services
     num_services = rand(5..10)
     establishment_services = created_services.sample(num_services)
-    
+
     establishment_services.each do |service|
       EstablishmentService.find_or_create_by!(establishment: establishment, service: service)
       puts "  - Added service: #{service.name}"

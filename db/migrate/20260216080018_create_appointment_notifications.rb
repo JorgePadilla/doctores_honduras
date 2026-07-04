@@ -11,6 +11,6 @@ class CreateAppointmentNotifications < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :appointment_notifications, [:user_id, :read]
+    add_index :appointment_notifications, [ :user_id, :read ]
   end
 end

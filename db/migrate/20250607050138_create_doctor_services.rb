@@ -6,7 +6,7 @@ class CreateDoctorServices < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
-    add_index :doctor_services, [:doctor_profile_id, :service_id], unique: true, name: 'idx_unique_doctor_service'
+
+    add_index :doctor_services, [ :doctor_profile_id, :service_id ], unique: true, name: 'idx_unique_doctor_service'
   end
 end

@@ -3,10 +3,8 @@
 require "test_helper"
 
 class HelloWorldComponentTest < ViewComponent::TestCase
-  def test_component_renders_something_useful
-    # assert_equal(
-    #   %(<span>Hello, components!</span>),
-    #   render_inline(HelloWorldComponent.new(message: "Hello, components!")).css("span").to_html
-    # )
+  def test_component_renders_its_template
+    render_inline(HelloWorldComponent.new)
+    assert_text "Add HelloWorld template here"
   end
 end

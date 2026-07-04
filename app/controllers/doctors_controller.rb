@@ -17,7 +17,7 @@ class DoctorsController < ApplicationController
     @services = Service.order(:name).pluck(:name).uniq
 
     # Build the base query - exclude hidden profiles
-    doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department, :specialty, :subspecialty, doctor_branches: [:department, :city]).where(hidden: false)
+    doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department, :specialty, :subspecialty, doctor_branches: [ :department, :city ]).where(hidden: false)
 
     # Apply specialty filter if present
     if params[:specialty].present? && params[:specialty] != "Todas las especialidades"
@@ -53,9 +53,11 @@ class DoctorsController < ApplicationController
       establishment_conditions = []
       establishment_parameters = []
 
-      terms.each do |term|
-        establishment_conditions << "LOWER(establishments.name) LIKE ?"
-        establishment_parameters.push(term)
+      if section_visible?("establishments")
+        terms.each do |term|
+          establishment_conditions << "LOWER(establishments.name) LIKE ?"
+          establishment_parameters.push(term)
+        end
       end
 
       # Combine all conditions with OR logic instead of AND
@@ -85,7 +87,7 @@ class DoctorsController < ApplicationController
   def show
     @doctor = DoctorProfile.includes(
       :city, :department, :specialty, :subspecialty,
-      doctor_branches: [:department, :city, :branch_schedules],
+      doctor_branches: [ :department, :city, :branch_schedules ],
       doctor_educations: [],
       doctor_certifications: []
     ).find_by(id: params[:id])

@@ -49,10 +49,10 @@ class StripeController < ApplicationController
 
       # Return the checkout URL and open it in a new window
       @checkout_url = session.url
-      
+
       respond_to do |format|
         format.html { redirect_to @checkout_url, allow_other_host: true }
-        format.turbo_stream { render 'create_checkout_session' }
+        format.turbo_stream { render "create_checkout_session" }
       end
     rescue Stripe::StripeError => e
       redirect_to settings_subscription_path, alert: "Error al crear la sesión de pago: #{e.message}"

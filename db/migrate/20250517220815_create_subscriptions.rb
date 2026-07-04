@@ -9,7 +9,7 @@ class CreateSubscriptions < ActiveRecord::Migration[8.0]
       t.datetime :current_period_end
       t.datetime :cancel_at
       t.string :stripe_customer_id
-      
+
       # Rename next_billing_at to current_period_end if it doesn't exist
       if column_exists?(:subscriptions, :next_billing_at) && !column_exists?(:subscriptions, :current_period_end)
         t.rename :next_billing_at, :current_period_end

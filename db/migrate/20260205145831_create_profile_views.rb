@@ -10,9 +10,9 @@ class CreateProfileViews < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :profile_views, [:viewable_type, :viewable_id]
-    add_index :profile_views, [:viewable_type, :viewable_id, :created_at]
-    add_index :profile_views, [:viewer_id]
-    add_index :profile_views, [:ip_address, :viewable_type, :viewable_id, :created_at], name: "idx_profile_views_dedup"
+    add_index :profile_views, [ :viewable_type, :viewable_id ]
+    add_index :profile_views, [ :viewable_type, :viewable_id, :created_at ]
+    add_index :profile_views, [ :viewer_id ]
+    add_index :profile_views, [ :ip_address, :viewable_type, :viewable_id, :created_at ], name: "idx_profile_views_dedup"
   end
 end

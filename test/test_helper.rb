@@ -13,3 +13,10 @@ module ActiveSupport
     # Add more helper methods to be used by all tests here...
   end
 end
+
+class ActionDispatch::IntegrationTest
+  # Log a fixture user in through the real session flow so the auth cookie is set.
+  def sign_in_as(user, password: "password")
+    post session_url, params: { email: user.email, password: password }
+  end
+end

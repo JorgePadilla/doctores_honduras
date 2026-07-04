@@ -1,0 +1,7 @@
+establishments:
+  key: establishments
+  enabled: true
+
+suppliers:
+  key: suppliers
+  enabled: true

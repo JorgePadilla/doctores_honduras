@@ -9,6 +9,6 @@ class CreateBranchSchedules < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :branch_schedules, [:doctor_branch_id, :day_of_week], unique: true
+    add_index :branch_schedules, [ :doctor_branch_id, :day_of_week ], unique: true
   end
 end

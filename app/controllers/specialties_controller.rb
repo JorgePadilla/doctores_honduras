@@ -1,5 +1,5 @@
 class SpecialtiesController < ApplicationController
-  allow_unauthenticated_access only: [:subspecialties, :services]
+  allow_unauthenticated_access only: [ :subspecialties, :services ]
 
   def subspecialties
     @specialty = Specialty.find(params[:id])
@@ -12,7 +12,7 @@ class SpecialtiesController < ApplicationController
 
   def services
     @specialty = Specialty.find(params[:id])
-    services = Service.where(specialty_id: [@specialty.id, nil]).order(:name)
+    services = Service.where(specialty_id: [ @specialty.id, nil ]).order(:name)
 
     respond_to do |format|
       format.json { render json: services.select(:id, :name) }

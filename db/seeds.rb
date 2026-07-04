@@ -72,39 +72,39 @@ if Supplier.count == 0
 
   # Create products for each supplier
   puts "Creating products..."
-  
+
   created_suppliers.each do |supplier|
     # Create 15-20 products for each supplier to demonstrate pagination
     product_count = rand(15..20)
-    
+
     product_count.times do |i|
       category = categories.sample
       sku = "#{supplier.name[0..2].upcase}-#{category[0..2].upcase}-#{100 + i}"
-      
+
       product_name = case category
       when "Cuidado del Diabético"
-        ["Glucómetro Kit", "Cintas desechables", "Lancetas", "Estuche de viaje para insulina", "Medidor de presión"].sample
+        [ "Glucómetro Kit", "Cintas desechables", "Lancetas", "Estuche de viaje para insulina", "Medidor de presión" ].sample
       when "Cuidado en Casa"
-        ["Almohada refrescante", "Toallitas con alcohol", "Termómetro digital", "Tensiómetro automático", "Nebulizador portátil"].sample
+        [ "Almohada refrescante", "Toallitas con alcohol", "Termómetro digital", "Tensiómetro automático", "Nebulizador portátil" ].sample
       when "Equipo Diagnóstico"
-        ["Estetoscopio", "Oxímetro de pulso", "Otoscopio", "Báscula digital", "Termómetro infrarrojo"].sample
+        [ "Estetoscopio", "Oxímetro de pulso", "Otoscopio", "Báscula digital", "Termómetro infrarrojo" ].sample
       when "Rehabilitación"
-        ["Banda elástica", "Balón terapéutico", "Pesas para tobillos", "Colchoneta de ejercicio", "Rueda para abdominales"].sample
+        [ "Banda elástica", "Balón terapéutico", "Pesas para tobillos", "Colchoneta de ejercicio", "Rueda para abdominales" ].sample
       when "Fisioterapia"
-        ["TENS portátil", "Compresas frío/calor", "Masajeador eléctrico", "Ultrasonido terapéutico", "Lámpara infrarroja"].sample
+        [ "TENS portátil", "Compresas frío/calor", "Masajeador eléctrico", "Ultrasonido terapéutico", "Lámpara infrarroja" ].sample
       when "Movilidad"
-        ["Bastón ajustable", "Andador plegable", "Silla de ruedas", "Muletas axilares", "Scooter eléctrico"].sample
+        [ "Bastón ajustable", "Andador plegable", "Silla de ruedas", "Muletas axilares", "Scooter eléctrico" ].sample
       when "Terapia para Varices"
-        ["Medias de compresión", "Bomba de compresión secuencial", "Vendas elásticas", "Almohada elevadora", "Crema para varices"].sample
+        [ "Medias de compresión", "Bomba de compresión secuencial", "Vendas elásticas", "Almohada elevadora", "Crema para varices" ].sample
       when "Terapia Respiratoria"
-        ["Inhalador", "Oxímetro", "Aspirador de secreciones", "Concentrador de oxígeno", "Máscara de nebulización"].sample
+        [ "Inhalador", "Oxímetro", "Aspirador de secreciones", "Concentrador de oxígeno", "Máscara de nebulización" ].sample
       end
-      
+
       # Add a suffix to make each product name unique
       product_name = "#{product_name} - #{supplier.name} #{i+1}"
-      
+
       description = "Dispositivo médico de alta calidad para #{category.downcase}. Ideal para uso profesional o doméstico. Fabricado con los más altos estándares de calidad y seguridad."
-      
+
       supplier.products.create!(
         name: product_name,
         sku: sku,
@@ -115,7 +115,7 @@ if Supplier.count == 0
       )
     end
   end
-  
+
   total_products = Product.count
   puts "Created #{total_products} products"
 else
@@ -222,25 +222,25 @@ doctors << DoctorProfile.create!(
   gender = i.even? ? "men" : "women"
   # Use a different image for each doctor
   image_number = i + 10
-  
+
   user = User.create!(
     email: "doctor#{i+3}.#{timestamp}@example.com",
     password: "password123",
     password_confirmation: "password123"
   )
-  
+
   # Generate a random name
-  first_names_male = ["Carlos", "Juan", "Miguel", "José", "Antonio", "Francisco", "Roberto", "David", "Fernando", "Rafael"]
-  first_names_female = ["María", "Ana", "Laura", "Sofía", "Carmen", "Isabel", "Patricia", "Gabriela", "Rosa", "Claudia"]
-  last_names = ["García", "Martínez", "López", "Hernández", "Pérez", "González", "Rodríguez", "Sánchez", "Ramírez", "Torres", "Flores", "Rivera", "Morales", "Reyes", "Cruz"]
-  
+  first_names_male = [ "Carlos", "Juan", "Miguel", "José", "Antonio", "Francisco", "Roberto", "David", "Fernando", "Rafael" ]
+  first_names_female = [ "María", "Ana", "Laura", "Sofía", "Carmen", "Isabel", "Patricia", "Gabriela", "Rosa", "Claudia" ]
+  last_names = [ "García", "Martínez", "López", "Hernández", "Pérez", "González", "Rodríguez", "Sánchez", "Ramírez", "Torres", "Flores", "Rivera", "Morales", "Reyes", "Cruz" ]
+
   first_name = gender == "men" ? first_names_male.sample : first_names_female.sample
   last_name = "#{last_names.sample} #{last_names.sample}"
-  title = gender == "men" ? "Dr." : ["Dra.", "Licda."].sample
-  
+  title = gender == "men" ? "Dr." : [ "Dra.", "Licda." ].sample
+
   # Select a random specialization
   spec = specializations.sample
-  
+
   # Create the doctor profile
   doctors << DoctorProfile.create!(
     user: user,
@@ -427,26 +427,26 @@ puts "Created #{Service.count} services"
 13.times do |i|
   # Select a random establishment data
   est_data = establishment_data[i + 2]
-  
+
   # Select a random location from our defined locations that have address templates
   location = address_templates.keys.sample
   city = location.split(",").first
-  
+
   # Generate a random address based on the city
   address_template = address_templates[location].sample
-  landmarks = ["Banco Atlantida", "Supermercado La Colonia", "Parque Central", "Plaza Miraflores", "Mall Multiplaza", "Universidad Nacional", "Estadio Nacional", "Hotel Marriott", "Catedral", "Mercado", "Gasolinera Uno", "Hospital", "Farmacia Siman", "Escuela Americana", "Centro Comercial"]
-  
+  landmarks = [ "Banco Atlantida", "Supermercado La Colonia", "Parque Central", "Plaza Miraflores", "Mall Multiplaza", "Universidad Nacional", "Estadio Nacional", "Hotel Marriott", "Catedral", "Mercado", "Gasolinera Uno", "Hospital", "Farmacia Siman", "Escuela Americana", "Centro Comercial" ]
+
   # Format the address with random numbers and landmarks
-  address = format(address_template, 
-    ["1er", "2do", "3er", "4to", "5to", "6to", "7mo", "8vo", "9no", "10mo"].sample,
+  address = format(address_template,
+    [ "1er", "2do", "3er", "4to", "5to", "6to", "7mo", "8vo", "9no", "10mo" ].sample,
     rand(100..999).to_s,
     landmarks.sample,
-    ["A", "B", "C", "D", "E", "F", "G", "H"].sample,
+    [ "A", "B", "C", "D", "E", "F", "G", "H" ].sample,
     rand(1..20).to_s)
-  
+
   # Generate a random phone number
   phone = "(504) #{rand(2200..9999)}-#{rand(1000..9999)}"
-  
+
   # Create the establishment
   establishments << Establishment.create!(
     name: est_data[:name],
@@ -467,8 +467,8 @@ all_specialties = Specialty.all
 all_services = Service.all
 
 # Associate specialties and services with the first establishment (Policlínica del Atlántico)
-centro_medico_specialties = ["Ortodoncia", "Nutrición", "Pediatría", "Psicología-Podiatría", "Medicina Estética", "Laparoscopía", "Ortopedia y Traumatología"]
-centro_medico_services = ["Farmacia", "Medicina General a recién nacido, niños, adulto y tercera edad", "Extracciones / Restauraciones", "Examen de Citología", "Lesiones que afectan los músculos, huesos y articulaciones", "Ultrasonidos", "Tratamiento Faciales y Corporales", "Trombosis venosa", "Prevención de pie Diabético", "Atención a mujer embarazada", "Radiografías", "Limpiezas dentales", "Control de peso (Obesidad y Desnutrición)", "Enfermedades Pulmonares", "Fracturas en Huesos", "Evaluaciones psicológicas", "Estimulación temprana", "Laboratorio", "Terapia Física y Rehabilitación"]
+centro_medico_specialties = [ "Ortodoncia", "Nutrición", "Pediatría", "Psicología-Podiatría", "Medicina Estética", "Laparoscopía", "Ortopedia y Traumatología" ]
+centro_medico_services = [ "Farmacia", "Medicina General a recién nacido, niños, adulto y tercera edad", "Extracciones / Restauraciones", "Examen de Citología", "Lesiones que afectan los músculos, huesos y articulaciones", "Ultrasonidos", "Tratamiento Faciales y Corporales", "Trombosis venosa", "Prevención de pie Diabético", "Atención a mujer embarazada", "Radiografías", "Limpiezas dentales", "Control de peso (Obesidad y Desnutrición)", "Enfermedades Pulmonares", "Fracturas en Huesos", "Evaluaciones psicológicas", "Estimulación temprana", "Laboratorio", "Terapia Física y Rehabilitación" ]
 
 centro_medico_specialties.each do |specialty_name|
   specialty = Specialty.find_by(name: specialty_name)
@@ -489,15 +489,15 @@ establishments[1..].each do |establishment|
   # Assign 3-7 random specialties
   num_specialties = rand(3..7)
   establishment_specialties = all_specialties.sample(num_specialties)
-  
+
   establishment_specialties.each do |specialty|
     EstablishmentSpecialty.find_or_create_by!(establishment: establishment, specialty: specialty)
   end
-  
+
   # Assign 5-10 random services
   num_services = rand(5..10)
   establishment_services = all_services.sample(num_services)
-  
+
   establishment_services.each do |service|
     EstablishmentService.find_or_create_by!(establishment: establishment, service: service)
   end
@@ -517,10 +517,10 @@ DoctorEstablishment.create!(doctor_profile: doctors[1], establishment: establish
 doctors[2..].each do |doctor|
   # Determine how many establishments this doctor will have (1-3)
   num_establishments = rand(1..3)
-  
+
   # Select random establishments for this doctor
   doctor_establishments = establishments.sample(num_establishments)
-  
+
   # Create the associations
   doctor_establishments.each do |establishment|
     DoctorEstablishment.create!(doctor_profile: doctor, establishment: establishment)

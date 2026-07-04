@@ -1,8 +1,8 @@
 class DoctorProfile < ApplicationRecord
   include HasUploadableImage
 
-  AVAILABLE_LANGUAGES = ["Español", "Inglés", "Francés", "Portugués", "Alemán", "Italiano", "Mandarín", "Otro"].freeze
-  PREFIXES = ["Dr.", "Dra.", "Lic.", "Ing.", "Téc.", "Enf.", "Msc.", "PhD."].freeze
+  AVAILABLE_LANGUAGES = [ "Español", "Inglés", "Francés", "Portugués", "Alemán", "Italiano", "Mandarín", "Otro" ].freeze
+  PREFIXES = [ "Dr.", "Dra.", "Lic.", "Ing.", "Téc.", "Enf.", "Msc.", "PhD." ].freeze
 
   has_uploadable_image :image, folder: "doctor_profiles", crop: true
 

@@ -5,9 +5,9 @@ Rails.application.routes.draw do
   post "onboarding/profile_type", to: "onboarding#save_profile_type", as: :onboarding_save_profile_type
   get "onboarding/basic_info", to: "onboarding#basic_info", as: :onboarding_basic_info
   post "onboarding/complete", to: "onboarding#complete", as: :onboarding_complete
-  
+
   # Payment route for subscription
-  get 'payment', to: 'payments#show', as: :payment
+  get "payment", to: "payments#show", as: :payment
   resources :suppliers, path: "proveedores", only: [ :index, :show ] do
     resources :products, only: [ :index, :show ], path: "productos"
     resources :lead_contacts, only: [ :new, :create ], path: "contacto"
@@ -21,28 +21,28 @@ Rails.application.routes.draw do
   end
   resource :session, only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
-  resources :doctors, only: [:index, :show] do
-    resource :booking, only: [:new, :create] do
+  resources :doctors, only: [ :index, :show ] do
+    resource :booking, only: [ :new, :create ] do
       get :slots, on: :collection
     end
   end
 
   # Paciente namespace
   namespace :paciente do
-    resources :appointments, only: [:index, :show]
-    resource :profile, only: [:show, :edit, :update]
+    resources :appointments, only: [ :index, :show ]
+    resource :profile, only: [ :show, :edit, :update ]
   end
 
   # Agenda (doctor + secretary)
   namespace :agenda do
     resources :appointments
-    resource  :settings, only: [:show, :update]
-    resources :secretaries, only: [:index, :new, :create, :destroy]
-    resources :slots, only: [:index]
-    resources :patients, only: [:index, :show] do
+    resource  :settings, only: [ :show, :update ]
+    resources :secretaries, only: [ :index, :new, :create, :destroy ]
+    resources :slots, only: [ :index ]
+    resources :patients, only: [ :index, :show ] do
       collection { get :search }
     end
-    resources :notifications, only: [:index] do
+    resources :notifications, only: [ :index ] do
       member do
         patch :mark_as_read
       end
@@ -51,12 +51,12 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :establishments, only: [:index, :show], path: 'hospitales-y-clinicas'
+  resources :establishments, only: [ :index, :show ], path: "hospitales-y-clinicas"
 
   # Establishment owner (hospital/clinic) profile editing — operates on the current user's
   # own establishment, mirroring vendor/paciente profile resources.
-  resource :establishment_profile, only: [:edit, :update], path: 'mi-establecimiento'
-  
+  resource :establishment_profile, only: [ :edit, :update ], path: "mi-establecimiento"
+
   # User registration routes
   get "signup" => "users#new"
   post "signup" => "users#create"
@@ -77,7 +77,7 @@ Rails.application.routes.draw do
 
   # Doctor analytics ("Estadísticas") — gated to Profesional/Elite
   get "estadisticas" => "doctor/analytics#index", as: :estadisticas
-  
+
   # Settings routes
   get "settings" => "settings#index", as: :settings
   get "settings/account" => "settings#account", as: :settings_account
@@ -90,40 +90,40 @@ Rails.application.routes.draw do
   get "settings/security" => "settings#security", as: :settings_security
   get "settings/language" => "settings#language", as: :settings_language
   patch "settings/language" => "settings#update_language"
-  
+
   # Stripe routes
   post "stripe/create_checkout_session" => "stripe#create_checkout_session", as: :stripe_checkout
   get "stripe/success" => "stripe#success", as: :stripe_success
   get "stripe/cancel" => "stripe#cancel", as: :stripe_cancel
   post "stripe/webhook" => "stripe#webhook", as: :stripe_webhook
-  
+
   # Profile routes
-  resource :profile, only: [:show, :new, :create, :edit, :update]
+  resource :profile, only: [ :show, :new, :create, :edit, :update ]
 
   # Specialty routes for subespecialties and services
   resources :specialties, only: [] do
-    get 'subspecialties', on: :member
-    get 'services', on: :member
+    get "subspecialties", on: :member
+    get "services", on: :member
   end
 
   # Department cities JSON endpoint
   resources :departments, only: [] do
-    get 'cities', on: :member
+    get "cities", on: :member
   end
 
   # Service find or create endpoint
-  post 'services/find_or_create', to: 'services#find_or_create'
+  post "services/find_or_create", to: "services#find_or_create"
 
   # Admin routes
   namespace :admin do
-    get 'dashboard', to: 'dashboard#index'
-    get 'users', to: 'dashboard#users'
-    get 'doctors', to: 'dashboard#doctors'
-    get 'subscriptions', to: 'dashboard#subscriptions'
-    get 'analytics', to: 'analytics#index'
-    get 'settings', to: 'settings#index'
-    patch 'settings', to: 'settings#update'
-    post 'doctors/:id/toggle_visibility', to: 'dashboard#toggle_doctor_visibility', as: 'toggle_doctor_visibility'
+    get "dashboard", to: "dashboard#index"
+    get "users", to: "dashboard#users"
+    get "doctors", to: "dashboard#doctors"
+    get "subscriptions", to: "dashboard#subscriptions"
+    get "analytics", to: "analytics#index"
+    get "settings", to: "settings#index"
+    patch "settings", to: "settings#update"
+    post "doctors/:id/toggle_visibility", to: "dashboard#toggle_doctor_visibility", as: "toggle_doctor_visibility"
   end
 
   # Defines the root path route ("/")

@@ -24,7 +24,7 @@ general_services = [
   "Telemedicina / Consulta Virtual",
   "Atención a Domicilio",
   "Urgencias Médicas",
-  "Referencias y Derivaciones",
+  "Referencias y Derivaciones"
 ]
 
 general_services.each do |name|
@@ -41,7 +41,7 @@ seed_services("Medicina General", [
   "Curación de Heridas",
   "Retiro de Puntos",
   "Inyecciones",
-  "Nebulizaciones",
+  "Nebulizaciones"
 ])
 
 # Cardiología
@@ -55,7 +55,7 @@ seed_services("Cardiología", [
   "Manejo de Insuficiencia Cardíaca",
   "Manejo de Arritmias",
   "Control de Hipertensión",
-  "Evaluación de Riesgo Cardiovascular",
+  "Evaluación de Riesgo Cardiovascular"
 ])
 
 # Dermatología
@@ -69,7 +69,7 @@ seed_services("Dermatología", [
   "Tratamiento de Dermatitis",
   "Evaluación de Lunares",
   "Micología (Hongos)",
-  "Dermatología Estética",
+  "Dermatología Estética"
 ])
 
 # Endocrinología
@@ -81,7 +81,7 @@ seed_services("Endocrinología", [
   "Trastornos Hormonales",
   "Control Metabólico",
   "Manejo de Suprarrenales",
-  "Evaluación de Crecimiento",
+  "Evaluación de Crecimiento"
 ])
 
 # Gastroenterología
@@ -95,7 +95,7 @@ seed_services("Gastroenterología", [
   "Detección de Cáncer de Colon",
   "Manejo de Enfermedad Hepática",
   "Manejo de Enfermedades Inflamatorias Intestinales",
-  "Estudios Endoscópicos Bajos",
+  "Estudios Endoscópicos Bajos"
 ])
 
 # Ginecología
@@ -110,7 +110,7 @@ seed_services("Ginecología", [
   "Control de Embarazo de Alto Riesgo",
   "Atención de Parto",
   "Manejo de Infertilidad",
-  "Ultrasonido Pélvico",
+  "Ultrasonido Pélvico"
 ])
 
 # Neurología
@@ -123,7 +123,7 @@ seed_services("Neurología", [
   "Manejo de Parkinson",
   "Evaluación de Neuropatías",
   "Manejo de Esclerosis Múltiple",
-  "Evaluación Neurocognitiva",
+  "Evaluación Neurocognitiva"
 ])
 
 # Oftalmología
@@ -137,7 +137,7 @@ seed_services("Oftalmología", [
   "Manejo de Retinopatía Diabética",
   "Adaptación de Lentes de Contacto",
   "Tratamiento de Ojo Seco",
-  "Evaluación Pediátrica Oftalmológica",
+  "Evaluación Pediátrica Oftalmológica"
 ])
 
 # Oncología
@@ -147,7 +147,7 @@ seed_services("Oncología", [
   "Biopsia y Diagnóstico",
   "Seguimiento Oncológico",
   "Manejo del Dolor Oncológico",
-  "Evaluación de Tumores",
+  "Evaluación de Tumores"
 ])
 
 # Ortopedia
@@ -161,7 +161,7 @@ seed_services("Ortopedia", [
   "Artroscopia",
   "Prótesis de Cadera y Rodilla",
   "Rehabilitación Ortopédica",
-  "Medicina Deportiva",
+  "Medicina Deportiva"
 ])
 
 # Pediatría
@@ -173,7 +173,7 @@ seed_services("Pediatría", [
   "Manejo de Alergias Pediátricas",
   "Neonatología",
   "Atención de Urgencias Pediátricas",
-  "Control Nutricional Pediátrico",
+  "Control Nutricional Pediátrico"
 ])
 
 # Psiquiatría
@@ -185,7 +185,7 @@ seed_services("Psiquiatría", [
   "Manejo de Trastorno Bipolar",
   "Manejo de TDAH",
   "Psiquiatría Infantil y Adolescente",
-  "Manejo de Adicciones",
+  "Manejo de Adicciones"
 ])
 
 # Urología
@@ -197,7 +197,7 @@ seed_services("Urología", [
   "Manejo de Infecciones Urinarias",
   "Manejo de Incontinencia",
   "Evaluación de Fertilidad Masculina",
-  "Circuncisión",
+  "Circuncisión"
 ])
 
 # Cirugía General
@@ -209,7 +209,7 @@ seed_services("Cirugía General", [
   "Cirugía de Tiroides",
   "Cirugía Menor Ambulatoria",
   "Biopsias Quirúrgicas",
-  "Drenaje de Abscesos",
+  "Drenaje de Abscesos"
 ])
 
 # Medicina Interna
@@ -220,7 +220,7 @@ seed_services("Medicina Interna", [
   "Manejo de Diabetes",
   "Manejo de Enfermedades Autoinmunes",
   "Evaluación Preoperatoria",
-  "Manejo de Infecciones Complejas",
+  "Manejo de Infecciones Complejas"
 ])
 
 # Medicina Familiar
@@ -229,7 +229,7 @@ seed_services("Medicina Familiar", [
   "Control de Crecimiento Infantil",
   "Atención del Adulto Mayor",
   "Consejería Familiar",
-  "Manejo de Enfermedades Crónicas Familiares",
+  "Manejo de Enfermedades Crónicas Familiares"
 ])
 
 # Neumología
@@ -240,7 +240,7 @@ seed_services("Neumología", [
   "Evaluación de Apnea del Sueño",
   "Broncoscopia",
   "Manejo de Neumonía",
-  "Pruebas de Función Pulmonar",
+  "Pruebas de Función Pulmonar"
 ])
 
 # Otorrinolaringología
@@ -252,7 +252,7 @@ seed_services("Otorrinolaringología", [
   "Manejo de Vértigo",
   "Manejo de Ronquido y Apnea",
   "Cirugía de Oído",
-  "Manejo de Alergias Nasales",
+  "Manejo de Alergias Nasales"
 ])
 
 # Cirugía Plástica
@@ -264,7 +264,7 @@ seed_services("Cirugía Plástica", [
   "Blefaroplastia (Párpados)",
   "Cirugía Reconstructiva",
   "Tratamiento de Quemaduras",
-  "Botox y Rellenos Faciales",
+  "Botox y Rellenos Faciales"
 ])
 
 # Anestesiología
@@ -274,7 +274,7 @@ seed_services("Anestesiología", [
   "Anestesia Epidural",
   "Manejo del Dolor Crónico",
   "Bloqueos Nerviosos",
-  "Sedación Consciente",
+  "Sedación Consciente"
 ])
 
 # Fisioterapia
@@ -286,7 +286,7 @@ seed_services("Fisioterapia", [
   "Rehabilitación Post-Quirúrgica",
   "Terapia Respiratoria",
   "Rehabilitación Neurológica",
-  "Terapia Deportiva",
+  "Terapia Deportiva"
 ])
 
 # Nutrición
@@ -297,7 +297,7 @@ seed_services("Nutrición", [
   "Nutrición Deportiva",
   "Nutrición Pediátrica",
   "Manejo Nutricional de Diabetes",
-  "Nutrición en Embarazo y Lactancia",
+  "Nutrición en Embarazo y Lactancia"
 ])
 
 # Psicología Clínica
@@ -308,7 +308,7 @@ seed_services("Psicología Clínica", [
   "Terapia Cognitivo-Conductual",
   "Evaluación Psicológica",
   "Manejo de Estrés y Ansiedad",
-  "Orientación Vocacional",
+  "Orientación Vocacional"
 ])
 
 # Odontología
@@ -321,7 +321,7 @@ seed_services("Odontología", [
   "Blanqueamiento Dental",
   "Prótesis Dentales",
   "Cirugía Oral",
-  "Periodoncia",
+  "Periodoncia"
 ])
 
 # Radiología
@@ -332,7 +332,7 @@ seed_services("Radiología", [
   "Ecografía / Ultrasonido",
   "Mamografía",
   "Densitometría Ósea",
-  "Radiología Intervencionista",
+  "Radiología Intervencionista"
 ])
 
 puts "#{Service.count} services available in the database"

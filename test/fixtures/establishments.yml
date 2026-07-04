@@ -1,0 +1,11 @@
+one:
+  name: Hospital Central de Prueba
+  est_type: Hospital
+  address: Avenida Test 100, Tegucigalpa
+  phone: "2200-1111"
+
+two:
+  name: Clínica de Prueba
+  est_type: Clínica
+  address: Boulevard Test 200, San Pedro Sula
+  phone: "2550-2222"

@@ -18,8 +18,8 @@ class CreateAppointments < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :appointments, [:doctor_branch_id, :appointment_date, :start_time], name: "idx_appointments_branch_date_time"
-    add_index :appointments, [:doctor_profile_id, :appointment_date], name: "idx_appointments_doctor_date"
+    add_index :appointments, [ :doctor_branch_id, :appointment_date, :start_time ], name: "idx_appointments_branch_date_time"
+    add_index :appointments, [ :doctor_profile_id, :appointment_date ], name: "idx_appointments_doctor_date"
     add_index :appointments, :status
     add_index :appointments, :patient_email
   end
