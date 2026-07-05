@@ -125,4 +125,19 @@
       <% end %>
     </div>
   <% end %>
+
+  <!-- Adjuntos / resultados de laboratorio -->
+  <% if @appointment.lab_attachments.attached? %>
+    <div class="mt-6 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
+      <h2 class="text-lg font-bold text-primary-700 dark:text-sky-400 mb-4">Resultados y adjuntos</h2>
+      <ul class="space-y-2">
+        <% @appointment.lab_attachments.each do |att| %>
+          <li class="flex items-center justify-between gap-3 text-sm">
+            <%= link_to att.filename, rails_blob_path(att, disposition: "attachment"), target: "_blank", class: "text-sky-600 dark:text-sky-400 hover:underline truncate" %>
+            <span class="text-gray-400 dark:text-slate-500 text-xs whitespace-nowrap"><%= number_to_human_size(att.byte_size) %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 </div>

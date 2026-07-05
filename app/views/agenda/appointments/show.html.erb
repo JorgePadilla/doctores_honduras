@@ -94,6 +94,29 @@
         </div>
         <%= render "agenda/appointments/prescription_summary", prescription: @appointment.prescription %>
       </div>
+
+      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+        <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Adjuntos / resultados de laboratorio</h3>
+        <% if @appointment.lab_attachments.attached? %>
+          <ul class="space-y-2 mb-3">
+            <% @appointment.lab_attachments.each do |att| %>
+              <li class="flex items-center justify-between gap-3 text-sm">
+                <%= link_to att.filename, rails_blob_path(att, disposition: "attachment"), target: "_blank", class: "text-sky-600 dark:text-sky-400 hover:underline truncate" %>
+                <span class="text-gray-400 dark:text-slate-500 text-xs whitespace-nowrap"><%= number_to_human_size(att.byte_size) %></span>
+                <%= button_to "Eliminar", agenda_appointment_attachment_path(@appointment, att.id), method: :delete, class: "text-xs text-red-600 dark:text-red-400 hover:underline", form: { data: { turbo_confirm: "¿Eliminar este adjunto?" } } %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-sm text-gray-500 dark:text-slate-400 mb-3">Sin adjuntos.</p>
+        <% end %>
+        <%= form_with url: agenda_appointment_attachments_path(@appointment), method: :post, multipart: true, class: "flex flex-wrap items-center gap-3" do %>
+          <input type="file" name="files[]" multiple accept="application/pdf,image/*"
+                 class="text-sm text-gray-600 dark:text-slate-300 file:mr-3 file:rounded-full file:border-0 file:bg-sky-50 dark:file:bg-sky-900/30 file:px-4 file:py-2 file:text-sky-700 dark:file:text-sky-300 file:font-medium">
+          <%= submit_tag "Subir", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg cursor-pointer" %>
+        <% end %>
+        <p class="mt-2 text-xs text-gray-400 dark:text-slate-500">PDF o imágenes, hasta 10 MB. Almacenamiento privado con enlaces firmados.</p>
+      </div>
     </div>
   <% else %>
     <div class="bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800 rounded-xl p-4 mt-6 text-sm text-sky-800 dark:text-sky-300">

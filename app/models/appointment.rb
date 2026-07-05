@@ -8,6 +8,8 @@ class Appointment < ApplicationRecord
   has_many :notifications, as: :notifiable, dependent: :destroy
   has_one :encounter, dependent: :destroy
   has_one :prescription, dependent: :destroy
+  # H4: adjuntos / resultados de laboratorio de la consulta (bucket S3 privado).
+  has_many_attached :lab_attachments
 
   STATUSES = %w[pendiente confirmada cancelada completada].freeze
   BOOKING_SOURCES = %w[manual public_booking].freeze

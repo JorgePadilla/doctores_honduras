@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       # Documentación clínica de la consulta (Elite).
       resource :encounter, only: [ :edit, :update ]
       resource :prescription, only: [ :show, :edit, :update ]
+      resources :attachments, only: [ :create, :destroy ]
     end
     resource  :settings, only: [ :show, :update ]
     resources :secretaries, only: [ :index, :new, :create, :destroy ]

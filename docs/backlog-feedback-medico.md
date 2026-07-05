@@ -2,7 +2,7 @@
 
 > Tickets y historias de usuario derivados de las reuniones de revisión de la app. Participantes: **Jorge Padilla** (desarrollo) y el **médico/socio** (dominio clínico + cliente).
 > **1ª sesión** — el hilo: *"básicamente eso es lo que busca la gente"* — la búsqueda por procedimiento y el contacto rápido son el corazón del producto; la agenda ligada al directorio es el diferenciador (*"esto ya es venderle… su secretaria ya no necesita papel"*). → **Épicas A, B, C: ✅ entregadas.**
-> **2ª sesión** — el expediente clínico digital (no perder el historial, seguridad ante alergias). → **F1, G1, G2, G3 + documentación por consulta (H1, H2, H3) + portal del paciente (I1): ✅ entregados**; solo **H4 (adjuntos de lab): pendiente** (ver "2º audio" abajo). El expediente es una función **Elite** con techo de registros (5k/25k/100k).
+> **2ª sesión** — el expediente clínico digital (no perder el historial, seguridad ante alergias). → **F1, G1, G2, G3 + documentación por consulta (H1–H4) + portal del paciente (I1): ✅ entregados** (H4 solo pendiente de crear el bucket S3 privado en prod). El expediente es una función **Elite** con techo de registros (5k/25k/100k).
 
 ## Leyenda
 
@@ -314,8 +314,8 @@ Registrar los medicamentos recetados por consulta.
 ### H3 · Signos vitales  `P2` · `S` · ✅
 Peso, presión, etc. por consulta.
 
-### H4 · Adjuntos / resultados de laboratorio  `P2` · `M` · 🔲
-Subir exámenes/resultados al expediente (reusar el patrón S3 / `ImageUploadService`).
+### H4 · Adjuntos / resultados de laboratorio  `P2` · `M` · ✅ (código) · ⏳ config S3 prod
+Subir exámenes/resultados a la consulta (PDF/imágenes, hasta 10 MB). Implementado con **ActiveStorage** (`Appointment has_many_attached :lab_attachments`), controlador `Agenda::AttachmentsController` (Elite, subir/eliminar), visibles para el paciente en su cita. **Almacenamiento privado**: nuevo servicio `amazon_private` en `storage.yml` (bucket sin lectura pública, URLs firmadas); prod usa `config.active_storage.service = :amazon_private`. **Pendiente de ops antes de usar en prod:** crear el bucket S3 **privado** y setear `AWS_PRIVATE_BUCKET` en Railway; idealmente rotar las llaves AWS filtradas primero. Hardening futuro: servir descargas vía controlador con autorización por usuario (hoy usa URLs firmadas de ActiveStorage).
 
 ---
 
@@ -355,11 +355,11 @@ El paciente ve (parte de) su expediente/alergias desde su cuenta. Hoy solo ve su
 | H1 | Nota de evolución por consulta | Consulta | P1 | M | ✅ |
 | H2 | Receta / prescripción (imprimible) | Consulta | P2 | M | ✅ |
 | H3 | Signos vitales | Consulta | P2 | S | ✅ |
-| H4 | Adjuntos / resultados de lab | Consulta | P2 | M | 🔲 |
+| H4 | Adjuntos / resultados de lab | Consulta | P2 | M | ✅ código · ⏳ bucket prod |
 | I1 | Paciente ve su historial | Paciente | P3 | M | ✅ |
 
 **Núcleo P0 entregado (esta sesión):** **F1** (modelo `Patient` canónico por-médico + backfill de citas) · **G1** (ficha clínica `ClinicalRecord`: alergias, crónicos, medicamentos, tipo de sangre, antecedentes, notas — CRUD Elite) · **G2** (alerta de alergias en la ficha del paciente y en el detalle de la cita) · **G3** (roster de pacientes + historial consolidado por identidad canónica). Incluye el **enforcement del `patient_limit`** (los 3 niveles Elite: 5k/25k/100k registros). Las **3 decisiones clave** se resolvieron: **por-médico**, cubre **walk-ins**, vive en un modelo `Patient` canónico nuevo.
 
 **Entregado (esta sesión):** **H1** (nota de evolución por consulta) · **H2** (receta con medicamentos repetibles + vista imprimible) · **H3** (signos vitales) · **I1** (el paciente ve sus vitales y recetas, sin la nota interna del médico). Todo Elite, colgando de la cita (`Encounter` + `Prescription` por `appointment`).
 
-**Único pendiente del 2º audio:** **H4** (adjuntos / resultados de laboratorio) — requiere configurar almacenamiento de archivos (ActiveStorage + S3). Priorizar con el socio.
+**2º audio: completo (F1, G1, G2, G3, H1–H4, I1).** Único pendiente **de ops** (no de código): crear el bucket S3 **privado** para los adjuntos de H4 y setear `AWS_PRIVATE_BUCKET` en Railway (idealmente rotar las llaves AWS filtradas antes).

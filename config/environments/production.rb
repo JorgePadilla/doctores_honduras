@@ -22,8 +22,11 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files on AWS S3 for persistence across deployments
-  config.active_storage.service = :amazon
+  # Datos médicos (adjuntos del expediente) van a un bucket S3 PRIVADO con URLs
+  # firmadas. Requiere ENV AWS_PRIVATE_BUCKET (bucket sin lectura pública). Las
+  # imágenes de perfil usan un cliente S3 propio (ImageUploadService), no
+  # ActiveStorage, así que este default solo afecta a los adjuntos del expediente.
+  config.active_storage.service = :amazon_private
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true

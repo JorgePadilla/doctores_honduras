@@ -14,6 +14,16 @@ amazon:
   region: <%= ENV['AWS_REGION'] || 'us-east-1' %>
   bucket: <%= ENV['AWS_BUCKET'] %>
 
+# Bucket S3 PRIVADO para datos médicos (adjuntos del expediente). NO debe tener
+# política de lectura pública: ActiveStorage sirve estos archivos con URLs
+# firmadas/expirantes. Usa un bucket distinto al público de imágenes (AWS_BUCKET).
+amazon_private:
+  service: S3
+  access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+  region: <%= ENV['AWS_REGION'] || 'us-east-1' %>
+  bucket: <%= ENV['AWS_PRIVATE_BUCKET'] %>
+
 # Cloudflare R2 (compatible con S3, más económico)
 cloudflare:
   service: S3
