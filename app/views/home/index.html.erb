@@ -32,16 +32,24 @@
     </div>
     <% if section_visible?("suppliers") %>
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
-        <div class="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mb-4">
-          <%= icon(:cube, class: "w-6 h-6 text-teal-600 dark:text-teal-400") %>
+        <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">
+          <%= icon(:cube, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
         </div>
         <h3 class="mb-2 text-sky-700 dark:text-sky-400">Proveedores Médicos</h3>
         <p class="text-gray-600 dark:text-slate-400">Encuentra los mejores proveedores de equipos y suministros médicos para profesionales y pacientes.</p>
       </div>
+    <% else %>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
+        <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">
+          <%= icon(:heart, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
+        </div>
+        <h3 class="mb-2 text-sky-700 dark:text-sky-400">Atención Confiable</h3>
+        <p class="text-gray-600 dark:text-slate-400">Profesionales comprometidos con tu salud y bienestar en cada consulta.</p>
+      </div>
     <% end %>
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
-      <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
-        <%= icon(:star, class: "w-6 h-6 text-amber-600 dark:text-amber-400") %>
+      <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">
+        <%= icon(:star, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
       </div>
       <h3 class="mb-2 text-sky-700 dark:text-sky-400">Reseñas y Calificaciones</h3>
       <p class="text-gray-600 dark:text-slate-400">Lee opiniones de otros pacientes para elegir el médico que mejor se adapte a tus necesidades.</p>
