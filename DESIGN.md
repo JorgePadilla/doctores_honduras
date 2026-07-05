@@ -107,3 +107,16 @@ Reglas de uso:
 6. **Micro-interacciones** al final (botones, búsqueda).
 
 **Tip para trabajar con Claude:** pedir primero *"leé DESIGN.md y `app/views/home`, proponeme el rediseño del hero (estructura + clases) sin escribir código todavía"*, revisar la propuesta, y recién después implementar. Iterar en la propuesta antes del código ahorra vueltas.
+
+---
+
+## Implementado (reutilizar, no reinventar)
+
+Tokens y piezas ya construidas — usalas en vez de crear nuevas:
+
+- **Tokens Tailwind** (`@theme` en `app/assets/tailwind/application.css`): `bg-primary` `bg-primary-hover` `bg-primary-deep` `bg-primary-soft` `text-ink` `text-muted` `border-line`, fuentes `font-display` (Bricolage) + `font-sans` (Inter, ya global).
+- **Clases CSS**: `.hero-title` (título hero), `.page-title` (título de página/sección — ganan a la regla global `h1/h2`), `.hero-wash` (gradiente sutil), `.reveal` (+ `html.js` gating, respeta reduced-motion), `.nav-glass`.
+- **Controllers Stimulus** (auto-registrados): `reveal` (fade-up con `data-reveal-delay-value` para stagger), `count-up`, `rotating-placeholder`, `navbar` (borde al scroll).
+- **Componentes**: `app/views/doctors/_doctor_card.html.erb` (card vertical: foto 4/5 con hover-scale, stretched link + contacto z-10, reveal). Navbar y footer viven en `app/views/shared/_navbar.html.erb` y el `<footer>` del layout.
+- **Ya rediseñado**: home (hero búsqueda), navbar (glass), footer (deep), `/doctors` (grilla de cards), header de la página del doctor.
+- **Pendiente** (adoptar los tokens incrementalmente): establecimientos, proveedores, dashboards, formularios de auth/onboarding, agenda. Usan aún estilos `sky-*` sueltos; migrar a los tokens cuando se toquen.
