@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_04_130000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -414,6 +414,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_04_130000) do
     t.datetime "updated_at", null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
+  create_table "search_synonyms", force: :cascade do |t|
+    t.string "term", null: false
+    t.text "keywords", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["term"], name: "index_search_synonyms_on_term", unique: true
   end
 
   create_table "secretary_assignments", force: :cascade do |t|

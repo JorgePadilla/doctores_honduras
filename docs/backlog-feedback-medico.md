@@ -29,7 +29,7 @@ El médico insiste en que la gente **no busca por nombre de médico, busca por l
 
 ---
 
-### A2 · Etiquetas / sinónimos de procedimientos por especialidad  `P1` · `L` · 🔲
+### A2 · Etiquetas / sinónimos de procedimientos por especialidad  `P1` · `L` · ✅
 **Historia:** Como médico, quiero asociar **palabras clave/etiquetas** a mi perfil (p. ej. odontólogo → "obturaciones", "caries", "limpieza dental") para que los pacientes me encuentren con el vocabulario que ellos usan, no con el término clínico.
 
 **Contexto:** *"que haya listado como de las etiquetas… la gente que escriba caries y tú aparezcan todos los odontólogos"*.
@@ -237,7 +237,7 @@ Ya implementado en esta iteración: `Notification` unificado + campana con dropd
 | B2 | Renombrar Sucursales → Ubicaciones | Perfil | P1 | M | 🔲 |
 | C1 | Duración de cita configurable | Agenda | P1 | L | 🔲 |
 | C2 | Sobrecupo / citas concurrentes (límite) | Agenda | P1 | XL | 🔲 |
-| A2 | Etiquetas/sinónimos por especialidad | Búsqueda | P1 | L | 🔲 |
+| A2 | Diccionario de sinónimos (admin CRUD) | Búsqueda | P1 | L | ✅ |
 | B3 | Abrir en Google Maps (deep link) | Perfil | P2 | S | 🟡 |
 | B4 | Reordenar jerarquía del perfil | Perfil | P2 | M | 🔲 |
 | B5 | Ocultar "Medicina General" | Perfil | P2 | S | 🟡 |

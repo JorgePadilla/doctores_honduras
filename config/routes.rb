@@ -122,6 +122,7 @@ Rails.application.routes.draw do
     get "analytics", to: "analytics#index"
     get "settings", to: "settings#index"
     patch "settings", to: "settings#update"
+    resources :synonyms, only: [ :index, :create, :update, :destroy ]
     post "doctors/:id/toggle_visibility", to: "dashboard#toggle_doctor_visibility", as: "toggle_doctor_visibility"
   end
 

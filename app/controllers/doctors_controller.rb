@@ -76,6 +76,14 @@ class DoctorsController < ApplicationController
         service_parameters.push(term)
       end
 
+      # Expand lay terms into clinical keywords via the admin synonym dictionary
+      # (Ticket A2). Each keyword matches a service, specialty, or subspecialty,
+      # so "caries" surfaces dentists by their dental services or specialty.
+      SearchSynonym.expand(query).each do |pattern|
+        service_conditions << "(LOWER(services.name) LIKE ? OR LOWER(specialties.name) LIKE ? OR LOWER(subspecialties.name) LIKE ?)"
+        service_parameters.push(pattern, pattern, pattern)
+      end
+
       # Add establishment name to search as an optional condition
       establishment_conditions = []
       establishment_parameters = []

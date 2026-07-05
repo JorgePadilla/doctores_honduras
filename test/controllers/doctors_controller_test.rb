@@ -47,4 +47,19 @@ class DoctorsControllerTest < ActionDispatch::IntegrationTest
     get doctors_url, params: { establishment_id: establishment.id }
     assert_select "a[href=?]", doctor_path(@doctor)
   end
+
+  # Ticket A2: a lay term finds a doctor via the synonym dictionary.
+  test "synonym expands a lay term to a clinical service and finds the doctor" do
+    surgery = Service.create!(name: "Apendicectomía")
+    DoctorService.create!(doctor_profile: @doctor, service: surgery)
+
+    # Without a synonym, the lay term does not match the clinical service name.
+    get doctors_url, params: { q: "apendicitis" }
+    assert_select "a[href=?]", doctor_path(@doctor), count: 0
+
+    # With the synonym, the lay term resolves to the clinical keyword.
+    SearchSynonym.create!(term: "apendicitis", keywords: "Apendicectomía")
+    get doctors_url, params: { q: "apendicitis" }
+    assert_select "a[href=?]", doctor_path(@doctor)
+  end
 end
