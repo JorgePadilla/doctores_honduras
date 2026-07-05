@@ -193,6 +193,43 @@ h3 {
   .hero-accent { animation: none; }
 }
 
+/* Electrocardiograma: línea de latido que recorre infinita (monitor médico). */
+.ecg-line {
+  height: 2.75rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath d='M0 20 H78 L84 20 L90 8 L96 32 L101 6 L107 34 L112 20 L118 20 H200' fill='none' stroke='%230ea5e9' stroke-opacity='0.5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 200px 100%;
+  animation: ecg-scroll 3.2s linear infinite;
+}
+@keyframes ecg-scroll { to { background-position-x: -200px; } }
+
+/* Corazón latiendo — loop infinito con el ritmo de un latido real. */
+.heartbeat {
+  display: inline-block;
+  transform-origin: center;
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14%      { transform: scale(1.2); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.14); }
+  70%      { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ecg-line { animation: none; }
+  .heartbeat { animation: none; }
+}
+
+/* Entrada de la paleta de comandos ⌘K. */
+.cmdk-panel { animation: cmdk-in 160ms cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes cmdk-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .cmdk-panel { animation: none; } }
+
 /* Scroll reveal. Gateado bajo html.js: sin JS el contenido se ve normal
    (nunca queda oculto); con JS parte oculto y reveal_controller.js añade
    .is-visible al entrar al viewport. El script inline que agrega .js va en

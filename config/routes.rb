@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resource :session, only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
   resources :doctors, only: [ :index, :show ] do
+    get :quick_search, on: :collection
     resource :booking, only: [ :new, :create ] do
       get :slots, on: :collection
     end

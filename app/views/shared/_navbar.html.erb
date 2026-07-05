@@ -20,8 +20,20 @@
         <% end %>
       </div>
 
-      <!-- Right side: dark mode, notifications, user menu -->
+      <!-- Right side: command palette, dark mode, notifications, user menu -->
       <div class="flex items-center gap-1 md:gap-2">
+        <!-- ⌘K command palette trigger -->
+        <button type="button" data-action="command-palette#open" title="Buscar (⌘K)" aria-label="Buscar"
+                class="hidden sm:inline-flex items-center gap-2 rounded-full border border-line dark:border-slate-700 pl-3 pr-2 py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary hover:border-sky-300 dark:hover:border-slate-600 transition-colors">
+          <%= icon(:magnifying_glass, class: "w-4 h-4") %>
+          <span>Buscar</span>
+          <kbd class="rounded border border-line dark:border-slate-600 px-1.5 py-0.5 text-[10px] font-semibold leading-none">⌘K</kbd>
+        </button>
+        <button type="button" data-action="command-palette#open" title="Buscar" aria-label="Buscar"
+                class="sm:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <%= icon(:magnifying_glass, class: "w-5 h-5") %>
+        </button>
+
         <!-- Dark Mode Toggle -->
         <button data-action="dark-mode#toggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Cambiar tema">
           <!-- Sun icon (shown in dark mode) -->

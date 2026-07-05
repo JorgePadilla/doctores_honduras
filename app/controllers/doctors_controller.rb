@@ -1,5 +1,5 @@
 class DoctorsController < ApplicationController
-  skip_before_action :require_authentication, only: [ :index, :show ]
+  skip_before_action :require_authentication, only: [ :index, :show, :quick_search ]
 
   def index
     @page = (params[:page] || 1).to_i
@@ -142,6 +142,26 @@ class DoctorsController < ApplicationController
 
     # Apply pagination
     @doctors = doctors_query.limit(@per_page).offset(offset)
+  end
+
+  # JSON para la paleta de comandos (⌘K): top doctores por nombre/especialidad.
+  def quick_search
+    q = params[:q].to_s.strip
+    return render(json: { doctors: [] }) if q.length < 2
+
+    term = "%#{q.downcase}%"
+    doctors = DoctorProfile.where(hidden: false)
+      .left_joins(:specialty, :subspecialty)
+      .where("LOWER(doctor_profiles.name) LIKE :t OR LOWER(specialties.name) LIKE :t OR LOWER(subspecialties.name) LIKE :t", t: term)
+      .limit(6)
+      .preload(:specialty, :subspecialty, :city)
+
+    render json: {
+      doctors: doctors.map { |d|
+        { name: d.display_name, specialty: d.headline_specialty, city: d.city&.name,
+          url: doctor_path(d), thumb: d.image_thumb_url.presence || d.image_url }
+      }
+    }
   end
 
   def show
