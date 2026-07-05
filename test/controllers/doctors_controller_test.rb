@@ -79,8 +79,14 @@ class DoctorsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href^=?]", "tel:", count: 0
   end
 
-  # País select is always shown in the location filter.
-  test "index shows the country select in the location filter" do
+  # País select se oculta cuando hay un solo país (ruido), y aparece con varios.
+  test "index hides the country select when there is only one country" do
+    get doctors_url
+    assert_select "select[name=?]", "country_id", count: 0
+  end
+
+  test "index shows the country select when there are multiple countries" do
+    Country.create!(name: "Guatemala", iso_code: "GT")
     get doctors_url
     assert_select "select[name=?]", "country_id"
   end

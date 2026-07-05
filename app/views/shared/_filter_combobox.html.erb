@@ -1,0 +1,38 @@
+<%# Píldora de filtro con popover + listbox filtrable (combobox).
+    Locals:
+      name       – nombre del param (p.ej. "specialty")
+      label      – texto por defecto de la píldora (p.ej. "Especialidad")
+      all_label  – primera opción que limpia la faceta (p.ej. "Todas las especialidades")
+      items      – array de strings (valores = etiquetas)
+      current    – valor activo o nil
+      id_prefix  – prefijo único para ids de accesibilidad %>
+<% active = current.present? %>
+<div class="filter-unit relative shrink-0" data-controller="popover combobox"
+     data-combobox-placeholder-value="<%= label %>"
+     data-action="popover:opened->combobox#reset">
+  <%= hidden_field_tag name, (active ? current : ""), id: "#{id_prefix}-field", data: { combobox_target: "field" } %>
+  <button type="button" class="filter-pill<%= ' is-active' if active %>"
+          data-popover-target="trigger" data-combobox-target="trigger"
+          data-action="popover#toggle" aria-haspopup="listbox" aria-expanded="false">
+    <span class="max-w-[10rem] truncate" data-combobox-target="label"><%= active ? current : label %></span>
+    <%= icon(:chevron_down, class: "w-4 h-4 text-muted shrink-0") %>
+  </button>
+  <div class="popover-backdrop" data-popover-target="backdrop" data-action="click->popover#close"></div>
+  <div class="popover-panel" data-popover-target="panel">
+    <label class="popover-search">
+      <%= icon(:magnifying_glass, class: "w-4 h-4 text-muted shrink-0") %>
+      <input type="text" placeholder="Buscar <%= label.downcase %>…" autocomplete="off"
+             role="combobox" aria-expanded="true" aria-controls="<%= id_prefix %>-listbox"
+             data-combobox-target="search" data-action="input->combobox#filter keydown->combobox#nav">
+    </label>
+    <ul id="<%= id_prefix %>-listbox" role="listbox" class="popover-list" data-action="click->combobox#select">
+      <li id="<%= id_prefix %>-opt-all" role="option" data-value="" data-combobox-target="option"
+          class="popover-option"><%= all_label %></li>
+      <% items.each_with_index do |item, i| %>
+        <li id="<%= id_prefix %>-opt-<%= i %>" role="option" data-value="<%= item %>" data-combobox-target="option"
+            class="popover-option<%= ' is-current' if active && current == item %>"><%= item %></li>
+      <% end %>
+    </ul>
+    <p data-combobox-target="empty" class="popover-empty hidden">Sin coincidencias — probá la búsqueda general.</p>
+  </div>
+</div>

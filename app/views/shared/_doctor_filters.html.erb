@@ -1,90 +1,86 @@
-<%# Filtros de doctores — panel colapsable arriba de los resultados (no sidebar).
-   Especialidad y Servicio usan <datalist> (typeahead: escribís y filtra). %>
-<% filter_input = "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500 text-sm py-2" %>
-<% filter_label = "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-<% active_count = [ params[:specialty], params[:service], params[:country_id], params[:department_id], params[:city_id], params[:establishment_id] ].count(&:present?) %>
+<%# Barra de filtros de /doctors: píldoras con popovers que auto-aplican al
+    turbo-frame "doctors-list". Los chips de filtros activos + el conteo viven
+    DENTRO del frame (ver doctors/index.html.erb) para refrescarse en cada submit. %>
+<div class="mb-6">
+  <%= form_with url: doctors_path, method: :get, data: { turbo_frame: "doctors-list", controller: "form" } do |form| %>
+    <% if params[:q].present? %><%= hidden_field_tag :q, params[:q] %><% end %>
 
-<details class="group mb-6 rounded-2xl border border-line dark:border-slate-700 bg-white dark:bg-slate-800" <%= "open" if active_count.positive? %>>
-  <summary class="flex list-none cursor-pointer select-none items-center justify-between gap-2 px-5 py-3">
-    <span class="flex items-center gap-2 text-sm font-medium text-ink dark:text-white">
-      <%= icon(:cog_6_tooth, class: "w-4 h-4 text-primary") %>
-      Filtros
-      <% if active_count.positive? %>
-        <span class="rounded-full bg-primary-soft dark:bg-sky-900/30 px-2 py-0.5 text-xs font-medium text-primary-hover dark:text-sky-300"><%= active_count %></span>
-      <% end %>
-    </span>
-    <%= icon(:chevron_down, class: "w-4 h-4 text-muted transition-transform group-open:rotate-180") %>
-  </summary>
+    <div class="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar sm:flex-wrap sm:gap-3 sm:overflow-visible">
+      <%= render "shared/filter_combobox",
+            name: "specialty", label: "Especialidad", all_label: "Todas las especialidades",
+            items: @specialties, id_prefix: "specialty",
+            current: (params[:specialty].presence unless params[:specialty] == "Todas las especialidades") %>
 
-  <div class="border-t border-line dark:border-slate-700 p-5">
-    <% if @geo_department_name.present? %>
-      <div class="mb-4 flex items-start gap-2 rounded-lg bg-sky-50 dark:bg-sky-900/20 px-3 py-2 text-sm text-sky-700 dark:text-sky-400">
-        <%= icon(:map_pin, class: "w-4 h-4 shrink-0 mt-0.5") %>
-        <span>Mostrando tu zona: <strong><%= @geo_department_name %></strong>.
-          <%= link_to "Ver todo el país", doctors_path(all: 1), class: "underline hover:no-underline whitespace-nowrap" %></span>
-      </div>
-    <% end %>
+      <%= render "shared/filter_combobox",
+            name: "service", label: "Servicio", all_label: "Todos los servicios",
+            items: @services, id_prefix: "service",
+            current: (params[:service].presence unless params[:service] == "Todos los servicios") %>
 
-    <%= form_with url: doctors_path, method: :get, data: { turbo_frame: "doctors-list", controller: "form", form_target: "filterForm" } do |form| %>
-      <% if params[:q].present? %><%= form.hidden_field :q, value: params[:q] %><% end %>
-
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div>
-          <%= form.label :specialty, "Especialidad", class: filter_label %>
-          <%= form.text_field :specialty, value: params[:specialty], list: "specialties-datalist", placeholder: "Todas las especialidades", autocomplete: "off", class: filter_input, data: { action: "change->form#submit" } %>
-          <datalist id="specialties-datalist"><% @specialties.each do |s| %><option value="<%= s %>"></option><% end %></datalist>
-        </div>
-
-        <div>
-          <%= form.label :service, "Servicio o procedimiento", class: filter_label %>
-          <%= form.text_field :service, value: params[:service], list: "services-datalist", placeholder: "Todos los servicios", autocomplete: "off", class: filter_input, data: { action: "change->form#submit" } %>
-          <datalist id="services-datalist"><% @services.each do |s| %><option value="<%= s %>"></option><% end %></datalist>
-        </div>
-
-        <% if @establishments.any? %>
-          <div>
-            <%= form.label :establishment_id, "Hospital / Clínica", class: filter_label %>
-            <%= form.select :establishment_id, options_from_collection_for_select(@establishments, :id, :name, params[:establishment_id]),
-                  { include_blank: "Todos los hospitales" }, class: filter_input, data: { action: "change->form#submit" } %>
-          </div>
-        <% end %>
-
-        <div data-controller="location-filter" class="contents"
-             data-location-filter-department-blank-value="Todos los departamentos"
-             data-location-filter-city-blank-value="Todas las ciudades">
-          <% if @countries.any? %>
+      <%# Ubicación — un solo popover con Departamento + Ciudad (País solo si hay varios) %>
+      <% selected_city = (@cities.detect { |c| c.id.to_s == params[:city_id].to_s } if params[:city_id].present?) %>
+      <% selected_dept = (@departments.detect { |d| d.id.to_s == params[:department_id].to_s } if params[:department_id].present?) %>
+      <% location_active = selected_city.present? || selected_dept.present? %>
+      <div class="filter-unit relative shrink-0" data-controller="popover location-filter"
+           data-location-filter-department-blank-value="Todos los departamentos"
+           data-location-filter-city-blank-value="Todas las ciudades"
+           data-location-filter-label-default-value="Ubicación">
+        <button type="button" class="filter-pill<%= ' is-active' if location_active %>"
+                data-popover-target="trigger" data-location-filter-target="trigger"
+                data-action="popover#toggle" aria-haspopup="true" aria-expanded="false">
+          <span class="max-w-[10rem] truncate" data-location-filter-target="label"><%= selected_city&.name || selected_dept&.name || "Ubicación" %></span>
+          <%= icon(:chevron_down, class: "w-4 h-4 text-muted shrink-0") %>
+        </button>
+        <div class="popover-backdrop" data-popover-target="backdrop" data-action="click->popover#close"></div>
+        <div class="popover-panel" data-popover-target="panel">
+          <div class="popover-body space-y-3">
+            <% if @countries.many? %>
+              <div>
+                <label class="filter-field-label">País</label>
+                <%= form.select :country_id,
+                      options_from_collection_for_select(@countries, :id, :name, params[:country_id] || @geo_country_id),
+                      { include_blank: "Todos los países" }, class: "filter-field",
+                      data: { location_filter_target: "country", action: "change->location-filter#loadDepartments change->location-filter#markActive change->form#submit" } %>
+              </div>
+            <% end %>
             <div>
-              <%= form.label :country_id, "País", class: filter_label %>
-              <%= form.select :country_id, options_from_collection_for_select(@countries, :id, :name, params[:country_id] || @geo_country_id || (@countries.first.id if @countries.one?)),
-                    { include_blank: "Todos los países" }, class: filter_input,
-                    data: { location_filter_target: "country", action: "change->location-filter#loadDepartments change->form#submit" } %>
+              <label class="filter-field-label">Departamento</label>
+              <%= form.select :department_id,
+                    options_from_collection_for_select(@departments, :id, :name, params[:department_id] || @geo_department_id),
+                    { include_blank: "Todos los departamentos" }, class: "filter-field",
+                    data: { location_filter_target: "department", action: "change->location-filter#loadCities change->location-filter#markActive change->form#submit" } %>
             </div>
-          <% end %>
-          <div>
-            <%= form.label :department_id, "Departamento", class: filter_label %>
-            <%= form.select :department_id, options_from_collection_for_select(@departments, :id, :name, params[:department_id] || @geo_department_id),
-                  { include_blank: "Todos los departamentos" }, class: filter_input,
-                  data: { location_filter_target: "department", action: "change->location-filter#loadCities change->form#submit" } %>
-          </div>
-          <div>
-            <%= form.label :city_id, "Ciudad", class: filter_label %>
-            <%= form.select :city_id, options_from_collection_for_select(@cities, :id, :name, params[:city_id]),
-                  { include_blank: "Todas las ciudades" }, class: filter_input,
-                  data: { location_filter_target: "city", action: "change->form#submit" } %>
+            <div>
+              <label class="filter-field-label">Ciudad</label>
+              <%= form.select :city_id,
+                    options_from_collection_for_select(@cities, :id, :name, params[:city_id]),
+                    { include_blank: "Todas las ciudades" }, class: "filter-field",
+                    data: { location_filter_target: "city", action: "change->location-filter#markActive change->form#submit" } %>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-4 flex items-center justify-end gap-2">
-        <% if active_count.positive? %>
-          <%= link_to doctors_path(q: params[:q], all: 1), class: "inline-flex items-center gap-1 rounded-full border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors" do %>
-            Limpiar <%= icon(:x_mark, class: "h-4 w-4") %>
-          <% end %>
-        <% end %>
-        <%= form.submit "Aplicar", class: "inline-flex items-center bg-primary-hover hover:bg-primary-deep text-white font-semibold rounded-full px-6 py-2 transition-colors cursor-pointer", data: { form_target: "submitButton" } %>
-      </div>
-
-      <div data-form-target="loadingIndicator" class="hidden mt-3 text-center text-sm text-muted">Buscando médicos…</div>
-    <% end %>
-  </div>
-</details>
+      <%# Hospital / Clínica — solo cuando la sección está visible y hay datos %>
+      <% if @establishments.any? %>
+        <% selected_hosp = (@establishments.detect { |e| e.id.to_s == params[:establishment_id].to_s } if params[:establishment_id].present?) %>
+        <div class="filter-unit relative shrink-0" data-controller="popover">
+          <button type="button" class="filter-pill<%= ' is-active' if selected_hosp %>"
+                  data-popover-target="trigger" data-action="popover#toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="max-w-[10rem] truncate"><%= selected_hosp&.name || "Hospital" %></span>
+            <%= icon(:chevron_down, class: "w-4 h-4 text-muted shrink-0") %>
+          </button>
+          <div class="popover-backdrop" data-popover-target="backdrop" data-action="click->popover#close"></div>
+          <div class="popover-panel" data-popover-target="panel">
+            <div class="popover-body">
+              <label class="filter-field-label">Hospital / Clínica</label>
+              <%= form.select :establishment_id,
+                    options_from_collection_for_select(@establishments, :id, :name, params[:establishment_id]),
+                    { include_blank: "Todos los hospitales" }, class: "filter-field",
+                    data: { action: "change->form#submit" } %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

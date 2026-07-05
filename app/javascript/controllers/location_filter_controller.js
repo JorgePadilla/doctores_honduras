@@ -10,12 +10,26 @@ import { Controller } from "@hotwired/stimulus"
 //     <select data-location-filter-target="department" data-action="change->location-filter#loadCities">
 //     <select data-location-filter-target="city">
 export default class extends Controller {
-  static targets = ["country", "department", "city"]
+  // trigger/label are optional (used only by the /doctors filter pill so it can
+  // show the chosen city/department and an active state). Appointment forms omit
+  // them, so every use of them is guarded by hasXTarget.
+  static targets = ["country", "department", "city", "trigger", "label"]
   // Blank-option labels are configurable so forms can say "Selecciona…" while
   // the search filter keeps "Todos…". Defaults preserve the filter behavior.
   static values = {
     departmentBlank: { type: String, default: "Todos los departamentos" },
-    cityBlank: { type: String, default: "Todas las ciudades" }
+    cityBlank: { type: String, default: "Todas las ciudades" },
+    labelDefault: { type: String, default: "Ubicación" }
+  }
+
+  // Refleja la selección de ubicación en la píldora del filtro (ciudad, si no
+  // departamento). No-op fuera de /doctors (sin trigger/label).
+  markActive() {
+    const cityText = this.cityTarget.value && this.cityTarget.selectedOptions[0]?.text
+    const deptText = this.hasDepartmentTarget && this.departmentTarget.value && this.departmentTarget.selectedOptions[0]?.text
+    const label = cityText || deptText || null
+    if (this.hasLabelTarget) this.labelTarget.textContent = label || this.labelDefaultValue
+    if (this.hasTriggerTarget) this.triggerTarget.classList.toggle("is-active", !!label)
   }
 
   async loadDepartments() {

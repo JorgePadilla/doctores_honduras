@@ -8,6 +8,10 @@
     <div class="flex items-center gap-2 bg-white dark:bg-slate-800 rounded-full border border-line dark:border-slate-700 shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)] p-2 pl-5">
       <%= icon(:magnifying_glass, class: "w-5 h-5 text-primary shrink-0") %>
       <form action="/doctors" method="get" data-turbo-frame="doctors-list" class="flex flex-1 items-center gap-2">
+        <%# Preserva los filtros activos al buscar por texto (si no, se perderían). %>
+        <% %w[specialty service country_id department_id city_id establishment_id].each do |k| %>
+          <% if params[k].present? %><%= hidden_field_tag k, params[k] %><% end %>
+        <% end %>
         <input type="text" name="q" value="<%= params[:q] %>"
                placeholder="Busca por especialidad, procedimiento, doctor o ciudad"
                class="flex-1 min-w-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-ink dark:text-white placeholder:text-muted py-2 text-base"
@@ -24,11 +28,57 @@
   <div class="max-w-6xl mx-auto">
     <%= render 'shared/doctor_filters' %>
 
-    <div class="mb-4">
-      <h2 class="text-lg font-semibold text-ink dark:text-white">Resultados</h2>
-    </div>
-
     <turbo-frame id="doctors-list">
+      <%
+        # Chips de filtros activos (× hace visita completa con data-turbo-frame _top
+        # para mantener en sync la barra de píldoras, que vive fuera del frame).
+        qp = request.query_parameters
+        remove = ->(overrides) { doctors_path(qp.merge(overrides.transform_keys(&:to_s)).merge("page" => nil).compact_blank) }
+        chips = []
+        if params[:specialty].present? && params[:specialty] != "Todas las especialidades"
+          chips << { text: params[:specialty], url: remove.(specialty: nil) }
+        end
+        if params[:service].present? && params[:service] != "Todos los servicios"
+          chips << { text: params[:service], url: remove.(service: nil) }
+        end
+        if params[:department_id].present? && (dept = @departments.detect { |d| d.id.to_s == params[:department_id].to_s })
+          chips << { text: dept.name, url: remove.(department_id: nil, city_id: nil, all: 1) }
+        end
+        if params[:city_id].present? && (city = @cities.detect { |c| c.id.to_s == params[:city_id].to_s })
+          chips << { text: city.name, url: remove.(city_id: nil, all: 1) }
+        end
+        if section_visible?("establishments") && params[:establishment_id].present? && (est = @establishments.detect { |e| e.id.to_s == params[:establishment_id].to_s })
+          chips << { text: est.name, url: remove.(establishment_id: nil) }
+        end
+      %>
+
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-ink dark:text-white tabular-nums">
+          <%= number_with_delimiter(@total_count) %> <%= @total_count == 1 ? "médico" : "médicos" %>
+        </h2>
+      </div>
+
+      <% if @geo_department_name.present? || chips.any? %>
+        <div class="mb-5 flex flex-wrap items-center gap-2">
+          <% if @geo_department_name.present? %>
+            <%= link_to doctors_path(qp.merge("all" => 1, "page" => nil).compact_blank), data: { turbo_frame: "_top" }, class: "filter-chip filter-chip--geo" do %>
+              <%= icon(:map_pin, class: "w-3.5 h-3.5") %>
+              Cerca de ti: <%= @geo_department_name %>
+              <%= icon(:x_mark, class: "w-3.5 h-3.5") %>
+            <% end %>
+          <% end %>
+          <% chips.each do |chip| %>
+            <%= link_to chip[:url], data: { turbo_frame: "_top" }, class: "filter-chip" do %>
+              <%= chip[:text] %>
+              <%= icon(:x_mark, class: "w-3.5 h-3.5") %>
+            <% end %>
+          <% end %>
+          <% if chips.any? %>
+            <%= link_to "Limpiar todo", doctors_path(q: params[:q], all: 1), data: { turbo_frame: "_top" }, class: "ml-1 text-sm text-muted hover:text-ink dark:hover:text-white underline underline-offset-2" %>
+          <% end %>
+        </div>
+      <% end %>
+
       <% if @doctors.any? %>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <% @doctors.each_with_index do |doctor, index| %>
@@ -45,7 +95,11 @@
       <% if @total_pages > 1 %>
         <div class="mt-10 mb-6 flex justify-center">
           <nav class="rounded-lg" aria-label="Pagination">
-            <%= pagination_links(@page, @total_pages, { q: params[:q], specialty: params[:specialty], service: params[:service] }) %>
+            <%= pagination_links(@page, @total_pages, {
+                  q: params[:q], specialty: params[:specialty], service: params[:service],
+                  country_id: params[:country_id], department_id: params[:department_id],
+                  city_id: params[:city_id], establishment_id: params[:establishment_id]
+                }.compact_blank) %>
           </nav>
         </div>
       <% end %>
