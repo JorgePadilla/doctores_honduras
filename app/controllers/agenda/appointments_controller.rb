@@ -71,7 +71,7 @@ class Agenda::AppointmentsController < Agenda::BaseController
     params.require(:appointment).permit(
       :doctor_branch_id, :patient_name, :patient_phone, :patient_email,
       :appointment_date, :start_time, :end_time, :status, :reason, :doctor_notes,
-      :patient_user_id, :requested_duration, :sobrecupo
+      :patient_id, :patient_user_id, :requested_duration, :sobrecupo
     )
   end
 end

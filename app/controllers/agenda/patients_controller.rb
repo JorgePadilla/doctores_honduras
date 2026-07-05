@@ -16,19 +16,25 @@ class Agenda::PatientsController < Agenda::BaseController
     @clinical_record = @patient.clinical_record
   end
 
-  # JSON autocomplete para el formulario de citas. Mantiene las llaves que espera
-  # patient_search_controller.js (name/phone/email/patient_user_id).
+  # JSON autocomplete para el formulario de citas. Busca por nombre, correo o
+  # DNI (normalizando dígitos, ignora guiones). Siempre scopeado a los pacientes
+  # del médico (current_doctor_profile.patients) — no filtra los de otros.
   def search
     query = params[:q].to_s.strip
     return render(json: []) if query.length < 2
 
+    digits = query.gsub(/\D/, "")
     patients = current_doctor_profile.patients
-      .where("name ILIKE :q OR email ILIKE :q", q: "%#{query}%")
+      .where(
+        "name ILIKE :q OR email ILIKE :q OR (:digits <> '' AND regexp_replace(coalesce(identity_document, ''), '[^0-9]', '', 'g') LIKE :dq)",
+        q: "%#{query}%", digits: digits, dq: "%#{digits}%"
+      )
       .order(:name)
       .limit(10)
 
     render json: patients.map { |p|
-      { id: p.id, name: p.name, phone: p.phone, email: p.email, patient_user_id: p.user_id }
+      { id: p.id, name: p.name, phone: p.phone, email: p.email,
+        identity_document: p.identity_document, patient_user_id: p.user_id }
     }
   end
 end

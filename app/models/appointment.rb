@@ -35,6 +35,7 @@ class Appointment < ApplicationRecord
   validate :minimum_duration
   validate :within_branch_schedule, on: :create
   validate :no_overlapping_appointments, on: :create
+  validate :patient_belongs_to_doctor
 
   scope :for_date, ->(date) { where(appointment_date: date) }
   scope :for_branch, ->(branch) { where(doctor_branch: branch) }
@@ -122,6 +123,16 @@ class Appointment < ApplicationRecord
   end
 
   private
+
+  # Aislamiento por médico: si la cita trae un patient_id (hard-link desde el
+  # autocompletado), ese Patient debe ser del mismo doctor. Evita ligar la cita
+  # al paciente de otro médico vía un patient_id manipulado en el form oculto.
+  def patient_belongs_to_doctor
+    return if patient_id.blank?
+    if patient && patient.doctor_profile_id != doctor_profile_id
+      errors.add(:patient_id, "no pertenece a este médico")
+    end
+  end
 
   # F1: attach (find-or-create) the canonical Patient for this doctor from the
   # raw patient_user_id / patient_name fields, so every write path builds the

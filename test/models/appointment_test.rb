@@ -89,4 +89,23 @@ class AppointmentTest < ActiveSupport::TestCase
     # is not counted against the limit.
     assert build_appointment.save
   end
+
+  # --- Patient hard-link isolation (appointment search) ---
+
+  test "an appointment can hard-link to one of the doctor's own patients" do
+    patient = @profile.patients.create!(name: "Ana")
+    appt = build_appointment(patient: patient)
+    assert appt.save, appt.errors.full_messages.to_sentence
+    assert_equal patient.id, appt.patient_id
+  end
+
+  test "an appointment rejects a patient_id belonging to another doctor" do
+    other_user = User.create!(email: "doc2-#{SecureRandom.hex(4)}@example.com", password: "password", profile_type: "doctor")
+    other_profile = DoctorProfile.create!(user: other_user, name: "Doc2", department: departments(:one), city: cities(:one))
+    foreign = other_profile.patients.create!(name: "Ajeno")
+
+    appt = build_appointment(patient_id: foreign.id)
+    assert_not appt.save
+    assert appt.errors[:patient_id].any?
+  end
 end
