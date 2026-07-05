@@ -2,7 +2,7 @@
 
 > Tickets y historias de usuario derivados de las reuniones de revisión de la app. Participantes: **Jorge Padilla** (desarrollo) y el **médico/socio** (dominio clínico + cliente).
 > **1ª sesión** — el hilo: *"básicamente eso es lo que busca la gente"* — la búsqueda por procedimiento y el contacto rápido son el corazón del producto; la agenda ligada al directorio es el diferenciador (*"esto ya es venderle… su secretaria ya no necesita papel"*). → **Épicas A, B, C: ✅ entregadas.**
-> **2ª sesión** — el expediente clínico digital (no perder el historial, seguridad ante alergias). → **Núcleo P0 (F1, G1, G2, G3): ✅ entregado**; **H–I: pendientes** (ver "2º audio" abajo). El expediente es una función **Elite** con techo de registros (5k/25k/100k).
+> **2ª sesión** — el expediente clínico digital (no perder el historial, seguridad ante alergias). → **F1, G1, G2, G3 + documentación por consulta (H1, H2, H3) + portal del paciente (I1): ✅ entregados**; solo **H4 (adjuntos de lab): pendiente** (ver "2º audio" abajo). El expediente es una función **Elite** con techo de registros (5k/25k/100k).
 
 ## Leyenda
 
@@ -305,13 +305,13 @@ El Expediente Clínico Digital es una **función exclusiva del plan Elite** (doc
 
 > H2–H4 no salieron explícitas del audio; son la evolución lógica de un expediente. Marcadas para decidir si entran.
 
-### H1 · Nota de evolución por consulta  `P1` · `M` · 🔲
+### H1 · Nota de evolución por consulta  `P1` · `M` · ✅
 Nota clínica estructurada por cita (más allá del único `doctor_notes`), que alimenta el historial consolidado (G3).
 
-### H2 · Receta / prescripción  `P2` · `M` · 🔲
+### H2 · Receta / prescripción  `P2` · `M` · ✅
 Registrar los medicamentos recetados por consulta.
 
-### H3 · Signos vitales  `P2` · `S` · 🔲
+### H3 · Signos vitales  `P2` · `S` · ✅
 Peso, presión, etc. por consulta.
 
 ### H4 · Adjuntos / resultados de laboratorio  `P2` · `M` · 🔲
@@ -321,7 +321,7 @@ Subir exámenes/resultados al expediente (reusar el patrón S3 / `ImageUploadSer
 
 ## EPIC I — Acceso del paciente a su expediente (futuro)
 
-### I1 · El paciente ve su historial clínico  `P3` · `M` · 🔲
+### I1 · El paciente ve su historial clínico  `P3` · `M` · ✅
 El paciente ve (parte de) su expediente/alergias desde su cuenta. Hoy solo ve sus citas y datos demográficos. Requiere definir qué es visible al paciente vs privado del médico.
 
 **Posicionamiento / valor (no es ticket):** del audio — *"las ventajas de tener todo eso es brutal… no solo papel, es información para tomar decisiones… más seguridad de que no haya errores."* El expediente digital elimina el riesgo de perder el historial y de errores clínicos — algo que un directorio "página amarilla" jamás da.
@@ -352,12 +352,14 @@ El paciente ve (parte de) su expediente/alergias desde su cuenta. Hoy solo ve su
 | G1 | Ficha clínica (alergias, crónicos, meds) | Expediente | **P0** | L | ✅ |
 | G2 | Alerta de info crítica (alergias) | Expediente | **P0** | M | ✅ |
 | G3 | Historial clínico consolidado | Expediente | P1 | M | ✅ |
-| H1 | Nota de evolución por consulta | Consulta | P1 | M | 🔲 |
-| H2 | Receta / prescripción | Consulta | P2 | M | 🔲 |
-| H3 | Signos vitales | Consulta | P2 | S | 🔲 |
+| H1 | Nota de evolución por consulta | Consulta | P1 | M | ✅ |
+| H2 | Receta / prescripción (imprimible) | Consulta | P2 | M | ✅ |
+| H3 | Signos vitales | Consulta | P2 | S | ✅ |
 | H4 | Adjuntos / resultados de lab | Consulta | P2 | M | 🔲 |
-| I1 | Paciente ve su historial | Paciente | P3 | M | 🔲 |
+| I1 | Paciente ve su historial | Paciente | P3 | M | ✅ |
 
 **Núcleo P0 entregado (esta sesión):** **F1** (modelo `Patient` canónico por-médico + backfill de citas) · **G1** (ficha clínica `ClinicalRecord`: alergias, crónicos, medicamentos, tipo de sangre, antecedentes, notas — CRUD Elite) · **G2** (alerta de alergias en la ficha del paciente y en el detalle de la cita) · **G3** (roster de pacientes + historial consolidado por identidad canónica). Incluye el **enforcement del `patient_limit`** (los 3 niveles Elite: 5k/25k/100k registros). Las **3 decisiones clave** se resolvieron: **por-médico**, cubre **walk-ins**, vive en un modelo `Patient` canónico nuevo.
 
-**Siguiente foco:** **H** (documentación por consulta: nota de evolución, receta, signos vitales, adjuntos) → **I1** (paciente ve su historial). H/I no estaban explícitos en el audio; priorizar con el socio.
+**Entregado (esta sesión):** **H1** (nota de evolución por consulta) · **H2** (receta con medicamentos repetibles + vista imprimible) · **H3** (signos vitales) · **I1** (el paciente ve sus vitales y recetas, sin la nota interna del médico). Todo Elite, colgando de la cita (`Encounter` + `Prescription` por `appointment`).
+
+**Único pendiente del 2º audio:** **H4** (adjuntos / resultados de laboratorio) — requiere configurar almacenamiento de archivos (ActiveStorage + S3). Priorizar con el socio.
