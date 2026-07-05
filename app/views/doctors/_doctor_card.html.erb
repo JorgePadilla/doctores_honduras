@@ -1,0 +1,64 @@
+<%#
+  Card de doctor (DESIGN.md). Locals: `doctor`, `index` (para el stagger del reveal).
+  Toda la card es clickeable (stretched link a "Ver perfil"); los botones de
+  contacto van con z-10 para quedar por encima del link estirado.
+%>
+<% location = branch_name = doctor.doctor_branches.min_by { |b| b.position || 0 }&.name %>
+<% location ||= (doctor.establishments.first&.name if section_visible?("establishments") && doctor.establishments.any?) %>
+<% location ||= [ doctor.city&.name, doctor.department&.name ].compact.join(", ").presence %>
+
+<div class="group relative reveal flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-line dark:border-slate-700 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)]"
+     data-controller="reveal" data-reveal-delay-value="<%= (index.to_i % 3) * 70 %>">
+  <div class="aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-700">
+    <% if doctor.image_url.present? %>
+      <img src="<%= doctor.image_thumb_url.presence || doctor.image_url %>" alt="<%= doctor.display_name %>" loading="lazy"
+           class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
+    <% else %>
+      <div class="w-full h-full flex items-center justify-center bg-primary-soft dark:bg-slate-700">
+        <span class="font-display text-6xl font-semibold text-primary/40"><%= doctor.display_name.first %></span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex flex-1 flex-col p-5">
+    <h3 class="font-display text-lg font-semibold leading-snug text-ink dark:text-white"><%= doctor.display_name %></h3>
+    <% if doctor.headline_specialty.present? %>
+      <p class="mt-0.5 text-sm text-slate-600 dark:text-slate-400"><%= doctor.headline_specialty %></p>
+    <% end %>
+    <% if location.present? %>
+      <p class="mt-2 flex items-center gap-1 text-xs text-muted">
+        <%= icon(:map_pin, class: "w-3.5 h-3.5 shrink-0 text-primary") %>
+        <span class="truncate"><%= location %></span>
+      </p>
+    <% end %>
+
+    <div class="mt-auto flex items-center justify-between pt-4">
+      <div class="relative z-10 flex items-center gap-1">
+        <% if doctor.tel_url.present? %>
+          <a href="<%= doctor.tel_url %>" title="Llamar"
+             data-controller="analytics" data-analytics-name-value="Contact Click"
+             data-analytics-props-value="<%= { kind: "Phone", viewable_type: "DoctorProfile", viewable_id: doctor.id }.to_json %>"
+             data-action="click->analytics#track"
+             class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+            <%= icon(:phone, class: "w-4 h-4") %>
+          </a>
+        <% end %>
+        <% if doctor.whatsapp_url.present? %>
+          <a href="<%= doctor.whatsapp_url %>" target="_blank" rel="noopener noreferrer" title="WhatsApp"
+             data-controller="analytics" data-analytics-name-value="Contact Click"
+             data-analytics-props-value="<%= { kind: "WhatsApp", viewable_type: "DoctorProfile", viewable_id: doctor.id }.to_json %>"
+             data-action="click->analytics#track"
+             class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+            <%= icon(:whatsapp, class: "w-4 h-4", fill: "currentColor", "stroke-width": "0") %>
+          </a>
+        <% end %>
+      </div>
+
+      <%= link_to doctor_path(doctor), data: { turbo_frame: "_top" },
+            class: "inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-hover after:absolute after:inset-0" do %>
+        Ver perfil
+        <%= icon(:arrow_right, class: "h-4 w-4 transition-transform group-hover:translate-x-1") %>
+      <% end %>
+    </div>
+  </div>
+</div>
