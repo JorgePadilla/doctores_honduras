@@ -2,7 +2,7 @@
 
 > Tickets y historias de usuario derivados de las reuniones de revisión de la app. Participantes: **Jorge Padilla** (desarrollo) y el **médico/socio** (dominio clínico + cliente).
 > **1ª sesión** — el hilo: *"básicamente eso es lo que busca la gente"* — la búsqueda por procedimiento y el contacto rápido son el corazón del producto; la agenda ligada al directorio es el diferenciador (*"esto ya es venderle… su secretaria ya no necesita papel"*). → **Épicas A, B, C: ✅ entregadas.**
-> **2ª sesión** — el expediente clínico digital (no perder el historial, seguridad ante alergias). → **Épicas F–I: pendientes** (ver "2º audio" abajo).
+> **2ª sesión** — el expediente clínico digital (no perder el historial, seguridad ante alergias). → **Núcleo P0 (F1, G1, G2, G3): ✅ entregado**; **H–I: pendientes** (ver "2º audio" abajo). El expediente es una función **Elite** con techo de registros (5k/25k/100k).
 
 ## Leyenda
 
@@ -250,7 +250,7 @@ El Expediente Clínico Digital es una **función exclusiva del plan Elite** (doc
 
 ## EPIC F — Identidad canónica del paciente (base técnica)
 
-### F1 · Entidad de paciente estable  `P0` · `L` · 🔲
+### F1 · Entidad de paciente estable  `P0` · `L` · ✅
 **Historia:** como sistema, necesito **una identidad de paciente única y confiable** que una todas sus visitas, en vez del string `patient_name` actual.
 
 **Contexto:** hoy "Juan Pérez", "Juan Perez" y "juan perez" son personas distintas; los walk-ins no tienen identidad estable; la historia es por-médico.
@@ -265,7 +265,7 @@ El Expediente Clínico Digital es una **función exclusiva del plan Elite** (doc
 
 ## EPIC G — Expediente clínico
 
-### G1 · Ficha clínica del paciente  `P0` · `L` · 🔲
+### G1 · Ficha clínica del paciente  `P0` · `L` · ✅
 **Historia:** como médico, quiero una **ficha clínica** por paciente con **alergias, condiciones crónicas, medicamentos actuales, tipo de sangre y antecedentes**, para no depender de mi memoria ni del papel.
 
 **Contexto:** *"yo pude haber puesto algo importante tuyo… alérgico a tal cosa, y no lo tengo. Yo no tengo memoria infinita."*
@@ -277,7 +277,7 @@ El Expediente Clínico Digital es una **función exclusiva del plan Elite** (doc
 
 ---
 
-### G2 · Alerta de información crítica (alergias) — seguridad  `P0` · `M` · 🔲
+### G2 · Alerta de información crítica (alergias) — seguridad  `P0` · `M` · ✅
 **Historia:** como médico/secretaria, quiero ver de forma **prominente las alergias e info crítica** del paciente al abrir su cita, para evitar errores (medicar algo a lo que es alérgico).
 
 **Contexto:** el caso del **derivado de ibuprofeno** — *"eso es un riesgo para un paciente, y pasa bastante."*
@@ -289,7 +289,7 @@ El Expediente Clínico Digital es una **función exclusiva del plan Elite** (doc
 
 ---
 
-### G3 · Historial clínico consolidado (no perder nada)  `P1` · `M` · 🔲
+### G3 · Historial clínico consolidado (no perder nada)  `P1` · `M` · ✅
 **Historia:** como médico, quiero **abrir a un paciente y ver todo su historial** (notas de cada consulta, evolución) en un solo lugar, para nunca perder el hilo.
 
 **Contexto:** *"vuelves a entrar y está todo el historial."* / *"pierdo el historial del paciente en la consulta."*
@@ -347,15 +347,17 @@ El paciente ve (parte de) su expediente/alergias desde su cuenta. Hoy solo ve su
 | C3 | Estado "sobrecupo" condicional | Agenda | P2 | L | ✅ |
 | C4 | Horarios por ubicación visibles | Agenda | P2 | M | ✅ |
 | C5 | Exponer asignación de secretaria | Agenda | P2 | S | ✅ |
-| — | *2º audio — Expediente clínico* | | | | |
-| F1 | Identidad canónica del paciente (base) | Expediente | **P0** | L | 🔲 |
-| G1 | Ficha clínica (alergias, crónicos, meds) | Expediente | **P0** | L | 🔲 |
-| G2 | Alerta de info crítica (alergias) | Expediente | **P0** | M | 🔲 |
-| G3 | Historial clínico consolidado | Expediente | P1 | M | 🔲 |
+| — | *2º audio — Expediente clínico (núcleo P0 entregado)* | | | | |
+| F1 | Identidad canónica del paciente (base) | Expediente | **P0** | L | ✅ |
+| G1 | Ficha clínica (alergias, crónicos, meds) | Expediente | **P0** | L | ✅ |
+| G2 | Alerta de info crítica (alergias) | Expediente | **P0** | M | ✅ |
+| G3 | Historial clínico consolidado | Expediente | P1 | M | ✅ |
 | H1 | Nota de evolución por consulta | Consulta | P1 | M | 🔲 |
 | H2 | Receta / prescripción | Consulta | P2 | M | 🔲 |
 | H3 | Signos vitales | Consulta | P2 | S | 🔲 |
 | H4 | Adjuntos / resultados de lab | Consulta | P2 | M | 🔲 |
 | I1 | Paciente ve su historial | Paciente | P3 | M | 🔲 |
 
-**Siguiente foco (Expediente clínico):** primero **F1** (identidad estable del paciente, base de todo) → **G1 + G2** (ficha clínica + alerta de alergias: el valor y la seguridad que pidió el médico) → **G3** (historial consolidado) → resto. Antes de arrancar, definir las **3 decisiones clave** de arriba (por-médico vs compartido, walk-ins, dónde vive el expediente).
+**Núcleo P0 entregado (esta sesión):** **F1** (modelo `Patient` canónico por-médico + backfill de citas) · **G1** (ficha clínica `ClinicalRecord`: alergias, crónicos, medicamentos, tipo de sangre, antecedentes, notas — CRUD Elite) · **G2** (alerta de alergias en la ficha del paciente y en el detalle de la cita) · **G3** (roster de pacientes + historial consolidado por identidad canónica). Incluye el **enforcement del `patient_limit`** (los 3 niveles Elite: 5k/25k/100k registros). Las **3 decisiones clave** se resolvieron: **por-médico**, cubre **walk-ins**, vive en un modelo `Patient` canónico nuevo.
+
+**Siguiente foco:** **H** (documentación por consulta: nota de evolución, receta, signos vitales, adjuntos) → **I1** (paciente ve su historial). H/I no estaban explícitos en el audio; priorizar con el socio.

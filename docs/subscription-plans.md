@@ -217,7 +217,7 @@ El **Expediente Clínico Digital** (ficha clínica: alergias, crónicos, medicam
 
 Todos los niveles tienen un tope numérico — no hay nivel ilimitado. Como los 3 comparten `tier: "elite"`, el gating de acceso a la función se resuelve con `tier == "elite"` (igual que Agenda/reservas); el `patient_limit` se aplicará al crear registros para hacer cumplir la capacidad contratada.
 
-> **Estado:** el modelo de datos del expediente (entidad de paciente canónica, ficha clínica, alertas) está en el backlog — ver `docs/backlog-feedback-medico.md`, sección "2º audio — Expediente clínico digital" (Epics F–I). El campo `patient_limit` en los planes ya está listo para cuando se implemente la aplicación del límite.
+> **Estado:** el núcleo del expediente **ya está implementado** — modelo `Patient` canónico (por-médico, cubre walk-ins), ficha clínica `ClinicalRecord` (CRUD Elite), alerta de alergias (en la ficha y en el detalle de la cita), historial consolidado, y **enforcement del `patient_limit`** al crear fichas (bloquea al alcanzar el techo del nivel Elite). Ver `docs/backlog-feedback-medico.md`, sección "2º audio" (F1, G1, G2, G3 = ✅; H–I pendientes). Gate de acceso: `AgendaAuthorization#require_elite`; controlador `Agenda::ClinicalRecordsController`.
 
 Server-side enforcement:
 - `AgendaAuthorization` concern verifica que el doctor tenga tier != "gratis" para acceder a `/agenda/*`
