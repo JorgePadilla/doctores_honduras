@@ -53,10 +53,9 @@
             <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-3">
               <div>
                 <h2 class="text-xl font-semibold text-sky-600 dark:text-sky-400"><%= doctor.display_name %></h2>
-                <% if doctor.subspecialty.present? %>
-                  <p class="text-gray-700 dark:text-slate-300 text-sm mt-1"><%= doctor.subspecialty.name %></p>
-                <% elsif doctor.specialty.present? %>
-                  <p class="text-gray-700 dark:text-slate-300 text-sm mt-1"><%= doctor.specialty.name %></p>
+                <%# Prefer subspecialty; hide the generic "Medicina General" placeholder (B5). %>
+                <% if doctor.headline_specialty.present? %>
+                  <p class="text-gray-700 dark:text-slate-300 text-sm mt-1"><%= doctor.headline_specialty %></p>
                 <% end %>
                 <% if doctor.medical_license.present? %>
                   <p class="text-gray-400 dark:text-slate-500 text-sm mt-1">Col. <%= doctor.medical_license %></p>
@@ -123,6 +122,16 @@
                 <% if doctor.youtube_url.present? %>
                   <a href="<%= doctor.youtube_url %>" target="_blank" rel="noopener" class="text-gray-400 hover:text-red-600 dark:text-slate-500 dark:hover:text-red-400 transition">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  </a>
+                <% end %>
+                <% if doctor.whatsapp_url.present? %>
+                  <a href="<%= doctor.whatsapp_url %>" target="_blank" rel="noopener noreferrer"
+                     data-controller="analytics"
+                     data-analytics-name-value="Contact Click"
+                     data-analytics-props-value="<%= { kind: "WhatsApp", viewable_type: "DoctorProfile", viewable_id: doctor.id }.to_json %>"
+                     data-action="click->analytics#track"
+                     class="text-gray-400 hover:text-green-600 dark:text-slate-500 dark:hover:text-green-400 transition" title="WhatsApp">
+                    <%= icon(:whatsapp, class: "w-5 h-5", fill: "currentColor", "stroke-width": "0") %>
                   </a>
                 <% end %>
               </div>

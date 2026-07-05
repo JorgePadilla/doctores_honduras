@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_140001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -246,6 +246,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_140000) do
     t.text "languages", default: [], array: true
     t.string "prefix"
     t.string "image_thumb_url"
+    t.string "whatsapp"
     t.index ["city_id"], name: "index_doctor_profiles_on_city_id"
     t.index ["department_id"], name: "index_doctor_profiles_on_department_id"
     t.index ["specialty_id"], name: "index_doctor_profiles_on_specialty_id"

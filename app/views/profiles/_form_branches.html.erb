@@ -10,13 +10,13 @@
         </svg>
       </div>
       <div>
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Sucursales</h2>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Ubicaciones</h2>
         <% unless paid_plan? %>
           <p class="text-sm text-gray-500 dark:text-slate-400">
-            El plan gratuito permite 1 sucursal sin horarios ni teléfono.
+            El plan gratuito permite 1 ubicación sin horarios ni teléfono.
           </p>
         <% else %>
-          <p class="text-sm text-gray-500 dark:text-slate-400">Consultorios y sucursales donde atiendes</p>
+          <p class="text-sm text-gray-500 dark:text-slate-400">Consultorios y ubicaciones donde atiendes</p>
         <% end %>
       </div>
     </div>
@@ -27,7 +27,7 @@
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
-        Agregar sucursal
+        Agregar ubicación
       </button>
       <% unless paid_plan? %>
         <a href="<%= settings_subscription_path %>"
@@ -37,20 +37,20 @@
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"></path>
           </svg>
-          Mejorar plan para más sucursales
+          Mejorar plan para más ubicaciones
         </a>
       <% end %>
     </div>
   </div>
 
   <template data-nested-fields-target="template">
-    <%= render "profiles/form_branch_fields", form: form, branch_title: "Nueva sucursal" %>
+    <%= render "profiles/form_branch_fields", form: form, branch_title: "Nueva ubicación" %>
   </template>
 
   <div data-nested-fields-target="container">
     <% @doctor_profile.doctor_branches.each_with_index do |branch, index| %>
       <%= form.fields_for :doctor_branches, branch, child_index: branch.persisted? ? branch.id : index do |bf| %>
-        <%= render "profiles/form_branch_fields", form: form, bf: bf, branch: branch, branch_title: "Sucursal ##{index + 1}" %>
+        <%= render "profiles/form_branch_fields", form: form, bf: bf, branch: branch, branch_title: "Ubicación ##{index + 1}" %>
       <% end %>
     <% end %>
   </div>

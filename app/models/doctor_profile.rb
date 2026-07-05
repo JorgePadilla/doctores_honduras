@@ -33,7 +33,32 @@ class DoctorProfile < ApplicationRecord
   validates :department_id, presence: true
   validates :city_id, presence: true
 
+  # Generic placeholder specialty auto-assigned to many doctors. We avoid
+  # headlining it publicly when the doctor has something more specific (B5).
+  GENERAL_SPECIALTY_NAME = "Medicina General"
+
   def display_name
     prefix.present? ? "#{prefix} #{name}" : name
+  end
+
+  def general_specialty?
+    specialty&.name == GENERAL_SPECIALTY_NAME
+  end
+
+  # Public-facing headline. Prefer the (more specific) subspecialty; otherwise
+  # the specialty, unless it's the generic "Medicina General" placeholder (B5).
+  def headline_specialty
+    subspecialty&.name.presence || (specialty&.name unless general_specialty?)
+  end
+
+  # WhatsApp number stripped to digits only (for wa.me links). Nil when blank.
+  def whatsapp_digits
+    whatsapp.to_s.gsub(/\D/, "").presence
+  end
+
+  # https://wa.me/<digits> link, or nil when no WhatsApp number is set.
+  def whatsapp_url
+    digits = whatsapp_digits
+    "https://wa.me/#{digits}" if digits
   end
 end

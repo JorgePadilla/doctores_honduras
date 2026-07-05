@@ -93,4 +93,32 @@ class DoctorsControllerTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  # Ticket B1: WhatsApp contact button links to wa.me using digits only.
+  test "show renders a WhatsApp link normalized to digits when a number is set" do
+    @doctor.update!(whatsapp: "+504 9999-8888")
+    get doctor_path(@doctor)
+    assert_response :success
+    assert_select "a[href=?]", "https://wa.me/50499998888"
+  end
+
+  test "show omits the WhatsApp link when no number is set" do
+    @doctor.update!(whatsapp: nil)
+    get doctor_path(@doctor)
+    assert_response :success
+    assert_select "a[href^=?]", "https://wa.me/", count: 0
+  end
+
+  # Ticket B5: the generic "Medicina General" specialty is not headlined when a
+  # more specific subspecialty exists.
+  test "show hides the Medicina General headline when a subspecialty exists" do
+    general = Specialty.find_or_create_by!(name: DoctorProfile::GENERAL_SPECIALTY_NAME)
+    sub = Subspecialty.create!(name: "Cardiología Intervencionista", specialty: general)
+    @doctor.update!(specialty: general, subspecialty: sub)
+
+    get doctor_path(@doctor)
+    assert_response :success
+    assert_select "p", text: /Cardiología Intervencionista/
+    assert_select "p", text: /Medicina General/, count: 0
+  end
 end

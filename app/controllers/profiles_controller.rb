@@ -105,7 +105,7 @@ class ProfilesController < ApplicationController
     params.require(:doctor_profile).permit(
       :prefix, :name, :specialty_id, :subspecialty_id, :description, :website,
       :medical_license, :image_url, :department_id, :city_id, :image_file,
-      :fecha_de_nacimiento, :numero_de_identidad, :correo_personal,
+      :fecha_de_nacimiento, :numero_de_identidad, :correo_personal, :whatsapp,
       :facebook_url, :instagram_url, :twitter_url, :linkedin_url,
       :tiktok_url, :youtube_url,
       languages: [],

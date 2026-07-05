@@ -39,11 +39,13 @@
               <% if @establishment.phone.present? %>
                 <p class="text-gray-600 dark:text-slate-400"><i class="fas fa-phone mr-2"></i><%= @establishment.phone %></p>
               <% end %>
-              <% if @establishment.map_link.present? %>
-                <p class="text-gray-600 dark:text-slate-400">
-                  <i class="fas fa-map mr-2"></i>
-                  <a href="<%= @establishment.map_link %>" target="_blank" class="text-sky-500 dark:text-sky-400 hover:underline">Ver en Google Maps</a>
-                </p>
+              <% est_maps_url = google_maps_url(map_link: @establishment.map_link, address_parts: [@establishment.name, @establishment.address, @establishment.city&.name, @establishment.department&.name]) %>
+              <% if est_maps_url %>
+                <a href="<%= est_maps_url %>" target="_blank" rel="noopener"
+                   class="inline-flex items-center mt-1 px-3 py-1.5 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors">
+                  <%= icon(:map_pin, class: "w-4 h-4 mr-1.5") %>
+                  Cómo llegar
+                </a>
               <% end %>
             </div>
           </div>

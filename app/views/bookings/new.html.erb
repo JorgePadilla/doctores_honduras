@@ -43,7 +43,7 @@
 
       <!-- Step 1: Branch -->
       <div data-booking-target="step" data-step="1">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">1. Selecciona la sucursal</h2>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">1. Selecciona la ubicación</h2>
         <div class="space-y-2">
           <% @branches.each do |branch| %>
             <label class="block p-4 border border-gray-200 dark:border-slate-600 rounded-xl cursor-pointer hover:border-sky-500 dark:hover:border-sky-400 hover:shadow-md transition-all" data-action="click->booking#selectBranch" data-branch-id="<%= branch.id %>">
