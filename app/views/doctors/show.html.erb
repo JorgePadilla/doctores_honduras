@@ -143,7 +143,7 @@
                   <p class="text-gray-600 dark:text-slate-400"><%= [branch.city&.name, branch.department&.name].compact.join(", ") %></p>
                 <% end %>
                 <% if doctor_has_paid_plan && branch.phone.present? %>
-                  <p class="text-gray-600 dark:text-slate-400">Tel: <%= branch.phone %></p>
+                  <p class="text-gray-600 dark:text-slate-400">Tel: <a href="tel:<%= branch.phone.gsub(/\D/, "") %>" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors"><%= branch.phone %></a></p>
                 <% end %>
                 <% branch_maps_url = google_maps_url(map_link: branch.map_link, address_parts: [branch.name, branch.address, branch.city&.name, branch.department&.name]) %>
                 <% if branch_maps_url %>
@@ -170,7 +170,7 @@
                 <h3 class="text-lg font-medium text-sky-600 dark:text-sky-400"><%= establishment.name %></h3>
                 <p class="text-gray-600 dark:text-slate-400"><%= establishment.address %></p>
                 <% if establishment.phone.present? %>
-                  <p class="text-gray-600 dark:text-slate-400">Tel: <%= establishment.phone %></p>
+                  <p class="text-gray-600 dark:text-slate-400">Tel: <a href="tel:<%= establishment.phone.gsub(/\D/, "") %>" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors"><%= establishment.phone %></a></p>
                 <% end %>
                 <% est_maps_url = google_maps_url(map_link: establishment.map_link, address_parts: [establishment.name, establishment.address]) %>
                 <% if est_maps_url %>
@@ -213,18 +213,33 @@
         <% end %>
 
         <%# Contacto %>
-        <% if @doctor.whatsapp_url.present? %>
+        <% if @doctor.whatsapp_url.present? || @doctor.tel_url.present? %>
           <div class="mb-6">
             <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Contacto</h2>
-            <a href="<%= @doctor.whatsapp_url %>" target="_blank" rel="noopener noreferrer"
-               data-controller="analytics"
-               data-analytics-name-value="Contact Click"
-               data-analytics-props-value="<%= { kind: "WhatsApp", viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
-               data-action="click->analytics#track"
-               class="inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-green-500 hover:bg-green-600">
-              <%= icon(:whatsapp, class: "w-5 h-5 mr-2", fill: "currentColor", "stroke-width": "0") %>
-              WhatsApp
-            </a>
+            <div class="flex flex-wrap gap-2">
+              <% if @doctor.tel_url.present? %>
+                <a href="<%= @doctor.tel_url %>"
+                   data-controller="analytics"
+                   data-analytics-name-value="Contact Click"
+                   data-analytics-props-value="<%= { kind: "Phone", viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
+                   data-action="click->analytics#track"
+                   class="inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
+                  <%= icon(:phone, class: "w-5 h-5 mr-2") %>
+                  Llamar
+                </a>
+              <% end %>
+              <% if @doctor.whatsapp_url.present? %>
+                <a href="<%= @doctor.whatsapp_url %>" target="_blank" rel="noopener noreferrer"
+                   data-controller="analytics"
+                   data-analytics-name-value="Contact Click"
+                   data-analytics-props-value="<%= { kind: "WhatsApp", viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
+                   data-action="click->analytics#track"
+                   class="inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-green-500 hover:bg-green-600">
+                  <%= icon(:whatsapp, class: "w-5 h-5 mr-2", fill: "currentColor", "stroke-width": "0") %>
+                  WhatsApp
+                </a>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>

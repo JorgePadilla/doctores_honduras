@@ -31,12 +31,12 @@
 
     <%# Ubicación: País → Departamento → Ciudad (cascada) %>
     <div data-controller="location-filter" class="space-y-4">
-      <% if @countries.size > 1 %>
+      <% if @countries.any? %>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">País</label>
           <div class="relative">
             <%= form.select :country_id,
-                          options_from_collection_for_select(@countries, :id, :name, params[:country_id] || @geo_country_id),
+                          options_from_collection_for_select(@countries, :id, :name, params[:country_id] || @geo_country_id || (@countries.first.id if @countries.one?)),
                           { include_blank: "Todos los países" },
                           class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md appearance-none dark:bg-slate-700 dark:text-white",
                           data: { location_filter_target: "country", action: "change->location-filter#loadDepartments change->form#submit" } %>

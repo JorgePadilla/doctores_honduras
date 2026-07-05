@@ -61,4 +61,15 @@ class DoctorProfile < ApplicationRecord
     digits = whatsapp_digits
     "https://wa.me/#{digits}" if digits
   end
+
+  # Contact phone stripped to digits only. Nil when blank.
+  def phone_digits
+    phone.to_s.gsub(/\D/, "").presence
+  end
+
+  # tel:<digits> link for the "Llamar" button, or nil when no phone is set.
+  def tel_url
+    digits = phone_digits
+    "tel:#{digits}" if digits
+  end
 end

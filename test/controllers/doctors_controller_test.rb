@@ -64,6 +64,27 @@ class DoctorsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", doctor_path(@doctor)
   end
 
+  # Doctor-level phone: "Llamar" (tel:) link on the profile.
+  test "show renders a Llamar tel link normalized to digits when a phone is set" do
+    @doctor.update!(phone: "+504 2200-0000")
+    get doctor_path(@doctor)
+    assert_response :success
+    assert_select "a[href=?]", "tel:50422000000"
+  end
+
+  test "show omits the tel link when no phone is set" do
+    @doctor.update!(phone: nil)
+    get doctor_path(@doctor)
+    assert_response :success
+    assert_select "a[href^=?]", "tel:", count: 0
+  end
+
+  # País select is always shown in the location filter.
+  test "index shows the country select in the location filter" do
+    get doctors_url
+    assert_select "select[name=?]", "country_id"
+  end
+
   # Location filter: department (parent of city).
   test "department filter matches doctors in that department and excludes others" do
     get doctors_url, params: { department_id: departments(:one).id }
