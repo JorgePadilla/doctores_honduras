@@ -167,3 +167,17 @@ html.js .reveal.is-visible {
     transform: none;
   }
 }
+
+/* Navbar glass: el borde inferior + sombra sutil aparecen al hacer scroll
+   (navbar_controller.js añade .is-scrolled). */
+.nav-glass {
+  border-bottom: 1px solid transparent;
+}
+.nav-glass.is-scrolled {
+  border-bottom-color: var(--color-line);
+  box-shadow: 0 1px 3px rgb(11 18 32 / 0.06);
+}
+.dark .nav-glass.is-scrolled {
+  border-bottom-color: #334155; /* slate-700 */
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+}
