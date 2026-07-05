@@ -1,9 +1,9 @@
 require "test_helper"
 
 class SearchSynonymTest < ActiveSupport::TestCase
-  test "normalizes the term (lowercase, accent-stripped) on save" do
+  test "lowercases the term but keeps accents (human-readable) on save" do
     s = SearchSynonym.create!(term: "Apéndice", keywords: "Apendicectomía")
-    assert_equal "apendice", s.term
+    assert_equal "apéndice", s.term
   end
 
   test "keyword_list parses comma-separated keywords" do
