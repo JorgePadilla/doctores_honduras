@@ -1,0 +1,49 @@
+<%= form_with(model: @clinical_record, url: agenda_patient_clinical_record_path(@patient), class: "space-y-6") do |f| %>
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 space-y-6">
+    <% if @clinical_record.errors.any? %>
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+        <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-300 space-y-1">
+          <% @clinical_record.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :allergies, "Alergias e información crítica", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.text_area :allergies, rows: 2, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+      <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Se mostrará como alerta destacada en el expediente y en las citas.</p>
+    </div>
+
+    <div>
+      <%= f.label :chronic_conditions, "Condiciones crónicas", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.text_area :chronic_conditions, rows: 2, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+    </div>
+
+    <div>
+      <%= f.label :current_medications, "Medicamentos actuales", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.text_area :current_medications, rows: 2, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+    </div>
+
+    <div>
+      <%= f.label :blood_type, "Tipo de sangre", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.select :blood_type, ClinicalRecord::BLOOD_TYPES, { include_blank: "—" }, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+    </div>
+
+    <div>
+      <%= f.label :medical_history, "Antecedentes", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.text_area :medical_history, rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+    </div>
+
+    <div>
+      <%= f.label :notes, "Notas", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.text_area :notes, rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancelar", agenda_patient_path(@patient), class: "inline-flex items-center border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-5 py-2 rounded-full font-medium transition-all" %>
+      <%= f.submit "Guardar ficha", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer" %>
+    </div>
+  </div>
+<% end %>
