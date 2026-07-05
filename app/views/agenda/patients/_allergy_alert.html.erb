@@ -1,0 +1,15 @@
+<%#
+  Alerta de seguridad: alergias e info crítica del paciente (G2).
+  Se renderiza donde el médico necesita verla (ficha del paciente, cita).
+  Requiere una ficha clínica (Elite) con alergias cargadas; si no, no muestra nada.
+  Espera la variable local `patient`.
+%>
+<% if patient&.allergies? %>
+  <div class="flex items-start gap-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 mb-6">
+    <%= icon(:exclamation_triangle, class: "w-6 h-6 shrink-0 text-red-500 dark:text-red-400") %>
+    <div>
+      <h3 class="text-red-800 dark:text-red-300 font-semibold">Alergias e información crítica</h3>
+      <div class="text-sm text-red-700 dark:text-red-400 mt-0.5 whitespace-pre-line"><%= patient.allergies %></div>
+    </div>
+  </div>
+<% end %>

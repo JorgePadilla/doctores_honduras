@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     resources :slots, only: [ :index ]
     resources :patients, only: [ :index, :show ] do
       collection { get :search }
+      # Expediente clínico (ficha) — una por paciente, exclusivo Elite.
+      resource :clinical_record, only: [ :new, :create, :edit, :update ]
     end
   end
 

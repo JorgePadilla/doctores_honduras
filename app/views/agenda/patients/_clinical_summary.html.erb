@@ -1,0 +1,20 @@
+<%#
+  Resumen de solo lectura de la ficha clínica (expediente). Espera `record`.
+%>
+<dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+  <% {
+    "Alergias" => record.allergies,
+    "Condiciones crónicas" => record.chronic_conditions,
+    "Medicamentos actuales" => record.current_medications,
+    "Tipo de sangre" => record.blood_type,
+    "Antecedentes" => record.medical_history,
+    "Notas" => record.notes
+  }.each do |label, value| %>
+    <% if value.present? %>
+      <div>
+        <dt class="font-medium text-gray-500 dark:text-slate-400"><%= label %></dt>
+        <dd class="text-gray-900 dark:text-white whitespace-pre-line mt-0.5"><%= value %></dd>
+      </div>
+    <% end %>
+  <% end %>
+</dl>

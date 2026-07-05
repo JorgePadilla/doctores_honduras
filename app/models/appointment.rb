@@ -3,6 +3,7 @@ class Appointment < ApplicationRecord
   belongs_to :doctor_branch
   belongs_to :created_by, class_name: "User", optional: true
   belongs_to :patient_user, class_name: "User", optional: true
+  belongs_to :patient, optional: true
 
   has_many :notifications, as: :notifiable, dependent: :destroy
 
@@ -25,6 +26,7 @@ class Appointment < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates :booking_source, inclusion: { in: BOOKING_SOURCES }
   before_validation :apply_requested_duration
+  before_save :link_canonical_patient, if: -> { patient_id.blank? && patient_name.present? && doctor_profile_id.present? }
   validate :end_time_after_start_time
   validate :minimum_duration
   validate :within_branch_schedule, on: :create
@@ -116,6 +118,19 @@ class Appointment < ApplicationRecord
   end
 
   private
+
+  # F1: attach (find-or-create) the canonical Patient for this doctor from the
+  # raw patient_user_id / patient_name fields, so every write path builds the
+  # patient roster automatically.
+  def link_canonical_patient
+    self.patient = Patient.resolve_for(
+      doctor_profile_id: doctor_profile_id,
+      user_id: patient_user_id,
+      name: patient_name,
+      phone: patient_phone,
+      email: patient_email
+    )
+  end
 
   # C1: derive end_time from a chosen duration (minutes) + start_time.
   def apply_requested_duration

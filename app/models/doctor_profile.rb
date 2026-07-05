@@ -23,6 +23,8 @@ class DoctorProfile < ApplicationRecord
   has_many :secretaries, through: :secretary_assignments, source: :user
   has_one :agenda_setting, class_name: "DoctorAgendaSetting", dependent: :destroy
   has_many :appointments, dependent: :destroy
+  has_many :patients, dependent: :destroy
+  has_many :clinical_records, through: :patients
 
   accepts_nested_attributes_for :doctor_branches, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :doctor_educations, allow_destroy: true, reject_if: :all_blank

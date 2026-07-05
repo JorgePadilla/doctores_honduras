@@ -3,17 +3,37 @@
     <%= link_to "← Volver a pacientes", agenda_patients_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
   </div>
 
-  <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-2"><%= @patient_name %></h1>
-
-  <% first_apt = @appointments.first %>
-  <% if first_apt %>
-    <p class="text-sm text-gray-500 dark:text-slate-400 mb-6">
-      <%= first_apt.patient_email %>
-      <% if first_apt.patient_phone.present? %>
-        &middot; <%= first_apt.patient_phone %>
-      <% end %>
-    </p>
+  <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-2"><%= @patient.name %></h1>
+  <% if @patient.display_contact.present? %>
+    <p class="text-sm text-gray-500 dark:text-slate-400 mb-6"><%= @patient.display_contact %></p>
   <% end %>
+
+  <%= render "agenda/patients/allergy_alert", patient: @patient %>
+
+  <!-- Expediente clínico (ficha) -->
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Expediente clínico</h2>
+      <% if current_doctor_elite? %>
+        <% if @clinical_record %>
+          <%= link_to "Editar ficha", edit_agenda_patient_clinical_record_path(@patient), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
+        <% else %>
+          <%= link_to "Crear ficha", new_agenda_patient_clinical_record_path(@patient), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if !current_doctor_elite? %>
+      <div class="rounded-lg bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800 p-4 text-sm text-sky-800 dark:text-sky-300">
+        El <strong>Expediente Clínico Digital</strong> (alergias, condiciones crónicas, medicamentos y antecedentes) está disponible en el plan <strong>Elite</strong>.
+        <%= link_to "Ver planes", settings_subscription_path, class: "underline font-medium" %>
+      </div>
+    <% elsif @clinical_record && !@clinical_record.blank_record? %>
+      <%= render "agenda/patients/clinical_summary", record: @clinical_record %>
+    <% else %>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Aún no hay ficha clínica para este paciente.</p>
+    <% end %>
+  </div>
 
   <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Historial de Citas (<%= @appointments.count %>)</h2>
 

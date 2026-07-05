@@ -2,13 +2,31 @@ module AgendaAuthorization
   extend ActiveSupport::Concern
 
   included do
-    helper_method :current_doctor_profile, :acting_as_secretary?
+    helper_method :current_doctor_profile, :acting_as_secretary?,
+                  :current_doctor_tier, :current_doctor_elite?
   end
 
   private
 
   def current_doctor_profile
     @current_doctor_profile ||= resolve_doctor_profile
+  end
+
+  # Tier del médico dueño de la agenda (una secretaria hereda el del doctor).
+  def current_doctor_tier
+    current_doctor_profile&.user&.subscription&.subscription_plan&.tier || "gratis"
+  end
+
+  def current_doctor_elite?
+    current_doctor_tier == "elite"
+  end
+
+  # Gate para el Expediente Clínico Digital (función exclusiva de Elite).
+  def require_elite
+    unless current_doctor_elite?
+      redirect_to agenda_patients_path,
+        alert: "El Expediente Clínico Digital está disponible solo en el plan Elite."
+    end
   end
 
   def resolve_doctor_profile

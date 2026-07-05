@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_150000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_160002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -103,12 +103,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_150000) do
     t.datetime "updated_at", null: false
     t.bigint "patient_user_id"
     t.boolean "sobrecupo", default: false, null: false
+    t.bigint "patient_id"
     t.index ["created_by_id"], name: "index_appointments_on_created_by_id"
     t.index ["doctor_branch_id", "appointment_date", "start_time"], name: "idx_appointments_branch_date_time"
     t.index ["doctor_branch_id"], name: "index_appointments_on_doctor_branch_id"
     t.index ["doctor_profile_id", "appointment_date"], name: "idx_appointments_doctor_date"
     t.index ["doctor_profile_id"], name: "index_appointments_on_doctor_profile_id"
     t.index ["patient_email"], name: "index_appointments_on_patient_email"
+    t.index ["patient_id"], name: "index_appointments_on_patient_id"
     t.index ["patient_user_id"], name: "index_appointments_on_patient_user_id"
     t.index ["status"], name: "index_appointments_on_status"
   end
@@ -142,6 +144,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_150000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["department_id"], name: "index_cities_on_department_id"
+  end
+
+  create_table "clinical_records", force: :cascade do |t|
+    t.bigint "patient_id", null: false
+    t.text "allergies"
+    t.text "chronic_conditions"
+    t.text "current_medications"
+    t.string "blood_type"
+    t.text "medical_history"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["patient_id"], name: "index_clinical_records_on_patient_id", unique: true
   end
 
   create_table "countries", force: :cascade do |t|
@@ -365,6 +380,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_150000) do
     t.index ["user_id"], name: "index_patient_profiles_on_user_id", unique: true
   end
 
+  create_table "patients", force: :cascade do |t|
+    t.bigint "doctor_profile_id", null: false
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.string "phone"
+    t.string "email"
+    t.date "date_of_birth"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_profile_id", "user_id"], name: "idx_patients_doctor_user_unique", unique: true, where: "(user_id IS NOT NULL)"
+    t.index ["doctor_profile_id"], name: "index_patients_on_doctor_profile_id"
+    t.index ["user_id"], name: "index_patients_on_user_id"
+  end
+
   create_table "payment_histories", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "amount"
@@ -577,11 +606,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_150000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "appointments", "doctor_branches"
   add_foreign_key "appointments", "doctor_profiles"
+  add_foreign_key "appointments", "patients"
   add_foreign_key "appointments", "users", column: "created_by_id"
   add_foreign_key "appointments", "users", column: "patient_user_id"
   add_foreign_key "articles", "users", column: "author_id"
   add_foreign_key "branch_schedules", "doctor_branches"
   add_foreign_key "cities", "departments"
+  add_foreign_key "clinical_records", "patients"
   add_foreign_key "departments", "countries"
   add_foreign_key "doctor_agenda_settings", "doctor_profiles"
   add_foreign_key "doctor_branches", "cities"
@@ -609,6 +640,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_150000) do
   add_foreign_key "patient_profiles", "cities"
   add_foreign_key "patient_profiles", "departments"
   add_foreign_key "patient_profiles", "users"
+  add_foreign_key "patients", "doctor_profiles"
+  add_foreign_key "patients", "users"
   add_foreign_key "payment_histories", "users"
   add_foreign_key "products", "suppliers"
   add_foreign_key "provider_profiles", "users"

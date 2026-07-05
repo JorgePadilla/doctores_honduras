@@ -7,14 +7,14 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
       <div class="divide-y divide-gray-200 dark:divide-slate-700">
         <% @patients.each do |patient| %>
-          <%= link_to agenda_patient_path(patient.patient_name), class: "block p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" do %>
+          <%= link_to agenda_patient_path(patient), class: "block p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" do %>
             <div class="flex items-center justify-between">
               <div>
-                <p class="font-semibold text-gray-900 dark:text-white"><%= patient.patient_name %></p>
+                <p class="font-semibold text-gray-900 dark:text-white"><%= patient.name %></p>
                 <p class="text-sm text-gray-500 dark:text-slate-400">
-                  <%= patient.patient_email %>
-                  <% if patient.patient_phone.present? %>
-                    &middot; <%= patient.patient_phone %>
+                  <%= patient.email %>
+                  <% if patient.phone.present? %>
+                    &middot; <%= patient.phone %>
                   <% end %>
                 </p>
               </div>
