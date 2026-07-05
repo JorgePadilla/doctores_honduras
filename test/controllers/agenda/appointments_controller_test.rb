@@ -8,7 +8,7 @@ class Agenda::AppointmentsControllerTest < ActionDispatch::IntegrationTest
     @profile = DoctorProfile.create!(user: @user, name: "Doc Test", department: departments(:one), city: cities(:one))
     @branch = @profile.doctor_branches.create!(name: "Sede Central", address: "Calle 1")
     @branch.ensure_default_schedules!
-    @profile.create_agenda_setting!(appointment_duration: 30, buffer_minutes: 0, max_concurrent: 1)
+    @profile.create_agenda_setting!(appointment_duration: 30, buffer_minutes: 0)
 
     plan = SubscriptionPlan.create!(name: "Elite", price: 100, interval: "month", profile_type: "doctor", tier: "elite")
     Subscription.create!(user: @user, subscription_plan: plan, plan_name: "Elite", status: "active", current_period_end: 1.year.from_now)

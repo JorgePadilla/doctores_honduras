@@ -8,7 +8,7 @@ class SlotGeneratorTest < ActiveSupport::TestCase
     @profile = DoctorProfile.create!(user: @user, name: "Doc Test", department: departments(:one), city: cities(:one))
     @branch = @profile.doctor_branches.create!(name: "Sede Central", address: "Calle 1")
     @branch.ensure_default_schedules!
-    @setting = @profile.create_agenda_setting!(appointment_duration: 30, buffer_minutes: 0, max_concurrent: 1)
+    @setting = @profile.create_agenda_setting!(appointment_duration: 30, buffer_minutes: 0)
   end
 
   def generate
@@ -37,7 +37,7 @@ class SlotGeneratorTest < ActiveSupport::TestCase
   end
 
   test "a slot stays available until max_concurrent is reached" do
-    @setting.update!(max_concurrent: 2)
+    @branch.update!(max_concurrent: 2)
     create_appointment
     assert slot_at(generate, "09:00")[:available], "one booking under a limit of 2 keeps the slot open"
 

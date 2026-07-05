@@ -9,7 +9,7 @@ class AppointmentTest < ActiveSupport::TestCase
     @profile = DoctorProfile.create!(user: @user, name: "Doc Test", department: departments(:one), city: cities(:one))
     @branch = @profile.doctor_branches.create!(name: "Sede Central", address: "Calle 1")
     @branch.ensure_default_schedules!
-    @setting = @profile.create_agenda_setting!(appointment_duration: 30, buffer_minutes: 0, max_concurrent: 1)
+    @setting = @profile.create_agenda_setting!(appointment_duration: 30, buffer_minutes: 0)
   end
 
   def build_appointment(attrs = {})
@@ -60,7 +60,7 @@ class AppointmentTest < ActiveSupport::TestCase
   end
 
   test "overlapping appointments are allowed up to max_concurrent" do
-    @setting.update!(max_concurrent: 2)
+    @branch.update!(max_concurrent: 2)
     assert build_appointment.save
     assert build_appointment.save, "second concurrent appointment should fit under the limit"
 

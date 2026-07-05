@@ -7,8 +7,12 @@ class DoctorBranch < ApplicationRecord
 
   accepts_nested_attributes_for :branch_schedules, allow_destroy: true, reject_if: :all_blank
 
+  # Max simultaneous appointments per time slot at THIS consultorio (sobrecupo).
+  MAX_CONCURRENT_LIMIT = 10
+
   validates :name, presence: true
   validates :address, presence: true
+  validates :max_concurrent, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_CONCURRENT_LIMIT }
 
   scope :ordered, -> { order(:position) }
 

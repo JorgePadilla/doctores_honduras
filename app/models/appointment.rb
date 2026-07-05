@@ -109,10 +109,10 @@ class Appointment < ApplicationRecord
     status.capitalize
   end
 
-  # Max simultaneous appointments allowed for this doctor's agenda (C2). Falls
-  # back to 1 (no overbooking) when no setting exists.
+  # Max simultaneous appointments allowed at this appointment's consultorio (C2).
+  # The limit lives per-ubicación (DoctorBranch); falls back to 1 (no overbooking).
   def max_concurrent_limit
-    doctor_profile&.agenda_setting&.max_concurrent || 1
+    doctor_branch&.max_concurrent || 1
   end
 
   private

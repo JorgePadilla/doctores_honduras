@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_140004) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_140005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -168,7 +168,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_140004) do
     t.boolean "public_booking_enabled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "max_concurrent", default: 1, null: false
     t.index ["doctor_profile_id"], name: "index_doctor_agenda_settings_on_doctor_profile_id", unique: true
   end
 
@@ -183,6 +182,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_140004) do
     t.integer "position", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_concurrent", default: 1, null: false
     t.index ["city_id"], name: "index_doctor_branches_on_city_id"
     t.index ["department_id"], name: "index_doctor_branches_on_department_id"
     t.index ["doctor_profile_id"], name: "index_doctor_branches_on_doctor_profile_id"

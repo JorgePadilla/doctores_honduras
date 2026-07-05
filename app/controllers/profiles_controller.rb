@@ -112,7 +112,7 @@ class ProfilesController < ApplicationController
       service_ids: [],
       doctor_branches_attributes: [
         :id, :name, :address, :department_id, :city_id, :map_link,
-        :phone, :position, :_destroy,
+        :phone, :max_concurrent, :position, :_destroy,
         branch_schedules_attributes: [
           :id, :day_of_week, :opens_at, :closes_at, :_destroy
         ]

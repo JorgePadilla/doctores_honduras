@@ -42,8 +42,8 @@ class SlotGenerator
   private
 
   # C2: a slot stays available while the number of overlapping appointments is
-  # below the doctor's max_concurrent limit. Sobrecupo (C3) appointments are
-  # excluded from the count since they don't consume capacity.
+  # below this consultorio's max_concurrent limit. Sobrecupo (C3) appointments
+  # are excluded from the count since they don't consume capacity.
   def slot_available?(start_time, end_time)
     occupancy = existing_appointments.count do |appt|
       appt.start_time < end_time && appt.end_time > start_time
@@ -52,7 +52,7 @@ class SlotGenerator
   end
 
   def max_concurrent
-    @max_concurrent ||= @setting.max_concurrent || 1
+    @max_concurrent ||= @branch.max_concurrent || 1
   end
 
   def existing_appointments
