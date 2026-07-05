@@ -11,18 +11,24 @@ import { Controller } from "@hotwired/stimulus"
 //     <select data-location-filter-target="city">
 export default class extends Controller {
   static targets = ["country", "department", "city"]
+  // Blank-option labels are configurable so forms can say "Selecciona…" while
+  // the search filter keeps "Todos…". Defaults preserve the filter behavior.
+  static values = {
+    departmentBlank: { type: String, default: "Todos los departamentos" },
+    cityBlank: { type: String, default: "Todas las ciudades" }
+  }
 
   async loadDepartments() {
     const countryId = this.hasCountryTarget ? this.countryTarget.value : null
-    this.resetSelect(this.departmentTarget, "Todos los departamentos")
-    this.resetSelect(this.cityTarget, "Todas las ciudades")
+    this.resetSelect(this.departmentTarget, this.departmentBlankValue)
+    this.resetSelect(this.cityTarget, this.cityBlankValue)
     if (!countryId) return
     await this.populate(this.departmentTarget, `/countries/${countryId}/departments`)
   }
 
   async loadCities() {
     const departmentId = this.departmentTarget.value
-    this.resetSelect(this.cityTarget, "Todas las ciudades")
+    this.resetSelect(this.cityTarget, this.cityBlankValue)
     if (!departmentId) return
     await this.populate(this.cityTarget, `/departments/${departmentId}/cities`)
   }

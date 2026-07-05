@@ -50,6 +50,8 @@ class OnboardingController < ApplicationController
       @cities = City.order(:name)
     when "paciente"
       @patient_profile = current_user.patient_profile || current_user.build_patient_profile
+      @countries = Country.order(:name)
+      @patient_profile.country_id ||= @countries.first&.id
       @departments = Department.order(:name)
       @cities = City.order(:name)
     end
@@ -97,6 +99,7 @@ class OnboardingController < ApplicationController
       if @patient_profile.save
         assign_free_plan_and_finish
       else
+        @countries = Country.order(:name)
         @departments = Department.order(:name)
         @cities = City.order(:name)
         render :basic_info, status: :unprocessable_entity
@@ -158,6 +161,6 @@ class OnboardingController < ApplicationController
   end
 
   def patient_profile_params
-    params.require(:patient_profile).permit(:name, :identity_document, :phone, :date_of_birth, :department_id, :city_id)
+    params.require(:patient_profile).permit(:name, :identity_document, :phone, :date_of_birth, :country_id, :department_id, :city_id)
   end
 end

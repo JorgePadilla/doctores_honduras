@@ -1,5 +1,8 @@
 <%= form_with model: patient_profile, url: onboarding_complete_path, method: :post, class: "space-y-6" do |f| %>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
+       data-controller="location-filter"
+       data-location-filter-department-blank-value="Selecciona un departamento"
+       data-location-filter-city-blank-value="Selecciona una ciudad">
     <div>
       <%= f.label :name, "Nombre completo", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
       <%= f.text_field :name, class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white", placeholder: "Tu nombre completo", required: true %>
@@ -12,7 +15,7 @@
 
     <div>
       <%= f.label :phone, "Teléfono", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-      <%= f.telephone_field :phone, class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white", placeholder: "+504 0000-0000" %>
+      <%= f.telephone_field :phone, class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white", placeholder: "+504 0000-0000", required: true %>
     </div>
 
     <div>
@@ -26,11 +29,21 @@
     </div>
 
     <div>
+      <%= f.label :country_id, "País", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
+      <%= f.select :country_id,
+                  options_for_select(countries.map { |c| [c.name, c.id] }, patient_profile.country_id),
+                  { include_blank: "Selecciona un país" },
+                  { class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white", required: true,
+                    data: { location_filter_target: "country", action: "change->location-filter#loadDepartments" } } %>
+    </div>
+
+    <div>
       <%= f.label :department_id, "Departamento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
       <%= f.select :department_id,
                   options_for_select(departments.map { |d| [d.name, d.id] }, patient_profile.department_id),
                   { include_blank: "Selecciona un departamento" },
-                  { class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white" } %>
+                  { class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white",
+                    data: { location_filter_target: "department", action: "change->location-filter#loadCities" } } %>
     </div>
 
     <div>
@@ -38,7 +51,8 @@
       <%= f.select :city_id,
                   options_for_select(cities.map { |c| [c.name, c.id] }, patient_profile.city_id),
                   { include_blank: "Selecciona una ciudad" },
-                  { class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white" } %>
+                  { class: "mt-1 block w-full border border-gray-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm dark:bg-slate-700 dark:text-white",
+                    data: { location_filter_target: "city" } } %>
     </div>
   </div>
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_180001) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_190000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -391,7 +391,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_180001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "identity_document"
+    t.bigint "country_id"
     t.index ["city_id"], name: "index_patient_profiles_on_city_id"
+    t.index ["country_id"], name: "index_patient_profiles_on_country_id"
     t.index ["department_id"], name: "index_patient_profiles_on_department_id"
     t.index ["identity_document"], name: "index_patient_profiles_on_identity_document"
     t.index ["user_id"], name: "index_patient_profiles_on_user_id", unique: true
@@ -677,6 +679,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_180001) do
   add_foreign_key "notification_preferences", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "patient_profiles", "cities"
+  add_foreign_key "patient_profiles", "countries"
   add_foreign_key "patient_profiles", "departments"
   add_foreign_key "patient_profiles", "users"
   add_foreign_key "patients", "doctor_profiles"

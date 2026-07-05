@@ -23,7 +23,7 @@
       <% elsif @profile_type == "vendor" %>
         <%= render "onboarding/vendor_basic_form", supplier: @supplier, departments: @departments, cities: @cities %>
       <% elsif @profile_type == "paciente" %>
-        <%= render "onboarding/patient_basic_form", patient_profile: @patient_profile, departments: @departments, cities: @cities %>
+        <%= render "onboarding/patient_basic_form", patient_profile: @patient_profile, countries: @countries, departments: @departments, cities: @cities %>
       <% end %>
     </div>
   </div>

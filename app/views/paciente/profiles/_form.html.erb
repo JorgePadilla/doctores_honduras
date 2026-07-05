@@ -9,7 +9,10 @@
     </div>
   <% end %>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
+       data-controller="location-filter"
+       data-location-filter-department-blank-value="Selecciona un departamento"
+       data-location-filter-city-blank-value="Selecciona una ciudad">
     <div>
       <%= f.label :name, "Nombre completo *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.text_field :name, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
@@ -21,8 +24,13 @@
     </div>
 
     <div>
-      <%= f.label :phone, "Teléfono", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-      <%= f.telephone_field :phone, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+      <%= label_tag :email, "Correo electrónico *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= email_field_tag :email, Current.user.email, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
+    </div>
+
+    <div>
+      <%= f.label :phone, "Teléfono *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.telephone_field :phone, placeholder: "+504 0000-0000", class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
     </div>
 
     <div>
@@ -36,17 +44,27 @@
     </div>
 
     <div>
+      <%= f.label :country_id, "País *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.select :country_id, options_from_collection_for_select(countries, :id, :name, patient_profile.country_id),
+          { include_blank: "Selecciona un país" },
+          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true,
+            data: { location_filter_target: "country", action: "change->location-filter#loadDepartments" } } %>
+    </div>
+
+    <div>
       <%= f.label :department_id, "Departamento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.select :department_id, options_from_collection_for_select(departments, :id, :name, patient_profile.department_id),
           { include_blank: "Selecciona un departamento" },
-          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" } %>
+          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500",
+            data: { location_filter_target: "department", action: "change->location-filter#loadCities" } } %>
     </div>
 
     <div>
       <%= f.label :city_id, "Ciudad", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.select :city_id, options_from_collection_for_select(cities, :id, :name, patient_profile.city_id),
           { include_blank: "Selecciona una ciudad" },
-          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" } %>
+          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500",
+            data: { location_filter_target: "city" } } %>
     </div>
   </div>
 
