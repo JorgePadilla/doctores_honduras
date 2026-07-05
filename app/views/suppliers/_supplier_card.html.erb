@@ -1,0 +1,36 @@
+<%#
+  Card de proveedor (DESIGN.md). Locals: `supplier`, `index` (stagger del reveal).
+  Card clickeable (stretched link a "Ver productos").
+%>
+<div class="group relative reveal flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-line dark:border-slate-700 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)]"
+     data-controller="reveal" data-reveal-delay-value="<%= (index.to_i % 3) * 70 %>">
+  <div class="aspect-[16/10] flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-700/50 p-6">
+    <% if supplier.logo_url.present? %>
+      <img src="<%= supplier.logo_thumb_url.presence || supplier.logo_url %>" alt="<%= supplier.name %>" loading="lazy"
+           class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]">
+    <% else %>
+      <span class="font-display text-4xl font-semibold text-primary/40"><%= supplier.name.first %></span>
+    <% end %>
+  </div>
+
+  <div class="flex flex-1 flex-col p-5">
+    <h3 class="font-display text-lg font-semibold leading-snug text-ink dark:text-white"><%= supplier.name %></h3>
+    <% if supplier.description.present? %>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400 line-clamp-2"><%= supplier.description %></p>
+    <% end %>
+    <% if supplier.address.present? %>
+      <p class="mt-2 flex items-center gap-1 text-xs text-muted">
+        <%= icon(:map_pin, class: "w-3.5 h-3.5 shrink-0 text-primary") %>
+        <span class="truncate"><%= supplier.address %></span>
+      </p>
+    <% end %>
+
+    <div class="mt-auto pt-4">
+      <%= link_to supplier_path(supplier),
+            class: "inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-hover after:absolute after:inset-0" do %>
+        Ver productos
+        <%= icon(:arrow_right, class: "h-4 w-4 transition-transform group-hover:translate-x-1") %>
+      <% end %>
+    </div>
+  </div>
+</div>

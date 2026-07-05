@@ -1,65 +1,39 @@
 <div class="container mx-auto px-4 py-8">
-  <header class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-4">Proveedores Médicos</h1>
-    <p class="text-xl text-gray-600 dark:text-slate-400">Encuentra los mejores proveedores de equipos y suministros médicos en Honduras</p>
+  <header class="text-center mb-10">
+    <h1 class="page-title mb-3">Proveedores médicos</h1>
+    <p class="text-lg text-slate-600 dark:text-slate-400">Equipos y suministros médicos en Honduras.</p>
   </header>
 
-  <div class="max-w-4xl mx-auto mb-12">
-    <div class="bg-white dark:bg-slate-800 rounded-full shadow-md dark:shadow-slate-900/50 p-2 transition-all hover:shadow-lg border border-transparent dark:border-slate-700">
-      <form action="/proveedores" method="get" class="flex items-center">
-        <div class="flex-grow pl-4">
-          <input type="text" name="q" placeholder="Busca por nombre o tipo de producto" class="w-full py-3 px-2 text-gray-700 dark:text-slate-200 focus:outline-none bg-transparent dark:placeholder-slate-400">
-        </div>
-        <button type="submit" class="ml-2 py-3 px-6 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
+  <div class="max-w-5xl mx-auto mb-8">
+    <div class="flex items-center gap-2 bg-white dark:bg-slate-800 rounded-full border border-line dark:border-slate-700 shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)] p-2 pl-5">
+      <%= icon(:magnifying_glass, class: "w-5 h-5 text-primary shrink-0") %>
+      <form action="/proveedores" method="get" class="flex flex-1 items-center gap-2">
+        <input type="text" name="q" value="<%= params[:q] %>" placeholder="Busca por nombre o tipo de producto"
+               class="flex-1 min-w-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-ink dark:text-white placeholder:text-muted py-2 text-base">
+        <button type="submit" class="shrink-0 inline-flex items-center bg-primary-hover hover:bg-primary-deep text-white font-semibold rounded-full px-6 py-3 transition-colors">
           Buscar
         </button>
       </form>
     </div>
   </div>
 
-  <div class="grid md:grid-cols-1 gap-8 max-w-4xl mx-auto">
-    <% @suppliers.each do |supplier| %>
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border-l-8 transition-all hover:shadow-lg border-sky-300 dark:border-sky-500">
-        <div class="flex flex-col md:flex-row">
-          <div class="md:w-1/4 p-4">
-            <% if supplier.logo_url.present? %>
-              <img src="<%= supplier.logo_thumb_url.presence || supplier.logo_url %>" alt="<%= supplier.name %>" loading="lazy" class="w-full h-auto rounded-lg object-cover">
-            <% else %>
-              <div class="w-full h-full bg-gray-200 dark:bg-slate-700 rounded-lg flex items-center justify-center" style="min-height: 120px;">
-                <span class="text-gray-500 dark:text-slate-400">Sin imagen</span>
-              </div>
-            <% end %>
-          </div>
-          <div class="md:w-3/4 p-4">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-              <div>
-                <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400"><%= supplier.name %></h2>
-                <p class="text-gray-700 dark:text-slate-300 mb-1"><%= supplier.description %></p>
-                <div class="mt-2">
-                  <p class="text-gray-600 dark:text-slate-400 text-sm"><i class="fas fa-map-marker-alt mr-2"></i><%= supplier.address %></p>
-                  <p class="text-gray-600 dark:text-slate-400 text-sm"><i class="fas fa-phone mr-2"></i><%= supplier.phone %></p>
-                  <p class="text-gray-600 dark:text-slate-400 text-sm"><i class="fas fa-envelope mr-2"></i><%= supplier.email %></p>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-4 text-right">
-              <a href="<%= supplier_path(supplier) %>" class="inline-flex items-center px-5 py-2.5 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
-                <span class="text-sm">VER PRODUCTOS</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
+  <div class="max-w-6xl mx-auto">
+    <% if @suppliers.any? %>
+      <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <% @suppliers.each_with_index do |supplier, index| %>
+          <%= render "supplier_card", supplier: supplier, index: index %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="rounded-2xl border border-line dark:border-slate-700 bg-white dark:bg-slate-800 p-10 text-center">
+        <p class="text-slate-600 dark:text-slate-400">No encontramos proveedores. Probá con otra búsqueda.</p>
       </div>
     <% end %>
 
     <!-- Pagination controls -->
     <% if @total_pages > 1 %>
       <div class="mt-10 mb-6 flex justify-center">
-        <nav class="shadow-sm rounded-lg" aria-label="Pagination">
+        <nav class="rounded-lg" aria-label="Pagination">
           <%= pagination_links(@page, @total_pages, { q: params[:q] }) %>
         </nav>
       </div>

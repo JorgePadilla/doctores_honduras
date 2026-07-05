@@ -1,16 +1,14 @@
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-5xl mx-auto mb-6 flex items-center">
-    <a href="<%= supplier_path(@supplier) %>" class="inline-flex items-center px-4 py-2 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-      </svg>
+    <a href="<%= supplier_path(@supplier) %>" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors">
+      <%= icon(:arrow_left, class: "h-4 w-4") %>
       Volver a <%= @supplier.name %>
     </a>
   </div>
 
   <div class="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border border-transparent dark:border-slate-700">
     <div class="p-6">
-      <h1 class="text-3xl font-bold mb-6 break-words text-sky-600 dark:text-sky-400">Productos de <%= @supplier.name %></h1>
+      <h1 class="page-title mb-6 break-words">Productos de <%= @supplier.name %></h1>
 
     <div class="mb-8">
       <div class="bg-white dark:bg-slate-800 rounded-full shadow-md dark:shadow-slate-900/50 p-2 transition-all hover:shadow-lg border border-transparent dark:border-slate-700">

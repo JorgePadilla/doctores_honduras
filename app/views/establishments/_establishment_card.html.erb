@@ -1,0 +1,39 @@
+<%#
+  Card de establecimiento (hospital/clínica). Locals: `establishment`, `index`.
+  Usa la foto del edificio si existe; si no, el logo; si no, la inicial.
+%>
+<div class="group relative reveal flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-line dark:border-slate-700 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)]"
+     data-controller="reveal" data-reveal-delay-value="<%= (index.to_i % 3) * 70 %>">
+  <div class="aspect-[16/10] flex items-center justify-center overflow-hidden bg-slate-100 dark:bg-slate-700">
+    <% if establishment.building_image_url.present? %>
+      <img src="<%= establishment.building_image_thumb_url.presence || establishment.building_image_url %>" alt="<%= establishment.name %>" loading="lazy"
+           class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
+    <% elsif establishment.logo_url.present? %>
+      <img src="<%= establishment.logo_thumb_url.presence || establishment.logo_url %>" alt="<%= establishment.name %>" loading="lazy"
+           class="max-h-full max-w-full object-contain p-6 transition-transform duration-500 group-hover:scale-[1.03]">
+    <% else %>
+      <span class="font-display text-4xl font-semibold text-primary/40"><%= establishment.name.first %></span>
+    <% end %>
+  </div>
+
+  <div class="flex flex-1 flex-col p-5">
+    <h3 class="font-display text-lg font-semibold leading-snug text-ink dark:text-white"><%= establishment.name %></h3>
+    <% if establishment.est_type.present? %>
+      <span class="mt-1.5 inline-flex w-fit items-center rounded-full bg-primary-soft dark:bg-sky-900/30 px-2.5 py-0.5 text-xs font-medium text-primary-hover dark:text-sky-300"><%= establishment.est_type %></span>
+    <% end %>
+    <% if establishment.address.present? %>
+      <p class="mt-2 flex items-center gap-1 text-xs text-muted">
+        <%= icon(:map_pin, class: "w-3.5 h-3.5 shrink-0 text-primary") %>
+        <span class="truncate"><%= establishment.address %></span>
+      </p>
+    <% end %>
+
+    <div class="mt-auto pt-4">
+      <%= link_to establishment_path(establishment), data: { turbo: false },
+            class: "inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-hover after:absolute after:inset-0" do %>
+        Ver detalles
+        <%= icon(:arrow_right, class: "h-4 w-4 transition-transform group-hover:translate-x-1") %>
+      <% end %>
+    </div>
+  </div>
+</div>

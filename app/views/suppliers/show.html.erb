@@ -1,9 +1,7 @@
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-5xl mx-auto mb-6 flex items-center">
-    <a href="/proveedores" class="inline-flex items-center px-4 py-2 rounded-full text-white font-medium transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-      </svg>
+    <a href="/proveedores" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors">
+      <%= icon(:arrow_left, class: "h-4 w-4") %>
       Volver a Proveedores
     </a>
   </div>
@@ -21,7 +19,7 @@
       </div>
 
       <div class="md:w-3/4 md:pl-8">
-        <h1 class="text-3xl font-bold mb-4 text-sky-600 dark:text-sky-400"><%= @supplier.name %></h1>
+        <h1 class="page-title mb-3"><%= @supplier.name %></h1>
         <p class="text-gray-700 dark:text-slate-300 mb-4"><%= @supplier.description %></p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
