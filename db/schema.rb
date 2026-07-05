@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_140001) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_140003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -102,6 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_140001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "patient_user_id"
+    t.boolean "sobrecupo", default: false, null: false
     t.index ["created_by_id"], name: "index_appointments_on_created_by_id"
     t.index ["doctor_branch_id", "appointment_date", "start_time"], name: "idx_appointments_branch_date_time"
     t.index ["doctor_branch_id"], name: "index_appointments_on_doctor_branch_id"
@@ -167,6 +168,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_140001) do
     t.boolean "public_booking_enabled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_concurrent", default: 1, null: false
     t.index ["doctor_profile_id"], name: "index_doctor_agenda_settings_on_doctor_profile_id", unique: true
   end
 

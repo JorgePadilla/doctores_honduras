@@ -22,6 +22,6 @@ class Agenda::SettingsController < Agenda::BaseController
   private
 
   def setting_params
-    params.require(:doctor_agenda_setting).permit(:appointment_duration, :buffer_minutes, :public_booking_enabled)
+    params.require(:doctor_agenda_setting).permit(:appointment_duration, :buffer_minutes, :max_concurrent, :public_booking_enabled)
   end
 end

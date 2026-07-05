@@ -9,13 +9,24 @@ class Appointment < ApplicationRecord
   STATUSES = %w[pendiente confirmada cancelada completada].freeze
   BOOKING_SOURCES = %w[manual public_booking].freeze
 
+  # Per-appointment duration choices (minutes). Broader than the doctor's single
+  # default (DoctorAgendaSetting) so each cita can be sized individually (C1).
+  DURATION_OPTIONS = [ 15, 20, 30, 45, 60, 90 ].freeze
+  MIN_DURATION_MINUTES = 15
+
+  # Virtual attribute: when set (e.g. from the agenda form), the end_time is
+  # derived from start_time + this many minutes in a before_validation hook.
+  attr_accessor :requested_duration
+
   validates :patient_name, presence: true
   validates :appointment_date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true
   validates :status, inclusion: { in: STATUSES }
   validates :booking_source, inclusion: { in: BOOKING_SOURCES }
+  before_validation :apply_requested_duration
   validate :end_time_after_start_time
+  validate :minimum_duration
   validate :within_branch_schedule, on: :create
   validate :no_overlapping_appointments, on: :create
 
@@ -98,11 +109,36 @@ class Appointment < ApplicationRecord
     status.capitalize
   end
 
+  # Max simultaneous appointments allowed for this doctor's agenda (C2). Falls
+  # back to 1 (no overbooking) when no setting exists.
+  def max_concurrent_limit
+    doctor_profile&.agenda_setting&.max_concurrent || 1
+  end
+
   private
+
+  # C1: derive end_time from a chosen duration (minutes) + start_time.
+  def apply_requested_duration
+    return if requested_duration.blank?
+    return unless start_time
+
+    minutes = requested_duration.to_i
+    return if minutes <= 0
+
+    self.end_time = start_time + minutes.minutes
+  end
 
   def end_time_after_start_time
     return unless start_time && end_time
     errors.add(:end_time, "debe ser posterior a la hora de inicio") if end_time <= start_time
+  end
+
+  # C1: enforce a 15-minute minimum on every appointment.
+  def minimum_duration
+    return unless start_time && end_time && end_time > start_time
+    if duration_minutes < MIN_DURATION_MINUTES
+      errors.add(:end_time, "la cita debe durar al menos #{MIN_DURATION_MINUTES} minutos")
+    end
   end
 
   def within_branch_schedule
@@ -121,18 +157,31 @@ class Appointment < ApplicationRecord
     end
   end
 
+  # C2 (concurrency limit) + C3 (sobrecupo bypass).
+  # Overbooked ("sobrecupo") appointments intentionally skip this check and do
+  # not consume capacity, so they can always be added on top of a full slot.
   def no_overlapping_appointments
     return unless doctor_branch && appointment_date && start_time && end_time
+    return if sobrecupo?
 
     overlapping = Appointment.active
       .for_branch(doctor_branch)
       .for_date(appointment_date)
+      .where(sobrecupo: false)
       .where("start_time < ? AND end_time > ?", end_time, start_time)
 
     overlapping = overlapping.where.not(id: id) if persisted?
 
-    if overlapping.exists?
-      errors.add(:start_time, "ya existe una cita en este horario")
+    if overlapping.count >= max_concurrent_limit
+      errors.add(:start_time, overlap_error_message)
+    end
+  end
+
+  def overlap_error_message
+    if max_concurrent_limit > 1
+      "el horario ya está completo (máximo #{max_concurrent_limit} citas simultáneas). Puedes marcarla como sobrecupo."
+    else
+      "ya existe una cita en este horario. Puedes marcarla como sobrecupo."
     end
   end
 end
