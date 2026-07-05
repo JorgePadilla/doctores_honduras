@@ -11,8 +11,10 @@ load File.join(Rails.root, 'db', 'seeds', 'search_synonyms.rb')
 # Create suppliers
 puts "Creating suppliers..."
 
-# Skip if suppliers already exist
-if Supplier.count == 0
+# Sample/demo data is development-only — never create fake suppliers/doctors on
+# production. Reference data (plans, services, departments, site_settings,
+# synonyms) is loaded above and is safe in every environment.
+if Rails.env.development? && Supplier.count == 0
   suppliers = [
     {
       name: "Mey-Ko",
@@ -129,9 +131,10 @@ end
 
 puts "Creating sample data for doctor profiles..."
 
-# Skip if we already have doctors
-if DoctorProfile.count >= 5
-  puts "#{DoctorProfile.count} doctor profiles already exist. Skipping sample doctor creation."
+# Sample doctors/establishments are development-only demo data (and this block
+# uses legacy attributes; it must not run on production).
+if !Rails.env.development? || DoctorProfile.count >= 5
+  puts "Skipping sample doctor creation (env: #{Rails.env}, #{DoctorProfile.count} profiles)."
 else
 
 # Generate a timestamp to make emails unique
