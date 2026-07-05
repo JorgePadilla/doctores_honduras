@@ -1,6 +1,6 @@
 <%= form_with model: patient_profile, url: paciente_profile_path, method: :patch, class: "space-y-6" do |f| %>
   <% if patient_profile.errors.any? %>
-    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4" role="alert">
       <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400">
         <% patient_profile.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -11,22 +11,22 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Nombre completo *</label>
+      <%= f.label :name, "Nombre completo *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.text_field :name, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Número de identidad (DNI) *</label>
+      <%= f.label :identity_document, "Número de identidad (DNI) *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.text_field :identity_document, placeholder: "0801-1990-12345", class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Teléfono</label>
+      <%= f.label :phone, "Teléfono", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.telephone_field :phone, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Fecha de nacimiento</label>
+      <%= f.label :date_of_birth, "Fecha de nacimiento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.text_field :date_of_birth,
             value: patient_profile.date_of_birth&.to_s,
             data: { controller: "datepicker", datepicker_mode_value: "past" },
@@ -36,14 +36,14 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Departamento</label>
+      <%= f.label :department_id, "Departamento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.select :department_id, options_from_collection_for_select(departments, :id, :name, patient_profile.department_id),
           { include_blank: "Selecciona un departamento" },
           { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" } %>
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Ciudad</label>
+      <%= f.label :city_id, "Ciudad", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
       <%= f.select :city_id, options_from_collection_for_select(cities, :id, :name, patient_profile.city_id),
           { include_blank: "Selecciona una ciudad" },
           { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" } %>
