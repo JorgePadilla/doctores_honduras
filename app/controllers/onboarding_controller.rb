@@ -158,6 +158,6 @@ class OnboardingController < ApplicationController
   end
 
   def patient_profile_params
-    params.require(:patient_profile).permit(:name, :phone, :date_of_birth, :department_id, :city_id)
+    params.require(:patient_profile).permit(:name, :identity_document, :phone, :date_of_birth, :department_id, :city_id)
   end
 end

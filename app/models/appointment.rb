@@ -132,7 +132,8 @@ class Appointment < ApplicationRecord
       user_id: patient_user_id,
       name: patient_name,
       phone: patient_phone,
-      email: patient_email
+      email: patient_email,
+      identity_document: patient_user&.patient_profile&.identity_document
     )
   end
 

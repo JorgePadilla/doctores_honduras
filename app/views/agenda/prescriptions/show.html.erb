@@ -19,7 +19,12 @@
       </div>
     </div>
 
-    <p class="text-gray-900 mb-6"><span class="font-semibold">Paciente:</span> <%= @appointment.patient_name %></p>
+    <p class="text-gray-900 mb-1"><span class="font-semibold">Paciente:</span> <%= @appointment.patient_name %></p>
+    <% if @appointment.patient&.identity_document.present? %>
+      <p class="text-gray-700 text-sm mb-6"><span class="font-semibold">DNI:</span> <%= @appointment.patient.identity_document %></p>
+    <% else %>
+      <div class="mb-6"></div>
+    <% end %>
 
     <div class="mb-8">
       <p class="text-3xl font-serif italic text-gray-900 mb-4">Rp.</p>

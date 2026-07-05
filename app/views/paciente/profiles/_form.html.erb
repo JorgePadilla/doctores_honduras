@@ -16,6 +16,11 @@
     </div>
 
     <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Número de identidad (DNI) *</label>
+      <%= f.text_field :identity_document, placeholder: "0801-1990-12345", class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
+    </div>
+
+    <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Teléfono</label>
       <%= f.telephone_field :phone, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
     </div>

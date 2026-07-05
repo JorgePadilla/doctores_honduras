@@ -13,7 +13,7 @@ class Patient < ApplicationRecord
   # a partir de los campos crudos que trae una cita. Los pacientes registrados
   # se identifican por user_id; los walk-ins por nombre normalizado dentro del
   # roster del médico.
-  def self.resolve_for(doctor_profile_id:, name:, user_id: nil, phone: nil, email: nil)
+  def self.resolve_for(doctor_profile_id:, name:, user_id: nil, phone: nil, email: nil, identity_document: nil)
     return nil if doctor_profile_id.blank? || name.blank?
 
     patient =
@@ -25,9 +25,10 @@ class Patient < ApplicationRecord
           .first_or_initialize
       end
 
-    patient.name  = name  if name.present?
-    patient.phone = phone if phone.present?
-    patient.email = email if email.present?
+    patient.name              = name              if name.present?
+    patient.phone             = phone             if phone.present?
+    patient.email             = email             if email.present?
+    patient.identity_document = identity_document if identity_document.present?
     patient.save! if patient.new_record? || patient.changed?
     patient
   end

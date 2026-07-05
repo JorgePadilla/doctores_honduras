@@ -4,6 +4,9 @@
   </div>
 
   <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-2"><%= @patient.name %></h1>
+  <% if @patient.identity_document.present? %>
+    <p class="text-sm text-gray-600 dark:text-slate-300">DNI: <%= @patient.identity_document %></p>
+  <% end %>
   <% if @patient.display_contact.present? %>
     <p class="text-sm text-gray-500 dark:text-slate-400 mb-6"><%= @patient.display_contact %></p>
   <% end %>

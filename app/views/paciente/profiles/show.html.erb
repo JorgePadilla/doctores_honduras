@@ -8,6 +8,13 @@
         <p class="text-gray-900 dark:text-white font-semibold"><%= @patient_profile.name %></p>
       </div>
 
+      <% if @patient_profile.identity_document.present? %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Número de identidad</h3>
+          <p class="text-gray-900 dark:text-white"><%= @patient_profile.identity_document %></p>
+        </div>
+      <% end %>
+
       <div>
         <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Correo electrónico</h3>
         <p class="text-gray-900 dark:text-white"><%= Current.user.email %></p>

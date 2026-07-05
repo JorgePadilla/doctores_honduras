@@ -20,7 +20,7 @@ class Paciente::ProfilesControllerTest < ActionDispatch::IntegrationTest
 
   test "update creates the profile when none exists, then show works" do
     assert_difference -> { PatientProfile.count }, 1 do
-      patch paciente_profile_url, params: { patient_profile: { name: "Ana Paciente" } }
+      patch paciente_profile_url, params: { patient_profile: { name: "Ana Paciente", identity_document: "0801-1990-12345" } }
     end
     assert_redirected_to paciente_profile_path
 
@@ -29,8 +29,15 @@ class Paciente::ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_match "Ana Paciente", @response.body
   end
 
+  test "update rejects a profile without the identity document" do
+    assert_no_difference -> { PatientProfile.count } do
+      patch paciente_profile_url, params: { patient_profile: { name: "Sin DNI" } }
+    end
+    assert_response :unprocessable_entity
+  end
+
   test "show renders for a patient that already has a profile" do
-    PatientProfile.create!(user: @user, name: "Existente")
+    PatientProfile.create!(user: @user, name: "Existente", identity_document: "0801-1990-12345")
     get paciente_profile_url
     assert_response :success
     assert_match "Existente", @response.body

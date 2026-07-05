@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_170002) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_180001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -390,8 +390,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_170002) do
     t.bigint "city_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "identity_document"
     t.index ["city_id"], name: "index_patient_profiles_on_city_id"
     t.index ["department_id"], name: "index_patient_profiles_on_department_id"
+    t.index ["identity_document"], name: "index_patient_profiles_on_identity_document"
     t.index ["user_id"], name: "index_patient_profiles_on_user_id", unique: true
   end
 
@@ -404,6 +406,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_170002) do
     t.date "date_of_birth"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "identity_document"
+    t.index ["doctor_profile_id", "identity_document"], name: "index_patients_on_doctor_profile_id_and_identity_document"
     t.index ["doctor_profile_id", "user_id"], name: "idx_patients_doctor_user_unique", unique: true, where: "(user_id IS NOT NULL)"
     t.index ["doctor_profile_id"], name: "index_patients_on_doctor_profile_id"
     t.index ["user_id"], name: "index_patients_on_user_id"
