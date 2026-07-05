@@ -3,13 +3,20 @@
   Toda la card es clickeable (stretched link a "Ver perfil"); los botones de
   contacto van con z-10 para quedar por encima del link estirado.
 %>
-<% location = branch_name = doctor.doctor_branches.min_by { |b| b.position || 0 }&.name %>
-<% location ||= (doctor.establishments.first&.name if section_visible?("establishments") && doctor.establishments.any?) %>
-<% location ||= [ doctor.city&.name, doctor.department&.name ].compact.join(", ").presence %>
+<% branch = doctor.doctor_branches.min_by { |b| b.position || 0 } %>
+<% place = branch&.name || (doctor.establishments.first&.name if section_visible?("establishments") && doctor.establishments.any?) %>
+<% geo = [ (branch&.city&.name || doctor.city&.name), (branch&.department&.name || doctor.department&.name) ].compact.join(", ").presence %>
+<% bookable = doctor.user&.subscription&.subscription_plan&.tier == "elite" && doctor.agenda_setting&.public_booking_enabled %>
 
 <div class="group relative reveal flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-line dark:border-slate-700 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)]"
      data-controller="reveal" data-reveal-delay-value="<%= (index.to_i % 3) * 70 %>">
-  <div class="aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-700">
+  <div class="relative aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-700">
+    <% if bookable %>
+      <span class="absolute top-3 left-3 z-[1] inline-flex items-center gap-1 rounded-full bg-white/95 dark:bg-slate-900/90 px-2.5 py-1 text-xs font-medium text-primary-hover dark:text-sky-300 shadow-sm">
+        <%= icon(:calendar_days, class: "w-3.5 h-3.5") %>
+        Reserva en línea
+      </span>
+    <% end %>
     <% if doctor.image_url.present? %>
       <img src="<%= doctor.image_thumb_url.presence || doctor.image_url %>" alt="<%= doctor.display_name %>" loading="lazy"
            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
@@ -25,12 +32,20 @@
     <% if doctor.headline_specialty.present? %>
       <p class="mt-0.5 text-sm text-slate-600 dark:text-slate-400"><%= doctor.headline_specialty %></p>
     <% end %>
-    <% if location.present? %>
-      <p class="mt-2 flex items-center gap-1 text-xs text-muted">
-        <%= icon(:map_pin, class: "w-3.5 h-3.5 shrink-0 text-primary") %>
-        <span class="truncate"><%= location %></span>
-      </p>
-    <% end %>
+    <div class="mt-2 space-y-1">
+      <% if place.present? %>
+        <p class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400">
+          <%= icon(:building_office, class: "w-3.5 h-3.5 shrink-0 text-primary") %>
+          <span class="truncate"><%= place %></span>
+        </p>
+      <% end %>
+      <% if geo.present? %>
+        <p class="flex items-center gap-1 text-xs text-muted">
+          <%= icon(:map_pin, class: "w-3.5 h-3.5 shrink-0 text-primary") %>
+          <span class="truncate"><%= geo %></span>
+        </p>
+      <% end %>
+    </div>
 
     <div class="mt-auto flex items-center justify-between pt-4">
       <div class="relative z-10 flex items-center gap-1">

@@ -24,7 +24,7 @@ class DoctorsController < ApplicationController
     @establishments = section_visible?("establishments") ? Establishment.order(:name) : Establishment.none
 
     # Build the base query - exclude hidden profiles
-    doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department, :specialty, :subspecialty, doctor_branches: [ :department, :city ]).where(hidden: false)
+    doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department, :specialty, :subspecialty, :agenda_setting, doctor_branches: [ :department, :city ], user: { subscription: :subscription_plan }).where(hidden: false)
 
     # Apply specialty filter if present
     if params[:specialty].present? && params[:specialty] != "Todas las especialidades"

@@ -1,135 +1,90 @@
-<div class="bg-white dark:bg-slate-800 shadow-md dark:shadow-slate-900/50 rounded-xl p-4 mb-6 border border-gray-100 dark:border-slate-700">
-  <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Filtrar Resultados</h3>
+<%# Filtros de doctores — panel colapsable arriba de los resultados (no sidebar).
+   Especialidad y Servicio usan <datalist> (typeahead: escribís y filtra). %>
+<% filter_input = "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500 text-sm py-2" %>
+<% filter_label = "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+<% active_count = [ params[:specialty], params[:service], params[:country_id], params[:department_id], params[:city_id], params[:establishment_id] ].count(&:present?) %>
 
-  <% if @geo_department_name.present? %>
-    <div class="mb-4 text-sm text-sky-700 dark:text-sky-400 bg-sky-50 dark:bg-sky-900/20 rounded-lg px-3 py-2 flex items-start gap-2">
-      <%= icon(:map_pin, class: "w-4 h-4 shrink-0 mt-0.5") %>
-      <span>Mostrando tu zona: <strong><%= @geo_department_name %></strong>.
-        <%= link_to "Ver todo el país", doctors_path(all: 1), class: "underline hover:no-underline whitespace-nowrap" %></span>
-    </div>
-  <% end %>
+<details class="group mb-6 rounded-2xl border border-line dark:border-slate-700 bg-white dark:bg-slate-800" <%= "open" if active_count.positive? %>>
+  <summary class="flex list-none cursor-pointer select-none items-center justify-between gap-2 px-5 py-3">
+    <span class="flex items-center gap-2 text-sm font-medium text-ink dark:text-white">
+      <%= icon(:cog_6_tooth, class: "w-4 h-4 text-primary") %>
+      Filtros
+      <% if active_count.positive? %>
+        <span class="rounded-full bg-primary-soft dark:bg-sky-900/30 px-2 py-0.5 text-xs font-medium text-primary-hover dark:text-sky-300"><%= active_count %></span>
+      <% end %>
+    </span>
+    <%= icon(:chevron_down, class: "w-4 h-4 text-muted transition-transform group-open:rotate-180") %>
+  </summary>
 
-  <%= form_with url: doctors_path, method: :get, class: "space-y-4", data: { turbo_frame: "doctors-list", controller: "form", form_target: "filterForm" } do |form| %>
-    <% if params[:q].present? %>
-      <%= form.hidden_field :q, value: params[:q] %>
+  <div class="border-t border-line dark:border-slate-700 p-5">
+    <% if @geo_department_name.present? %>
+      <div class="mb-4 flex items-start gap-2 rounded-lg bg-sky-50 dark:bg-sky-900/20 px-3 py-2 text-sm text-sky-700 dark:text-sky-400">
+        <%= icon(:map_pin, class: "w-4 h-4 shrink-0 mt-0.5") %>
+        <span>Mostrando tu zona: <strong><%= @geo_department_name %></strong>.
+          <%= link_to "Ver todo el país", doctors_path(all: 1), class: "underline hover:no-underline whitespace-nowrap" %></span>
+      </div>
     <% end %>
 
-    <%# Especialidad %>
-    <div>
-      <label for="specialty" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Especialidad</label>
-      <div class="relative">
-        <%= form.select :specialty,
-                      options_for_select(@specialties, params[:specialty]),
-                      { include_blank: "Todas las especialidades" },
-                      class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md appearance-none dark:bg-slate-700 dark:text-white",
-                      data: { action: "change->form#submit" } %>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400">
-          <%= icon(:chevron_down, class: "h-4 w-4") %>
-        </div>
-      </div>
-    </div>
+    <%= form_with url: doctors_path, method: :get, data: { turbo_frame: "doctors-list", controller: "form", form_target: "filterForm" } do |form| %>
+      <% if params[:q].present? %><%= form.hidden_field :q, value: params[:q] %><% end %>
 
-    <%# Ubicación: País → Departamento → Ciudad (cascada) %>
-    <div data-controller="location-filter" class="space-y-4">
-      <% if @countries.any? %>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">País</label>
-          <div class="relative">
-            <%= form.select :country_id,
-                          options_from_collection_for_select(@countries, :id, :name, params[:country_id] || @geo_country_id || (@countries.first.id if @countries.one?)),
-                          { include_blank: "Todos los países" },
-                          class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md appearance-none dark:bg-slate-700 dark:text-white",
-                          data: { location_filter_target: "country", action: "change->location-filter#loadDepartments change->form#submit" } %>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400">
-              <%= icon(:chevron_down, class: "h-4 w-4") %>
-            </div>
+          <%= form.label :specialty, "Especialidad", class: filter_label %>
+          <%= form.text_field :specialty, value: params[:specialty], list: "specialties-datalist", placeholder: "Todas las especialidades", autocomplete: "off", class: filter_input, data: { action: "change->form#submit" } %>
+          <datalist id="specialties-datalist"><% @specialties.each do |s| %><option value="<%= s %>"></option><% end %></datalist>
+        </div>
+
+        <div>
+          <%= form.label :service, "Servicio o procedimiento", class: filter_label %>
+          <%= form.text_field :service, value: params[:service], list: "services-datalist", placeholder: "Todos los servicios", autocomplete: "off", class: filter_input, data: { action: "change->form#submit" } %>
+          <datalist id="services-datalist"><% @services.each do |s| %><option value="<%= s %>"></option><% end %></datalist>
+        </div>
+
+        <% if @establishments.any? %>
+          <div>
+            <%= form.label :establishment_id, "Hospital / Clínica", class: filter_label %>
+            <%= form.select :establishment_id, options_from_collection_for_select(@establishments, :id, :name, params[:establishment_id]),
+                  { include_blank: "Todos los hospitales" }, class: filter_input, data: { action: "change->form#submit" } %>
           </div>
-        </div>
-      <% end %>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Departamento</label>
-        <div class="relative">
-          <%= form.select :department_id,
-                        options_from_collection_for_select(@departments, :id, :name, params[:department_id] || @geo_department_id),
-                        { include_blank: "Todos los departamentos" },
-                        class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md appearance-none dark:bg-slate-700 dark:text-white",
-                        data: { location_filter_target: "department", action: "change->location-filter#loadCities change->form#submit" } %>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400">
-            <%= icon(:chevron_down, class: "h-4 w-4") %>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Ciudad</label>
-        <div class="relative">
-          <%= form.select :city_id,
-                        options_from_collection_for_select(@cities, :id, :name, params[:city_id]),
-                        { include_blank: "Todas las ciudades" },
-                        class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md appearance-none dark:bg-slate-700 dark:text-white",
-                        data: { location_filter_target: "city", action: "change->form#submit" } %>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400">
-            <%= icon(:chevron_down, class: "h-4 w-4") %>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <%# Hospital / Clínica (solo si la sección está visible) %>
-    <% if @establishments.any? %>
-      <div>
-        <label for="establishment_id" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Hospital / Clínica</label>
-        <div class="relative">
-          <%= form.select :establishment_id,
-                        options_from_collection_for_select(@establishments, :id, :name, params[:establishment_id]),
-                        { include_blank: "Todos los hospitales" },
-                        class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md appearance-none dark:bg-slate-700 dark:text-white",
-                        data: { action: "change->form#submit" } %>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400">
-            <%= icon(:chevron_down, class: "h-4 w-4") %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-
-    <%# Servicio / Procedimiento %>
-    <div>
-      <label for="service" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Servicio o procedimiento</label>
-      <div class="relative">
-        <%= form.select :service,
-                      options_for_select(@services, params[:service]),
-                      { include_blank: "Todos los servicios" },
-                      class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md appearance-none dark:bg-slate-700 dark:text-white",
-                      data: { action: "change->form#submit" } %>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400">
-          <%= icon(:chevron_down, class: "h-4 w-4") %>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex justify-between pt-2">
-      <%= form.submit "Aplicar Filtros",
-                    class: "inline-flex justify-center items-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600",
-                    data: { form_target: "submitButton" } %>
-
-      <% if params[:specialty].present? || params[:service].present? || params[:country_id].present? || params[:department_id].present? || params[:city_id].present? || params[:establishment_id].present? %>
-        <%= link_to doctors_path(q: params[:q], all: 1),
-                   class: "inline-flex justify-center items-center py-2 px-4 border border-gray-300 dark:border-slate-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" do %>
-          <span>Limpiar</span>
-          <%= icon(:x_mark, class: "h-4 w-4 ml-1") %>
         <% end %>
-      <% end %>
-    </div>
 
-    <div data-form-target="loadingIndicator" class="hidden mt-2 text-center text-sm text-gray-500 dark:text-slate-400">
-      <div class="inline-flex items-center">
-        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <span>Buscando médicos...</span>
+        <div data-controller="location-filter" class="contents"
+             data-location-filter-department-blank-value="Todos los departamentos"
+             data-location-filter-city-blank-value="Todas las ciudades">
+          <% if @countries.any? %>
+            <div>
+              <%= form.label :country_id, "País", class: filter_label %>
+              <%= form.select :country_id, options_from_collection_for_select(@countries, :id, :name, params[:country_id] || @geo_country_id || (@countries.first.id if @countries.one?)),
+                    { include_blank: "Todos los países" }, class: filter_input,
+                    data: { location_filter_target: "country", action: "change->location-filter#loadDepartments change->form#submit" } %>
+            </div>
+          <% end %>
+          <div>
+            <%= form.label :department_id, "Departamento", class: filter_label %>
+            <%= form.select :department_id, options_from_collection_for_select(@departments, :id, :name, params[:department_id] || @geo_department_id),
+                  { include_blank: "Todos los departamentos" }, class: filter_input,
+                  data: { location_filter_target: "department", action: "change->location-filter#loadCities change->form#submit" } %>
+          </div>
+          <div>
+            <%= form.label :city_id, "Ciudad", class: filter_label %>
+            <%= form.select :city_id, options_from_collection_for_select(@cities, :id, :name, params[:city_id]),
+                  { include_blank: "Todas las ciudades" }, class: filter_input,
+                  data: { location_filter_target: "city", action: "change->form#submit" } %>
+          </div>
+        </div>
       </div>
-    </div>
-  <% end %>
-</div>
+
+      <div class="mt-4 flex items-center justify-end gap-2">
+        <% if active_count.positive? %>
+          <%= link_to doctors_path(q: params[:q], all: 1), class: "inline-flex items-center gap-1 rounded-full border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors" do %>
+            Limpiar <%= icon(:x_mark, class: "h-4 w-4") %>
+          <% end %>
+        <% end %>
+        <%= form.submit "Aplicar", class: "inline-flex items-center bg-primary-hover hover:bg-primary-deep text-white font-semibold rounded-full px-6 py-2 transition-colors cursor-pointer", data: { form_target: "submitButton" } %>
+      </div>
+
+      <div data-form-target="loadingIndicator" class="hidden mt-3 text-center text-sm text-muted">Buscando médicos…</div>
+    <% end %>
+  </div>
+</details>
