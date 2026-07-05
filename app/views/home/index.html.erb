@@ -2,7 +2,7 @@
 <section class="hero-wash">
   <div class="max-w-3xl mx-auto px-6 py-24 md:py-28 text-center">
     <p class="reveal text-[0.8125rem] uppercase tracking-[0.08em] text-muted font-medium mb-5" data-controller="reveal">
-      Directorio médico de Honduras
+      Directorio médico
     </p>
 
     <h1 class="reveal hero-title mb-6" data-controller="reveal" data-reveal-delay-value="60">
@@ -42,39 +42,3 @@
     </p>
   </div>
 </section>
-
-<div class="container mx-auto px-4 py-8">
-  <section class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
-      <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">
-        <%= icon(:shield_check, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
-      </div>
-      <h3 class="mb-2 text-sky-700 dark:text-sky-400">Especialistas Verificados</h3>
-      <p class="text-gray-600 dark:text-slate-400">Todos nuestros médicos son verificados y cuentan con las credenciales necesarias para ejercer.</p>
-    </div>
-    <% if section_visible?("suppliers") %>
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
-        <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">
-          <%= icon(:cube, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
-        </div>
-        <h3 class="mb-2 text-sky-700 dark:text-sky-400">Proveedores Médicos</h3>
-        <p class="text-gray-600 dark:text-slate-400">Encuentra los mejores proveedores de equipos y suministros médicos para profesionales y pacientes.</p>
-      </div>
-    <% else %>
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
-        <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">
-          <%= icon(:heart, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
-        </div>
-        <h3 class="mb-2 text-sky-700 dark:text-sky-400">Atención Confiable</h3>
-        <p class="text-gray-600 dark:text-slate-400">Profesionales comprometidos con tu salud y bienestar en cada consulta.</p>
-      </div>
-    <% end %>
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
-      <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">
-        <%= icon(:star, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
-      </div>
-      <h3 class="mb-2 text-sky-700 dark:text-sky-400">Reseñas y Calificaciones</h3>
-      <p class="text-gray-600 dark:text-slate-400">Lee opiniones de otros pacientes para elegir el médico que mejor se adapte a tus necesidades.</p>
-    </div>
-  </section>
-</div>
