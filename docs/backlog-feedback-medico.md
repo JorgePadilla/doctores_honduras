@@ -229,6 +229,20 @@ Switch en el panel admin para ocultar Hospitales/Clínicas y Proveedores del sit
 
 **Estado actual del código (verificado):** NO existe expediente clínico. Solo hay `reason` + `doctor_notes` (texto libre) por cita en `appointments`, y una "historia del paciente" (`Agenda::PatientsController#show`) que es una **lista de citas agrupada por el string `patient_name`** (sin identidad estable, por-médico, sin normalizar). `PatientProfile` es solo demográfico. → **Todo el expediente clínico es net-new.**
 
+### 💲 Modelo de negocio — Expediente = Elite (decidido)
+
+El Expediente Clínico Digital es una **función exclusiva del plan Elite** (doctor) y es la base de una escala de precios por **capacidad de registros**, con **techo numérico en todos los niveles** (nada ilimitado):
+
+| Nivel | Precio | Techo de registros |
+|-------|--------|--------------------|
+| Doctor Elite | $35/mes | 5,000 |
+| Doctor Elite 25K | $69/mes | 25,000 |
+| Doctor Elite 100K | $129/mes | 100,000 |
+
+- **Research de precio (2026):** EMR/EHR LATAM (SaludTotal, MediSystem, Huli, ARMED) ≈ **$14–131 USD/mes**; EMR EE. UU. promedian ~$382/mes. La escala entra bajo la mediana LATAM y el tope queda dentro del rango.
+- **Implementado ya (esta sesión):** columna `subscription_plans.patient_limit`, índice `(profile_type, tier)` **no-único** (los 3 Elite comparten `tier: "elite"` para no romper el gating), 3 planes Elite sembrados, badge de capacidad en la vista de planes. Ver `docs/subscription-plans.md`.
+- **Pendiente:** aplicar `patient_limit` al crear registros (depende de F1/G1, abajo). El gating de acceso a la función usa `tier == "elite"` (igual que Agenda/reservas).
+
 ### ⚠️ Decisiones clave a definir (antes de implementar)
 1. **Alcance:** ¿expediente **por médico** (cada médico su propio registro de sus pacientes) o **compartido/longitudinal** entre médicos? *Asunción por defecto: por médico* (más simple, coincide con el audio, evita complejidad legal/privacidad). Compartido = visión futura.
 2. **Pacientes sin cuenta (walk-ins):** hoy solo tienen un `patient_name` (string). ¿El expediente debe cubrirlos? Requiere identidad estable.

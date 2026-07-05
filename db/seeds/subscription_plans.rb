@@ -40,6 +40,26 @@ end
 # Seed new per-profile-type plans (idempotent via find_or_create_by)
 puts "Seeding per-profile-type subscription plans..."
 
+# Bloque común de funciones Elite. El Expediente Clínico Digital es exclusivo
+# de Elite; los 3 niveles se diferencian por el techo de registros (patient_limit).
+elite_base_features = [
+  "Alerta de alergias e info crítica",
+  "Historial clínico consolidado",
+  "Perfil premium",
+  "Agenda Médica",
+  "Reservas en línea (autoservicio paciente)",
+  "Asignar secretaria para agendar citas",
+  "Video consulta (enlace Zoom/Meet)",
+  "Estadísticas avanzadas",
+  "Notificaciones",
+  "Posición destacada",
+  "Sucursales con horarios y teléfono"
+]
+
+elite_features = ->(limit_label, support) {
+  ["Expediente Clínico Digital (#{limit_label})", *elite_base_features, support].join(", ")
+}
+
 new_plans = [
   # Doctor plans
   { profile_type: "doctor", tier: "gratis", name: "Doctor Gratis", price: 0, interval: "month", position: 0,
@@ -48,9 +68,20 @@ new_plans = [
   { profile_type: "doctor", tier: "profesional", name: "Doctor Profesional", price: 1200, interval: "month", position: 1,
     features: "Perfil destacado, Agenda Médica (gestión manual), Asignar secretaria para agendar citas, Estadísticas de visitas, Notificaciones, Soporte prioritario, Sucursales con horarios y teléfono",
     description: "Ideal para doctores que buscan mayor visibilidad" },
-  { profile_type: "doctor", tier: "elite", name: "Doctor Elite", price: 2900, interval: "month", position: 2,
-    features: "Perfil premium, Agenda Médica, Reservas en línea (autoservicio paciente), Asignar secretaria para agendar citas, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada, Sucursales con horarios y teléfono",
-    description: "La mejor opción para doctores: incluye enlace de video consulta" },
+
+  # Elite — 3 niveles por capacidad de Expediente Clínico Digital (todos con techo).
+  { profile_type: "doctor", tier: "elite", name: "Doctor Elite", price: 3500, interval: "month", position: 2,
+    patient_limit: 5_000,
+    features: elite_features.("hasta 5,000 registros", "Soporte prioritario"),
+    description: "Expediente Clínico Digital para consultorios: hasta 5,000 registros de pacientes." },
+  { profile_type: "doctor", tier: "elite", name: "Doctor Elite 25K", price: 6900, interval: "month", position: 3,
+    patient_limit: 25_000,
+    features: elite_features.("hasta 25,000 registros", "Soporte prioritario"),
+    description: "Para clínicas con alto volumen: hasta 25,000 registros de pacientes." },
+  { profile_type: "doctor", tier: "elite", name: "Doctor Elite 100K", price: 12900, interval: "month", position: 4,
+    patient_limit: 100_000,
+    features: elite_features.("hasta 100,000 registros", "Soporte dedicado"),
+    description: "Máxima capacidad: hasta 100,000 registros de pacientes." },
 
   # Hospital/Clinic plans
   { profile_type: "hospital", tier: "gratis", name: "Hospital/Clínica Gratis", price: 0, interval: "month", position: 0,
@@ -80,10 +111,13 @@ new_plans = [
     description: "Plan gratuito para pacientes" }
 ]
 
+# Upsert por nombre (único por plan). Con 3 niveles Elite ya no se puede usar
+# (profile_type, tier) como clave, y así los precios/límites/features se
+# actualizan en filas existentes al re-correr las seeds.
 new_plans.each do |plan_attrs|
-  SubscriptionPlan.find_or_create_by!(profile_type: plan_attrs[:profile_type], tier: plan_attrs[:tier]) do |plan|
-    plan.assign_attributes(plan_attrs)
-  end
+  plan = SubscriptionPlan.find_or_initialize_by(name: plan_attrs[:name])
+  plan.assign_attributes(plan_attrs)
+  plan.save!
 end
 
 puts "Per-profile-type plans seeded: #{SubscriptionPlan.where.not(profile_type: nil).count} plans"

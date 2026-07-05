@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_140005) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -498,7 +498,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_140005) do
     t.string "profile_type"
     t.string "tier"
     t.integer "position", default: 0
-    t.index ["profile_type", "tier"], name: "index_subscription_plans_on_profile_type_and_tier", unique: true
+    t.integer "patient_limit"
+    t.index ["profile_type", "tier"], name: "index_subscription_plans_on_profile_type_and_tier"
     t.index ["stripe_price_id"], name: "index_subscription_plans_on_stripe_price_id", unique: true
     t.index ["stripe_product_id"], name: "index_subscription_plans_on_stripe_product_id", unique: true
   end

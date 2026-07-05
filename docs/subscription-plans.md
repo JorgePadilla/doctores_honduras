@@ -4,17 +4,23 @@ This document describes the subscription plan system for Doctores Honduras.
 
 ## Overview
 
-The platform uses a **per-profile-type** subscription model. Each profile type (doctor, hospital/clinic, vendor, paciente) has its own set of plans. Doctor, hospital/clinic, and vendor have three tiers: **gratis**, **profesional**, and **elite/premium**. Paciente has a single **gratis** tier.
+The platform uses a **per-profile-type** subscription model. Each profile type (doctor, hospital/clinic, vendor, paciente) has its own set of plans. Doctor has **gratis**, **profesional**, and **three Elite tiers** (differentiated by clinical-record capacity). Hospital/clinic and vendor have **gratis**, **profesional**, and **premium**. Paciente has a single **gratis** tier.
 
 ## Plan Structure
 
 ### Doctor Plans
 
-| Tier | Name | Price | Features |
-|------|------|-------|----------|
-| gratis | Doctor Gratis | $0/mes | Perfil básico, Aparecer en directorio, Búsqueda de doctores, Sucursales (sin horarios ni teléfono) |
-| profesional | Doctor Profesional | $12/mes | Perfil destacado, Agenda Médica (gestión manual), Asignar secretaria para agendar citas, Estadísticas de visitas, Notificaciones, Soporte prioritario, Sucursales con horarios y teléfono |
-| elite | Doctor Elite | $29/mes | Perfil premium, Agenda Médica, Reservas en línea (autoservicio paciente), Asignar secretaria para agendar citas, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Soporte prioritario, Posición destacada, Sucursales con horarios y teléfono |
+The three Elite tiers all share `tier: "elite"` (so tier-based gating is unchanged) and are differentiated by **`patient_limit`** — the number of clinical records (registros) allowed by the **Expediente Clínico Digital**, an Elite-exclusive feature. Every tier has a numeric ceiling (no unlimited tier).
+
+| Tier | Name | Price | Registros (patient_limit) | Features |
+|------|------|-------|---------------------------|----------|
+| gratis | Doctor Gratis | $0/mes | — | Perfil básico, Aparecer en directorio, Búsqueda de doctores, Sucursales (sin horarios ni teléfono) |
+| profesional | Doctor Profesional | $12/mes | — | Perfil destacado, Agenda Médica (gestión manual), Asignar secretaria para agendar citas, Estadísticas de visitas, Notificaciones, Soporte prioritario, Sucursales con horarios y teléfono |
+| elite | Doctor Elite | $35/mes | 5,000 | **Expediente Clínico Digital (hasta 5,000 registros)**, Alerta de alergias e info crítica, Historial clínico consolidado, Perfil premium, Agenda Médica, Reservas en línea (autoservicio paciente), Asignar secretaria, Video consulta (enlace Zoom/Meet), Estadísticas avanzadas, Notificaciones, Posición destacada, Sucursales con horarios y teléfono, Soporte prioritario |
+| elite | Doctor Elite 25K | $69/mes | 25,000 | Todo lo de Elite, con **Expediente Clínico Digital hasta 25,000 registros** |
+| elite | Doctor Elite 100K | $129/mes | 100,000 | Todo lo de Elite, con **Expediente Clínico Digital hasta 100,000 registros** y Soporte dedicado |
+
+**Pricing rationale (2026):** research de mercado de EMR/EHR — soluciones LATAM (SaludTotal, MediSystem, Huli, ARMED) rondan **$14–131 USD/mes**; EMR de EE. UU. promedian ~$382/mes. La escala Elite ($35 → $69 → $129) posiciona el nivel de entrada por debajo de la mediana LATAM y el tope dentro del rango, escalando por capacidad de registros. Todos los niveles tienen techo (nada ilimitado).
 
 ### Hospital/Clinic Plans
 
@@ -72,9 +78,12 @@ end
 | description | text | Plan description |
 | profile_type | string | "doctor", "hospital", "vendor", or "paciente" (nil for legacy) |
 | tier | string | "gratis", "profesional", "elite", or "premium" |
-| position | integer | Display order (0, 1, 2) |
+| patient_limit | integer | Registros (clinical records) allowed. NULL = Expediente Clínico no aplica al plan. Used to differentiate the 3 Elite tiers. |
+| position | integer | Display order (0, 1, 2, 3, 4…) |
 | stripe_product_id | string | Stripe product ID |
 | stripe_price_id | string | Stripe price ID |
+
+**Index note:** `(profile_type, tier)` is indexed but **no longer unique** — the 3 Elite tiers share `("doctor", "elite")`. Uniqueness is now effectively by `name`.
 
 ### Key Scopes
 
@@ -130,7 +139,7 @@ Plans are seeded via `db/seeds/subscription_plans.rb`:
 bin/rails db:seed
 ```
 
-The seed file is idempotent - it uses `find_or_create_by` to avoid duplicates.
+The seed file is idempotent — it **upserts by `name`** (`find_or_initialize_by(name:)` + `save!`), so re-running the seeds also **updates** prices, `patient_limit`, and features on existing rows. (It can no longer key on `(profile_type, tier)` because the 3 Elite tiers share that pair.)
 
 ## Legacy Plans
 
@@ -195,6 +204,20 @@ El sistema de agenda permite a los doctores gestionar citas. El acceso depende d
 
 - **Profesional** (sin autoservicio): el doctor y sus secretarias pueden crear, editar y cancelar citas manualmente desde `/agenda/appointments`. Pueden configurar duración de citas y buffer entre citas. Los pacientes **no** pueden reservar por su cuenta.
 - **Elite** (autoservicio + secretarias): además de todo lo anterior, el doctor puede activar "Reservas en línea" (`public_booking_enabled`) para que pacientes reserven citas directamente desde el perfil público del doctor. También puede asignar secretarias para gestión manual.
+
+### Expediente Clínico Digital (Elite only)
+
+El **Expediente Clínico Digital** (ficha clínica: alergias, crónicos, medicamentos, tipo de sangre, antecedentes; alerta de info crítica; historial consolidado) es **exclusivo del tier Elite**. Los 3 niveles Elite se diferencian por el **techo de registros** (`patient_limit`):
+
+| Tier | Registros (patient_limit) |
+|------|---------------------------|
+| Doctor Elite | 5,000 |
+| Doctor Elite 25K | 25,000 |
+| Doctor Elite 100K | 100,000 |
+
+Todos los niveles tienen un tope numérico — no hay nivel ilimitado. Como los 3 comparten `tier: "elite"`, el gating de acceso a la función se resuelve con `tier == "elite"` (igual que Agenda/reservas); el `patient_limit` se aplicará al crear registros para hacer cumplir la capacidad contratada.
+
+> **Estado:** el modelo de datos del expediente (entidad de paciente canónica, ficha clínica, alertas) está en el backlog — ver `docs/backlog-feedback-medico.md`, sección "2º audio — Expediente clínico digital" (Epics F–I). El campo `patient_limit` en los planes ya está listo para cuando se implemente la aplicación del límite.
 
 Server-side enforcement:
 - `AgendaAuthorization` concern verifica que el doctor tenga tier != "gratis" para acceder a `/agenda/*`
