@@ -159,17 +159,7 @@
                       <a href="<%= branch.map_link %>" target="_blank" class="text-sm hover:underline text-sky-600 dark:text-sky-400">Ver en mapa</a>
                     <% end %>
                     <% if paid_plan? %>
-                      <% schedules = branch.branch_schedules.reject { |s| s.opens_at.nil? }.sort_by(&:day_of_week) %>
-                      <% if schedules.any? %>
-                        <div class="mt-2">
-                          <p class="text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Horarios:</p>
-                          <div class="text-sm text-gray-600 dark:text-slate-400 space-y-0.5">
-                            <% schedules.each do |schedule| %>
-                              <p><span class="w-24 inline-block"><%= schedule.day_name %>:</span> <%= schedule.opens_at.strftime("%H:%M") %> - <%= schedule.closes_at.strftime("%H:%M") %></p>
-                            <% end %>
-                          </div>
-                        </div>
-                      <% end %>
+                      <%= render "shared/branch_schedule", branch: branch %>
                     <% end %>
                   </div>
                 <% end %>

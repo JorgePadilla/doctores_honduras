@@ -1,0 +1,27 @@
+<%# Read-only weekly schedule for a doctor branch. Local: branch (DoctorBranch).
+    Shows every weekday (Mon-first) so patients can see at a glance which days are
+    open and which are "Cerrado". Renders nothing when the branch has no hours. %>
+<% ordered_days = [ 1, 2, 3, 4, 5, 6, 0 ] %>
+<% by_day = branch.branch_schedules.reject { |s| s.opens_at.nil? }.index_by(&:day_of_week) %>
+<% if by_day.any? %>
+  <div class="mt-3">
+    <p class="text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+      <%= icon(:calendar_days, class: "w-4 h-4 text-sky-500 dark:text-sky-400") %> Horarios de atención
+    </p>
+    <dl class="text-sm rounded-lg border border-gray-200 dark:border-slate-700 divide-y divide-gray-100 dark:divide-slate-700 overflow-hidden max-w-xs">
+      <% ordered_days.each do |day_num| %>
+        <% schedule = by_day[day_num] %>
+        <div class="flex items-center justify-between px-3 py-1.5 <%= 'bg-gray-50 dark:bg-slate-800/40' if schedule.nil? %>">
+          <dt class="text-gray-600 dark:text-slate-400"><%= BranchSchedule::DAY_NAMES[day_num] %></dt>
+          <dd class="font-medium <%= schedule ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-slate-500' %>">
+            <% if schedule %>
+              <%= schedule.opens_at.strftime("%H:%M") %> – <%= schedule.closes_at.strftime("%H:%M") %>
+            <% else %>
+              Cerrado
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+<% end %>

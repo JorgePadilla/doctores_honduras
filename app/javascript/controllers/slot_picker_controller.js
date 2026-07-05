@@ -1,10 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["branchSelect", "dateInput", "slotsContainer", "startTime", "endTime"]
+  static targets = ["branchSelect", "dateInput", "slotsContainer", "startTime", "endTime", "durationSelect"]
 
   connect() {
     this.selectedSlot = null
+    // Seed from existing values so editing an appointment keeps its start/end and
+    // a duration change recomputes the end time even before re-picking a slot.
+    this.selectedStart = this.startTimeTarget.value || null
+    this.selectedEnd = this.endTimeTarget.value || null
   }
 
   loadSlots() {
@@ -73,8 +77,34 @@ export default class extends Controller {
     button.classList.add("bg-sky-500", "text-white", "border-sky-500")
     this.selectedSlot = button
 
-    // Update hidden fields
-    this.startTimeTarget.value = slot.start_time
-    this.endTimeTarget.value = slot.end_time
+    this.selectedStart = slot.start_time
+    this.selectedEnd = slot.end_time
+    this.applyTimes()
+  }
+
+  // Recompute the end time when the per-appointment duration changes (C1).
+  durationChanged() {
+    this.applyTimes()
+  }
+
+  applyTimes() {
+    if (!this.selectedStart) return
+
+    this.startTimeTarget.value = this.selectedStart
+
+    if (this.hasDurationSelectTarget && this.durationSelectTarget.value) {
+      const minutes = parseInt(this.durationSelectTarget.value, 10)
+      this.endTimeTarget.value = this.addMinutes(this.selectedStart, minutes)
+    } else if (this.selectedEnd) {
+      this.endTimeTarget.value = this.selectedEnd
+    }
+  }
+
+  addMinutes(hhmm, minutes) {
+    const [h, m] = hhmm.split(":").map(Number)
+    const total = h * 60 + m + minutes
+    const nh = Math.floor(total / 60) % 24
+    const nm = total % 60
+    return `${String(nh).padStart(2, "0")}:${String(nm).padStart(2, "0")}`
   }
 }

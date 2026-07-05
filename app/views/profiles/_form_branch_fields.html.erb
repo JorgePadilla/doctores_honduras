@@ -102,7 +102,8 @@
   <% if paid_plan? %>
     <%# Schedule section for paid plans %>
     <div class="mt-4 border-t border-gray-200 dark:border-slate-600 pt-4">
-      <h4 class="text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">Horarios de atención</h4>
+      <h4 class="text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Horarios de atención</h4>
+      <p class="text-xs text-gray-500 dark:text-slate-400 mb-3">Define la hora de apertura y cierre de cada día. Marca <span class="font-medium">Cerrado</span> en los días que no atiendes; esos días no aparecerán en tu perfil ni en la agenda.</p>
       <div class="space-y-2">
         <% if defined?(bf) && bf %>
           <% BranchSchedule::DAY_NAMES.each do |day_num, day_name| %>
