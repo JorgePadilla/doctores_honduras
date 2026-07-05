@@ -1,27 +1,49 @@
-<div class="container mx-auto px-4 py-8">
-  <header class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-4">Doctores Honduras</h1>
-    <p class="text-xl text-gray-600 dark:text-slate-400">Encuentra el médico especialista que necesitas en Honduras</p>
-  </header>
-
-  <section class="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-8 mb-10 border border-transparent dark:border-slate-700">
-    <h2 class="text-2xl font-semibold text-primary-700 dark:text-sky-400 mb-4">Bienvenido a nuestro directorio médico</h2>
-    <p class="text-gray-700 dark:text-slate-300 mb-6">
-      Doctores Honduras es la plataforma más completa para encontrar profesionales de la salud en todo el país.
-      Busca por especialidad, ubicación o disponibilidad y agenda tu cita de manera rápida y sencilla.
+<%# ── Hero: la búsqueda es la protagonista (DESIGN.md "Signature") ── %>
+<section class="hero-wash">
+  <div class="max-w-3xl mx-auto px-6 py-24 md:py-28 text-center">
+    <p class="reveal text-[0.8125rem] uppercase tracking-[0.08em] text-muted font-medium mb-5" data-controller="reveal">
+      Directorio médico de Honduras
     </p>
-    <div class="flex justify-center space-x-4">
-      <a href="/doctors" class="py-3 px-6 rounded-full inline-block text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
-        Buscar médicos
-      </a>
-      <% if section_visible?("suppliers") %>
-        <a href="/proveedores" class="py-3 px-6 rounded-full inline-block text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
-          Ver proveedores
-        </a>
-      <% end %>
-    </div>
-  </section>
 
+    <h1 class="reveal hero-title mb-6" data-controller="reveal" data-reveal-delay-value="60">
+      Encontrá al <span class="text-primary">especialista</span> que buscás.
+    </h1>
+
+    <p class="reveal text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto mb-10" data-controller="reveal" data-reveal-delay-value="120">
+      Busca por especialidad, procedimiento o ciudad y agendá tu cita.
+    </p>
+
+    <%# Barra de búsqueda — envía a /doctors con ?q= (búsqueda ya existente) %>
+    <form action="/doctors" method="get"
+          class="reveal flex items-center gap-2 bg-white dark:bg-slate-800 rounded-full border border-line dark:border-slate-700 shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)] p-2 pl-5 max-w-2xl mx-auto"
+          data-controller="reveal rotating-placeholder"
+          data-reveal-delay-value="180"
+          data-rotating-placeholder-phrases-value="<%= (@placeholder_specialties.presence || %w[Cardiología Pediatría Dermatología]).to_json %>"
+          data-rotating-placeholder-interval-value="3000">
+      <%= icon(:magnifying_glass, class: "w-5 h-5 text-primary shrink-0") %>
+      <input type="text" name="q" autocomplete="off"
+             data-rotating-placeholder-target="input"
+             placeholder="Busca por especialidad, ciudad o nombre"
+             aria-label="Buscar doctor"
+             class="flex-1 min-w-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-ink dark:text-white placeholder:text-muted py-2 text-base">
+      <button type="submit"
+              class="shrink-0 inline-flex items-center bg-primary-hover hover:bg-primary-deep text-white font-semibold rounded-full px-6 py-3 transition-colors">
+        Buscar
+      </button>
+    </form>
+
+    <%# Stats con count-up al primer reveal %>
+    <p class="reveal mt-8 text-sm text-muted tabular-nums flex items-center justify-center gap-2 flex-wrap" data-controller="reveal" data-reveal-delay-value="240">
+      <span><span class="font-semibold text-ink dark:text-slate-200" data-controller="count-up" data-count-up-target-value="<%= @doctor_count %>"><%= number_with_delimiter(@doctor_count) %></span> doctores</span>
+      <span aria-hidden="true">·</span>
+      <span><span class="font-semibold text-ink dark:text-slate-200" data-controller="count-up" data-count-up-target-value="<%= @specialty_count %>"><%= @specialty_count %></span> especialidades</span>
+      <span aria-hidden="true">·</span>
+      <span><span class="font-semibold text-ink dark:text-slate-200" data-controller="count-up" data-count-up-target-value="<%= @department_count %>"><%= @department_count %></span> departamentos</span>
+    </p>
+  </div>
+</section>
+
+<div class="container mx-auto px-4 py-8">
   <section class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700 transition-all hover:shadow-lg">
       <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mb-4">

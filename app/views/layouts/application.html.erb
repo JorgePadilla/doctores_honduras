@@ -3,9 +3,17 @@
   <head>
     <title><%= content_for(:title) || "Doctores Honduras - Doctores Hospitales y Clínicas" %></title>
     <meta charset="utf-8">
+    <%# Marca que JS está activo antes del primer paint (para gatear el reveal sin flash). %>
+    <script>document.documentElement.classList.add('js')</script>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="view-transition" content="same-origin">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Fuentes del rediseño (DESIGN.md): Bricolage Grotesque + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="<%= content_for(:meta_description) || 'Directorio de médicos y establecimientos de salud en Honduras. Encuentra especialistas, hospitales y clínicas cerca de ti.' %>">

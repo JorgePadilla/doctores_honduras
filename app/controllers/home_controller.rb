@@ -3,6 +3,12 @@ class HomeController < ApplicationController
 
   def index
     redirect_to_onboarding_if_needed
+    return if performed?
+
+    @doctor_count = DoctorProfile.count
+    @specialty_count = Specialty.count
+    @department_count = Department.count
+    @placeholder_specialties = Specialty.order(:name).limit(8).pluck(:name)
   end
 
   private

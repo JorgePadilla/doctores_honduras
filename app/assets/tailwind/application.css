@@ -2,6 +2,21 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Design tokens — ver DESIGN.md. Generan utilidades: bg-primary, text-ink,
+   text-muted, border-line, bg-primary-deep/soft, font-display, etc. */
+@theme {
+  --color-primary:       #0EA5E9;  /* sky-500 — acentos, iconos, links, foco */
+  --color-primary-hover: #0284C7;  /* sky-600 — relleno de botón / hover */
+  --color-primary-deep:  #0C4A6E;  /* sky-900 — hero/footer fondo oscuro */
+  --color-primary-soft:  #F0F9FF;  /* sky-50  — tintes claros */
+  --color-ink:           #0B1220;  /* texto principal */
+  --color-muted:         #8B95A5;  /* labels, metadata, stats */
+  --color-line:          #E4E9F0;  /* bordes, divisores */
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
 /* Theme variables */
 :root {
   --color-surface: #ffffff;
@@ -102,4 +117,53 @@ h3 {
   font-weight: 500;
   color: var(--color-text-secondary);
   margin-bottom: 0.25rem;
+}
+
+/* ── Redesign (DESIGN.md) ─────────────────────────────────────────────── */
+
+/* Headline del hero. Clase específica (mayor especificidad que la regla
+   global `h1`, misma capa) para que gane sin !important. */
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 0;
+}
+.dark .hero-title { color: #f1f5f9; }
+
+/* Wash sutil del hero: primary-soft desvaneciendo a blanco. */
+.hero-wash {
+  background:
+    radial-gradient(60rem 32rem at 50% -8rem, var(--color-primary-soft), transparent 70%);
+}
+.dark .hero-wash {
+  background:
+    radial-gradient(60rem 32rem at 50% -8rem, rgb(14 165 233 / 0.10), transparent 70%);
+}
+
+/* Scroll reveal. Gateado bajo html.js: sin JS el contenido se ve normal
+   (nunca queda oculto); con JS parte oculto y reveal_controller.js añade
+   .is-visible al entrar al viewport. El script inline que agrega .js va en
+   el <head> del layout, antes del primer paint (evita el flash). */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    transition: opacity 150ms ease;
+    transform: none;
+  }
 }
