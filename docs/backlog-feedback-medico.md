@@ -362,4 +362,4 @@ El paciente ve (parte de) su expediente/alergias desde su cuenta. Hoy solo ve su
 
 **Entregado (esta sesión):** **H1** (nota de evolución por consulta) · **H2** (receta con medicamentos repetibles + vista imprimible) · **H3** (signos vitales) · **I1** (el paciente ve sus vitales y recetas, sin la nota interna del médico). Todo Elite, colgando de la cita (`Encounter` + `Prescription` por `appointment`).
 
-**2º audio: completo (F1, G1, G2, G3, H1–H4, I1).** Único pendiente **de ops** (no de código): crear el bucket S3 **privado** para los adjuntos de H4 y setear `AWS_PRIVATE_BUCKET` en Railway (idealmente rotar las llaves AWS filtradas antes).
+**2º audio: completo (F1, G1, G2, G3, H1–H4, I1).** Único pendiente **de ops** (no de código): crear el bucket S3 **privado** para los adjuntos de H4 + `AWS_PRIVATE_BUCKET`, rotar llaves AWS, y correr `db:seed` (planes Elite). **Checklist completo en [`docs/pendientes.md`](pendientes.md).**
