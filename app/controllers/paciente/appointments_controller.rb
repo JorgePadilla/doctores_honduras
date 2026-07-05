@@ -7,7 +7,7 @@ class Paciente::AppointmentsController < Paciente::BaseController
   end
 
   def show
-    @appointment = Current.user.patient_appointments.find(params[:id])
+    @appointment = Current.user.patient_appointments.with_attached_lab_attachments.find(params[:id])
     @encounter = @appointment.encounter
     @prescription = @appointment.prescription
   end

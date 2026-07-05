@@ -12,7 +12,7 @@ class Agenda::PatientsController < Agenda::BaseController
 
   def show
     @patient = current_doctor_profile.patients.find(params[:id])
-    @appointments = @patient.appointments.order(appointment_date: :desc, start_time: :desc)
+    @appointments = @patient.appointments.includes(:doctor_branch).order(appointment_date: :desc, start_time: :desc)
     @clinical_record = @patient.clinical_record
   end
 

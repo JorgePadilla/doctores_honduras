@@ -38,7 +38,7 @@
     <% end %>
   </div>
 
-  <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Historial de Citas (<%= @appointments.count %>)</h2>
+  <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Historial de Citas (<%= @appointments.size %>)</h2>
 
   <div class="space-y-3">
     <% @appointments.each do |apt| %>

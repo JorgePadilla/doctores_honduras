@@ -26,7 +26,7 @@ class Admin::DashboardController < ApplicationController
 
     # Recent activity
     @recent_users = User.order(created_at: :desc).limit(5)
-    @recent_doctors = DoctorProfile.order(created_at: :desc).limit(5)
+    @recent_doctors = DoctorProfile.includes(:specialty).order(created_at: :desc).limit(5)
 
     # Chart data
     @doctor_growth_data = doctor_growth_data
@@ -34,15 +34,16 @@ class Admin::DashboardController < ApplicationController
   end
 
   def users
-    @users = User.order(created_at: :desc)
+    @users = User.includes(:sessions).order(created_at: :desc)
   end
 
   def doctors
-    @doctors = DoctorProfile.includes(:user, :city, :department).order(created_at: :desc)
+    @doctors = DoctorProfile.includes(:user, :city, :department, :specialty, :subspecialty).order(created_at: :desc)
   end
 
   def subscriptions
     @subscriptions = Subscription.includes(:user, :subscription_plan).order(created_at: :desc)
+    @subscription_plans = SubscriptionPlan.all.to_a
   end
 
   def toggle_doctor_visibility

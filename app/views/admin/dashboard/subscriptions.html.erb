@@ -116,7 +116,7 @@
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Distribución por Plan</h2>
       <div class="space-y-3">
         <% active_total = active_subs.size %>
-        <% SubscriptionPlan.all.each do |plan| %>
+        <% @subscription_plans.each do |plan| %>
           <% plan_count = active_subs.count { |s| s.subscription_plan_id == plan.id } %>
           <% if plan_count > 0 %>
             <div class="flex justify-between items-center">
@@ -135,7 +135,7 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Ingresos por Plan</h2>
       <div class="space-y-3">
-        <% SubscriptionPlan.all.each do |plan| %>
+        <% @subscription_plans.each do |plan| %>
           <% plan_count = active_subs.count { |s| s.subscription_plan_id == plan.id } %>
           <% plan_revenue = plan_count * plan.price %>
           <% if plan_revenue > 0 %>

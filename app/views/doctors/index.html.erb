@@ -37,7 +37,8 @@
 
       <div class="grid md:grid-cols-1 gap-8">
     <% @doctors.each do |doctor| %>
-      <% branch = doctor.doctor_branches.ordered.first %>
+      <%# ordenar en Ruby sobre la asociación ya precargada (evita N+1: .ordered re-consultaría) %>
+      <% branch = doctor.doctor_branches.min_by { |b| b.position || 0 } %>
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border-l-8 transition-all hover:shadow-lg border-sky-300 dark:border-sky-500">
         <div class="flex flex-col md:flex-row">
           <div class="md:w-1/4 p-4">

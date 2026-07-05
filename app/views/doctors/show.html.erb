@@ -89,7 +89,7 @@
         <% end %>
 
         <%# Education %>
-        <% educations = @doctor.doctor_educations.ordered %>
+        <% educations = @doctor.doctor_educations.sort_by { |e| e.position || 0 } %>
         <% if educations.any? %>
           <div class="mb-6">
             <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Formación Académica</h2>
@@ -110,7 +110,7 @@
         <% end %>
 
         <%# Certifications %>
-        <% certifications = @doctor.doctor_certifications.ordered %>
+        <% certifications = @doctor.doctor_certifications.sort_by { |c| c.position || 0 } %>
         <% if certifications.any? %>
           <div class="mb-6">
             <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Capacitaciones y Certificaciones</h2>
@@ -131,7 +131,8 @@
         <% end %>
 
         <%# Ubicaciones (doctor_branches) - phone and schedules gated by doctor's plan %>
-        <% branches = @doctor.doctor_branches.ordered %>
+        <%# ordenar en Ruby preserva el preload anidado (department/city/branch_schedules) %>
+        <% branches = @doctor.doctor_branches.sort_by { |b| b.position || 0 } %>
         <% if branches.any? %>
           <div class="mb-6">
             <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Ubicaciones</h2>

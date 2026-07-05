@@ -1,5 +1,5 @@
 class Agenda::AppointmentsController < Agenda::BaseController
-  before_action :set_appointment, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_appointment, only: [ :edit, :update, :destroy ]
 
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Date.current
@@ -16,6 +16,8 @@ class Agenda::AppointmentsController < Agenda::BaseController
   end
 
   def show
+    # Precarga los adjuntos (blobs) para no hacer N+1 al listarlos en el detalle.
+    @appointment = current_doctor_profile.appointments.with_attached_lab_attachments.find(params[:id])
   end
 
   def new
