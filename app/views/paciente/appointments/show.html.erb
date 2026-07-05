@@ -51,4 +51,78 @@
       <% end %>
     </div>
   </div>
+
+  <!-- Signos vitales -->
+  <% if @encounter&.vitals? %>
+    <div class="mt-6 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
+      <h2 class="text-lg font-bold text-primary-700 dark:text-sky-400 mb-4">Signos vitales</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <% if @encounter.blood_pressure.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Presión arterial</h3>
+            <p class="text-gray-900 dark:text-white"><%= @encounter.blood_pressure %></p>
+          </div>
+        <% end %>
+        <% if @encounter.heart_rate.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Frec. cardíaca</h3>
+            <p class="text-gray-900 dark:text-white"><%= @encounter.heart_rate %> lpm</p>
+          </div>
+        <% end %>
+        <% if @encounter.temperature.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Temperatura</h3>
+            <p class="text-gray-900 dark:text-white"><%= @encounter.temperature %> °C</p>
+          </div>
+        <% end %>
+        <% if @encounter.respiratory_rate.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Frec. respiratoria</h3>
+            <p class="text-gray-900 dark:text-white"><%= @encounter.respiratory_rate %> rpm</p>
+          </div>
+        <% end %>
+        <% if @encounter.oxygen_saturation.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Saturación O₂</h3>
+            <p class="text-gray-900 dark:text-white"><%= @encounter.oxygen_saturation %> %</p>
+          </div>
+        <% end %>
+        <% if @encounter.weight.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Peso</h3>
+            <p class="text-gray-900 dark:text-white"><%= @encounter.weight %> kg</p>
+          </div>
+        <% end %>
+        <% if @encounter.height.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Altura</h3>
+            <p class="text-gray-900 dark:text-white"><%= @encounter.height %> cm</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Receta -->
+  <% if @prescription&.any_items? %>
+    <div class="mt-6 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
+      <h2 class="text-lg font-bold text-primary-700 dark:text-sky-400 mb-4">Receta</h2>
+      <ul class="space-y-3">
+        <% @prescription.prescription_items.each do |item| %>
+          <li>
+            <p class="text-gray-900 dark:text-white font-semibold"><%= item.medication %></p>
+            <p class="text-sm text-gray-600 dark:text-slate-300">
+              <%= [ item.dosage, item.frequency, item.duration ].reject(&:blank?).join(" · ") %>
+            </p>
+          </li>
+        <% end %>
+      </ul>
+      <% if @prescription.instructions.present? %>
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Indicaciones</h3>
+          <p class="text-gray-900 dark:text-white"><%= @prescription.instructions %></p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 </div>
