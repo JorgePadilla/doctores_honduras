@@ -7,14 +7,18 @@ class DoctorsController < ApplicationController
 
     # Track meaningful searches (admin traffic insight). Debounced live-search may
     # fire a few per session; acceptable for now.
-    if params[:q].to_s.length >= 2 || params[:service].present? ||
+    if params[:q].to_s.length >= 2 || params[:service].present? || params[:city_id].present? ||
+       params[:establishment_id].present? ||
        (params[:specialty].present? && params[:specialty] != "Todas las especialidades")
-      ahoy.track "Search", { scope: "doctors", query: params[:q], specialty: params[:specialty], service: params[:service] }.compact_blank
+      ahoy.track "Search", { scope: "doctors", query: params[:q], specialty: params[:specialty], service: params[:service], city_id: params[:city_id], establishment_id: params[:establishment_id] }.compact_blank
     end
 
-    # Load all specialties and services for filter dropdowns
+    # Load options for the filter dropdowns (Especialidad · Ciudad · Hospital · Servicio)
     @specialties = Specialty.order(:name).pluck(:name).uniq
     @services = Service.order(:name).pluck(:name).uniq
+    @cities = City.order(:name)
+    # Hospital filter only offered when the establishments section is visible.
+    @establishments = section_visible?("establishments") ? Establishment.order(:name) : Establishment.none
 
     # Build the base query - exclude hidden profiles
     doctors_query = DoctorProfile.includes(:establishments, :services, :city, :department, :specialty, :subspecialty, doctor_branches: [ :department, :city ]).where(hidden: false)
@@ -27,6 +31,19 @@ class DoctorsController < ApplicationController
     # Apply service filter if present
     if params[:service].present? && params[:service] != "Todos los servicios"
       doctors_query = doctors_query.joins(:services).where("LOWER(services.name) = ?", params[:service].downcase)
+    end
+
+    # Apply city filter (Ticket A3) — filter by the doctor's city. Uses city_id
+    # (not a join) to stay clear of the free-text search's raw joins below.
+    if params[:city_id].present?
+      doctors_query = doctors_query.where(city_id: params[:city_id])
+    end
+
+    # Apply hospital/clinic filter (Ticket A3) via a subquery on the join table.
+    if params[:establishment_id].present?
+      doctors_query = doctors_query.where(
+        id: DoctorEstablishment.where(establishment_id: params[:establishment_id]).select(:doctor_profile_id)
+      )
     end
 
     # Apply search filter if present
@@ -46,8 +63,18 @@ class DoctorsController < ApplicationController
         parameters.push(term, term, term, term, term)
       end
 
-      # Also search in establishments and include city/department joins for search
-      establishment_joins = doctors_query.joins("LEFT JOIN doctor_establishments ON doctor_profiles.id = doctor_establishments.doctor_profile_id LEFT JOIN establishments ON doctor_establishments.establishment_id = establishments.id LEFT JOIN cities ON doctor_profiles.city_id = cities.id LEFT JOIN departments ON doctor_profiles.department_id = departments.id LEFT JOIN specialties ON doctor_profiles.specialty_id = specialties.id LEFT JOIN subspecialties ON doctor_profiles.subspecialty_id = subspecialties.id")
+      # LEFT JOIN establishments, services, and location tables so a free-text term
+      # can match any of them without excluding doctors that lack an association.
+      search_joins = doctors_query.joins("LEFT JOIN doctor_establishments ON doctor_profiles.id = doctor_establishments.doctor_profile_id LEFT JOIN establishments ON doctor_establishments.establishment_id = establishments.id LEFT JOIN doctor_services ON doctor_profiles.id = doctor_services.doctor_profile_id LEFT JOIN services ON doctor_services.service_id = services.id LEFT JOIN cities ON doctor_profiles.city_id = cities.id LEFT JOIN departments ON doctor_profiles.department_id = departments.id LEFT JOIN specialties ON doctor_profiles.specialty_id = specialties.id LEFT JOIN subspecialties ON doctor_profiles.subspecialty_id = subspecialties.id")
+
+      # Match each term against a doctor's services/procedures (e.g. "cesárea",
+      # "caries") — this is how patients actually search. (Ticket A1.)
+      service_conditions = []
+      service_parameters = []
+      terms.each do |term|
+        service_conditions << "LOWER(services.name) LIKE ?"
+        service_parameters.push(term)
+      end
 
       # Add establishment name to search as an optional condition
       establishment_conditions = []
@@ -62,11 +89,11 @@ class DoctorsController < ApplicationController
 
       # Combine all conditions with OR logic instead of AND
       # This allows doctors to be found even if they don't have establishments
-      all_conditions = conditions + establishment_conditions
-      all_parameters = parameters + establishment_parameters
+      all_conditions = conditions + service_conditions + establishment_conditions
+      all_parameters = parameters + service_parameters + establishment_parameters
 
       # Use OR logic between all conditions
-      doctors_query = establishment_joins.where(all_conditions.join(" OR "), *all_parameters).distinct
+      doctors_query = search_joins.where(all_conditions.join(" OR "), *all_parameters).distinct
     end
 
     # Get total count for pagination

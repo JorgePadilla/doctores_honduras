@@ -15,7 +15,7 @@
 
 El médico insiste en que la gente **no busca por nombre de médico, busca por lo que le duele / el procedimiento**: "cesárea", "apéndice", "caries", "obturaciones". Hoy el buscador no cubre esto.
 
-### A1 · Búsqueda libre por servicio / procedimiento  `P0` · `M` · 🔲
+### A1 · Búsqueda libre por servicio / procedimiento  `P0` · `M` · ✅
 **Historia:** Como paciente, quiero escribir un procedimiento (p. ej. *"cesárea"*, *"apendicitis"*, *"caries"*) en el buscador y ver todos los médicos que ofrecen ese servicio, para encontrar al especialista adecuado sin saber su especialidad.
 
 **Contexto (transcripción):** *"por procedimiento específico… que vos pudieras escribir cesárea y aparezcan los ginecólogos"*, *"escriba caries y aparezcan todos los odontólogos"*. Jorge: *"si son los que no está indexado porque eso lo hice después de haber hecho el buscador"*.
@@ -43,7 +43,7 @@ El médico insiste en que la gente **no busca por nombre de médico, busca por l
 
 ---
 
-### A3 · Reorganizar el panel de filtros  `P1` · `M` · 🔲
+### A3 · Reorganizar el panel de filtros  `P1` · `M` · ✅
 **Historia:** Como paciente, quiero un panel de filtros claro con **Especialidad · Ciudad · Hospital/Ubicación** como ejes principales, para acotar la búsqueda sin perderme.
 
 **Contexto:** *"tengo que arreglar un poco, organizar… ahí a la izquierda está un poco perdidas las cosas"*. Las tres cosas que motivan la búsqueda: especialidad, ciudad y hospital.
@@ -231,8 +231,8 @@ Ya implementado en esta iteración: `Notification` unificado + campana con dropd
 
 | ID | Título | Epic | Prioridad | Esfuerzo | Estado |
 |----|--------|------|-----------|----------|--------|
-| A1 | Búsqueda libre por servicio/procedimiento | Búsqueda | **P0** | M | 🔲 |
-| A3 | Reorganizar panel de filtros | Búsqueda | P1 | M | 🔲 |
+| A1 | Búsqueda libre por servicio/procedimiento | Búsqueda | **P0** | M | ✅ |
+| A3 | Reorganizar panel de filtros (+ Ciudad y Hospital) | Búsqueda | P1 | M | ✅ |
 | B1 | Contacto rápido (teléfono + Llamar + WhatsApp) | Perfil | P1 | M | 🟡 |
 | B2 | Renombrar Sucursales → Ubicaciones | Perfil | P1 | M | 🔲 |
 | C1 | Duración de cita configurable | Agenda | P1 | L | 🔲 |
