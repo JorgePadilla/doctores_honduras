@@ -69,6 +69,39 @@
     <% end %>
   </div>
 
+  <!-- Documentación clínica de la consulta (H1 nota + H3 vitales + H2 receta) — Elite -->
+  <% if current_doctor_elite? %>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mt-6 space-y-6">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Documentación clínica</h2>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300">Nota de evolución y signos vitales</h3>
+          <%= link_to (@appointment.encounter&.any_data? ? "Editar" : "Documentar"), edit_agenda_appointment_encounter_path(@appointment), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
+        </div>
+        <%= render "agenda/appointments/encounter_summary", encounter: @appointment.encounter %>
+      </div>
+
+      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300">Receta</h3>
+          <div class="flex items-center gap-3">
+            <%= link_to "Editar receta", edit_agenda_appointment_prescription_path(@appointment), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
+            <% if @appointment.prescription&.any_items? %>
+              <%= link_to "Ver / imprimir", agenda_appointment_prescription_path(@appointment), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
+            <% end %>
+          </div>
+        </div>
+        <%= render "agenda/appointments/prescription_summary", prescription: @appointment.prescription %>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800 rounded-xl p-4 mt-6 text-sm text-sky-800 dark:text-sky-300">
+      Documentá la consulta (nota de evolución, signos vitales y receta imprimible) con el plan <strong>Elite</strong>.
+      <%= link_to "Ver planes", settings_subscription_path, class: "underline font-medium" %>
+    </div>
+  <% end %>
+
   <div class="mt-6">
     <%= link_to "← Volver a la agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
   </div>

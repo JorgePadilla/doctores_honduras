@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title><%= content_for(:title) || "Receta" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <style>
+      /* Oculta los controles (botones) al imprimir; deja solo el documento. */
+      @media print {
+        .no-print { display: none !important; }
+        body { background: #fff; }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-900">
+    <main class="max-w-2xl mx-auto p-6"><%= yield %></main>
+  </body>
+</html>

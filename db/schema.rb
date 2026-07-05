@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_160002) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_170002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -282,6 +282,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_160002) do
     t.index ["service_id"], name: "index_doctor_services_on_service_id"
   end
 
+  create_table "encounters", force: :cascade do |t|
+    t.bigint "appointment_id", null: false
+    t.text "evolution_note"
+    t.string "blood_pressure"
+    t.integer "heart_rate"
+    t.decimal "temperature", precision: 4, scale: 1
+    t.integer "respiratory_rate"
+    t.integer "oxygen_saturation"
+    t.decimal "weight", precision: 5, scale: 2
+    t.decimal "height", precision: 5, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["appointment_id"], name: "index_encounters_on_appointment_id", unique: true
+  end
+
   create_table "establishment_services", force: :cascade do |t|
     t.bigint "establishment_id", null: false
     t.bigint "service_id", null: false
@@ -403,6 +418,25 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_160002) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_payment_histories_on_user_id"
+  end
+
+  create_table "prescription_items", force: :cascade do |t|
+    t.bigint "prescription_id", null: false
+    t.string "medication", null: false
+    t.string "dosage"
+    t.string "frequency"
+    t.string "duration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["prescription_id"], name: "index_prescription_items_on_prescription_id"
+  end
+
+  create_table "prescriptions", force: :cascade do |t|
+    t.bigint "appointment_id", null: false
+    t.text "instructions"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["appointment_id"], name: "index_prescriptions_on_appointment_id", unique: true
   end
 
   create_table "products", force: :cascade do |t|
@@ -629,6 +663,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_160002) do
   add_foreign_key "doctor_profiles", "users"
   add_foreign_key "doctor_services", "doctor_profiles"
   add_foreign_key "doctor_services", "services"
+  add_foreign_key "encounters", "appointments"
   add_foreign_key "establishment_services", "establishments"
   add_foreign_key "establishment_services", "services"
   add_foreign_key "establishment_specialties", "establishments"
@@ -643,6 +678,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_160002) do
   add_foreign_key "patients", "doctor_profiles"
   add_foreign_key "patients", "users"
   add_foreign_key "payment_histories", "users"
+  add_foreign_key "prescription_items", "prescriptions"
+  add_foreign_key "prescriptions", "appointments"
   add_foreign_key "products", "suppliers"
   add_foreign_key "provider_profiles", "users"
   add_foreign_key "secretary_assignments", "doctor_profiles"

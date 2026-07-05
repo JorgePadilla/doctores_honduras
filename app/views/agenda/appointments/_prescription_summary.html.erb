@@ -1,0 +1,19 @@
+<%#
+  Resumen de solo lectura de la receta. Espera `prescription` (puede ser nil).
+%>
+<% if prescription&.any_items? %>
+  <ul class="space-y-1 text-sm">
+    <% prescription.prescription_items.each do |item| %>
+      <li class="text-gray-900 dark:text-white">
+        <span class="font-medium"><%= item.medication %></span>
+        <% extra = [ item.dosage, item.frequency, item.duration ].compact_blank.join(" · ") %>
+        <% if extra.present? %> — <span class="text-gray-600 dark:text-slate-300"><%= extra %></span><% end %>
+      </li>
+    <% end %>
+  </ul>
+  <% if prescription.instructions.present? %>
+    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2 whitespace-pre-line"><%= prescription.instructions %></p>
+  <% end %>
+<% else %>
+  <p class="text-sm text-gray-500 dark:text-slate-400">Sin receta.</p>
+<% end %>

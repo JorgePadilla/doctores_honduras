@@ -35,7 +35,11 @@ Rails.application.routes.draw do
 
   # Agenda (doctor + secretary)
   namespace :agenda do
-    resources :appointments
+    resources :appointments do
+      # Documentación clínica de la consulta (Elite).
+      resource :encounter, only: [ :edit, :update ]
+      resource :prescription, only: [ :show, :edit, :update ]
+    end
     resource  :settings, only: [ :show, :update ]
     resources :secretaries, only: [ :index, :new, :create, :destroy ]
     resources :slots, only: [ :index ]

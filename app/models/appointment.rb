@@ -6,6 +6,8 @@ class Appointment < ApplicationRecord
   belongs_to :patient, optional: true
 
   has_many :notifications, as: :notifiable, dependent: :destroy
+  has_one :encounter, dependent: :destroy
+  has_one :prescription, dependent: :destroy
 
   STATUSES = %w[pendiente confirmada cancelada completada].freeze
   BOOKING_SOURCES = %w[manual public_booking].freeze
