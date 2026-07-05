@@ -1,0 +1,22 @@
+<div data-nested-fields-entry class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end border-b border-gray-100 dark:border-slate-700 pb-3">
+  <div>
+    <%= f.label :medication, "Medicamento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+    <%= f.text_field :medication, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+  </div>
+  <div>
+    <%= f.label :dosage, "Dosis", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+    <%= f.text_field :dosage, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+  </div>
+  <div>
+    <%= f.label :frequency, "Frecuencia", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+    <%= f.text_field :frequency, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+  </div>
+  <div>
+    <%= f.label :duration, "Duración", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+    <%= f.text_field :duration, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+  </div>
+  <div class="sm:col-span-4 flex justify-end">
+    <%= f.hidden_field :_destroy %>
+    <button type="button" data-action="nested-fields#remove" class="text-sm text-red-600 dark:text-red-400 hover:underline">Quitar</button>
+  </div>
+</div>
