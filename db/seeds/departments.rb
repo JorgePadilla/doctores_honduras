@@ -26,9 +26,10 @@ if defined?(Department)
     "Yoro"
   ]
 
-  # Create departments if they don't exist
+  # Create departments if they don't exist (all under Honduras).
+  honduras = Country.find_or_create_by!(name: "Honduras") { |c| c.iso_code = "HN" }
   departments.each do |name|
-    Department.find_or_create_by!(name: name)
+    Department.find_or_create_by!(name: name) { |d| d.country = honduras }
   end
 
   puts "Created #{Department.count} departments"

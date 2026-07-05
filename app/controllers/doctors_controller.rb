@@ -8,15 +8,18 @@ class DoctorsController < ApplicationController
     # Track meaningful searches (admin traffic insight). Debounced live-search may
     # fire a few per session; acceptable for now.
     if params[:q].to_s.length >= 2 || params[:service].present? || params[:city_id].present? ||
-       params[:establishment_id].present? ||
+       params[:department_id].present? || params[:country_id].present? || params[:establishment_id].present? ||
        (params[:specialty].present? && params[:specialty] != "Todas las especialidades")
-      ahoy.track "Search", { scope: "doctors", query: params[:q], specialty: params[:specialty], service: params[:service], city_id: params[:city_id], establishment_id: params[:establishment_id] }.compact_blank
+      ahoy.track "Search", { scope: "doctors", query: params[:q], specialty: params[:specialty], service: params[:service], country_id: params[:country_id], department_id: params[:department_id], city_id: params[:city_id], establishment_id: params[:establishment_id] }.compact_blank
     end
 
-    # Load options for the filter dropdowns (Especialidad · Ciudad · Hospital · Servicio)
+    # Load options for the filter dropdowns (País · Departamento · Ciudad · Especialidad · Hospital · Servicio).
     @specialties = Specialty.order(:name).pluck(:name).uniq
     @services = Service.order(:name).pluck(:name).uniq
-    @cities = City.order(:name)
+    @countries = Country.order(:name)
+    # Departments scoped to the selected country (else all); cities scoped to the selected department (else all).
+    @departments = params[:country_id].present? ? Department.where(country_id: params[:country_id]).order(:name) : Department.order(:name)
+    @cities = params[:department_id].present? ? City.where(department_id: params[:department_id]).order(:name) : City.order(:name)
     # Hospital filter only offered when the establishments section is visible.
     @establishments = section_visible?("establishments") ? Establishment.order(:name) : Establishment.none
 
@@ -33,8 +36,14 @@ class DoctorsController < ApplicationController
       doctors_query = doctors_query.joins(:services).where("LOWER(services.name) = ?", params[:service].downcase)
     end
 
-    # Apply city filter (Ticket A3) — filter by the doctor's city. Uses city_id
-    # (not a join) to stay clear of the free-text search's raw joins below.
+    # Location filters (País → Departamento → Ciudad). Filter by id (no joins) to
+    # stay clear of the free-text search's raw joins below.
+    if params[:country_id].present?
+      doctors_query = doctors_query.where(department_id: Department.where(country_id: params[:country_id]).select(:id))
+    end
+    if params[:department_id].present?
+      doctors_query = doctors_query.where(department_id: params[:department_id])
+    end
     if params[:city_id].present?
       doctors_query = doctors_query.where(city_id: params[:city_id])
     end
@@ -44,6 +53,22 @@ class DoctorsController < ApplicationController
       doctors_query = doctors_query.where(
         id: DoctorEstablishment.where(establishment_id: params[:establishment_id]).select(:doctor_profile_id)
       )
+    end
+
+    # Geolocation: on a fresh visit (no explicit location filter and not "see all"),
+    # preselect the visitor's region so nearby doctors show first. Best-effort —
+    # a no-op when the MaxMind DB is absent or the region doesn't match our data.
+    location_filtered = params[:country_id].present? || params[:department_id].present? || params[:city_id].present?
+    if !location_filtered && params[:all].blank? && IpGeolocator.available?
+      loc = LocationResolver.from_geo(IpGeolocator.from_request(request))
+      if loc[:country] && loc[:department]
+        @geo_country_id = loc[:country].id
+        @geo_department_id = loc[:department].id
+        @geo_department_name = loc[:department].name
+        @departments = loc[:country].departments.order(:name)
+        @cities = loc[:department].cities.order(:name)
+        doctors_query = doctors_query.where(department_id: loc[:department].id)
+      end
     end
 
     # Apply search filter if present

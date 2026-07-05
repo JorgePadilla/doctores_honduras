@@ -20,7 +20,7 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 
 | Model | Table | Key fields | Relationships |
 |---|---|---|---|
-| `User` | `users` | email, password_digest, profile_type, onboarding_completed, admin, language | has_one :doctor_profile, has_many :establishments, has_one :supplier, has_one :patient_profile, has_one :subscription, has_many :sessions, has_many :secretary_assignments, has_many :appointment_notifications, has_many :patient_appointments |
+| `User` | `users` | email, password_digest, profile_type, onboarding_completed, admin, language | has_one :doctor_profile, has_many :establishments, has_one :supplier, has_one :patient_profile, has_one :subscription, has_many :sessions, has_many :secretary_assignments, has_many :notifications, has_many :patient_appointments |
 | `DoctorProfile` | `doctor_profiles` | name, description, image_url, medical_license, hidden, video_consultation_url | belongs_to :user, :specialty, :subspecialty, :department, :city; has_many :establishments (through doctor_establishments), :services (through doctor_services), :secretary_assignments, :appointments; has_one :agenda_setting |
 | `Establishment` | `establishments` | name, est_type, address, phone, map_link, logo_url, building_image_url, description, website, email | belongs_to :user, :department, :city; has_many :doctor_profiles (through doctor_establishments), :specialties (through establishment_specialties), :services (through establishment_services) |
 | `Supplier` | `suppliers` | name, address, phone, email, description, logo_url, category, website, featured, hidden | belongs_to :user, :department, :city; has_many :products, :lead_contacts |
@@ -55,6 +55,13 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 | `Subspecialty` | `subspecialties` | belongs_to :specialty |
 | `Service` | `services` | Medical services/tags; linked to doctors and establishments |
 
+### Site configuration & search
+
+| Model | Table | Key fields | Notes |
+|---|---|---|---|
+| `SiteSetting` | `site_settings` | key (unique), enabled | Per-section visibility toggle managed from admin. `SECTIONS` = establishments, suppliers. `section_enabled?(key)` defaults to `true` when no row exists. |
+| `SearchSynonym` | `search_synonyms` | term (unique), keywords | Lay→clinical search dictionary. `term` stored lowercased with accents; `expand(query)` returns LIKE patterns and is accent-insensitive at match time. Admin-managed CRUD. |
+
 ### Join tables
 
 - `doctor_establishments` -- DoctorProfile <-> Establishment
@@ -70,7 +77,7 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 | `DoctorAgendaSetting` | `doctor_agenda_settings` | appointment_duration, buffer_minutes, public_booking_enabled | belongs_to :doctor_profile |
 | `Appointment` | `appointments` | patient_name, appointment_date, start_time, end_time, status, booking_source, patient_user_id | belongs_to :doctor_profile, :doctor_branch, :created_by (User), :patient_user (User, optional) |
 | `PatientProfile` | `patient_profiles` | name, phone, date_of_birth | belongs_to :user (unique), :department, :city (optional) |
-| `AppointmentNotification` | `appointment_notifications` | notification_type, message, read | belongs_to :user, :appointment |
+| `Notification` | `notifications` | notification_type, title, message, url, icon, read, read_at | belongs_to :user; belongs_to :notifiable (polymorphic, optional). Unified in-app notification for all personas — see **Notifications** below. (Renamed from `AppointmentNotification`.) |
 
 ### Supporting
 
@@ -88,7 +95,7 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 | Controller | Routes | Purpose |
 |---|---|---|
 | `HomeController` | `GET /` | Landing page |
-| `DoctorsController` | `GET /doctors`, `GET /doctors/:id` | Doctor directory with search, specialty/service filters, pagination |
+| `DoctorsController` | `GET /doctors`, `GET /doctors/:id` | Doctor directory. Free-text search matches name/specialty/city/hospital + **services**, and expands lay terms via `SearchSynonym`. Filters: specialty, city, hospital, service. Pagination. |
 | `EstablishmentsController` | `GET /hospitales-y-clinicas` | Hospital/clinic directory |
 | `SuppliersController` | `GET /proveedores`, `GET /proveedores/:id` | Supplier directory |
 | `ProductsController` | nested under suppliers | Public product listing |
@@ -104,6 +111,7 @@ Controllers opt out of auth with `allow_unauthenticated_access`.
 | `ProfilesController` | Edit own profile |
 | `SettingsController` | Account, subscription management, notifications, security (sessions), language |
 | `PaymentsController` | Shows Stripe payment form with client secret |
+| `NotificationsController` | Global in-app notification center: `index`, `mark_as_read`, `mark_all_as_read`. The navbar bell + dropdown link here. |
 
 ### Vendor namespace (`Vendor::`)
 
@@ -125,8 +133,9 @@ All inherit from `Agenda::BaseController` which enforces authentication + `requi
 | `Agenda::SettingsController` | Agenda config: duration, buffer, public booking toggle (elite only) |
 | `Agenda::SecretariesController` | Add/remove secretaries by email (doctor only) |
 | `Agenda::SlotsController` | JSON endpoint returning available time slots for branch+date |
-| `Agenda::NotificationsController` | List and mark-as-read in-app notifications |
 | `Agenda::PatientsController` | Patient list (index), patient history (show), patient search (JSON search endpoint for auto-suggest) |
+
+_(In-app notifications moved out of the agenda namespace to the global `NotificationsController` — see Authenticated above.)_
 
 ### Paciente namespace (`Paciente::`)
 
@@ -154,6 +163,9 @@ All inherit from `Paciente::BaseController` which enforces authentication + `pro
 | Controller | Purpose |
 |---|---|
 | `Admin::DashboardController` | Admin overview, user list, doctor list, subscription list, toggle doctor visibility |
+| `Admin::AnalyticsController` | Ahoy-based visitor analytics |
+| `Admin::SettingsController` | Toggle public section visibility (Hospitales / Proveedores) via `SiteSetting` |
+| `Admin::SynonymsController` | Full CRUD for the search synonym dictionary (`SearchSynonym`) |
 
 ## Services
 
@@ -177,7 +189,11 @@ Generates available time slots for a doctor branch on a specific date. Reads `Br
 
 `app/services/appointment_notifier.rb`
 
-Creates in-app `AppointmentNotification` records and sends emails via `AppointmentMailer` when appointments are created or their status changes. Notifies the doctor, all active secretaries, and the patient (by email).
+Creates in-app `Notification` records (via `Notification.notify`) and sends emails via `AppointmentMailer` when appointments are created or their status changes. Notifies the doctor, all active secretaries, and the patient (in-app + email).
+
+### Notifications (unified)
+
+`Notification` is the single in-app notification model (polymorphic `notifiable`). `Notification.notify(user:, type:, title:, message:, url:, icon:)` is the one creation entry point (no-op when `user` is nil). Wired events: new appointment / status change (doctor + secretaries + patient), new lead (supplier owner), payment success/failure (subscriber), and secretary invitation (the invited user). The navbar renders a bell + unread badge + dropdown (`shared/_navbar`), backed by `User#unread_notifications_count`; `NotificationsController` serves the full-page list.
 
 ## Internationalization
 
@@ -191,6 +207,8 @@ Supported locales: `es` (Spanish), `en` (English). Locale is stored in session, 
 
 Uses Pundit (`app/policies/application_policy.rb`). Admin check via `User#admin?` boolean column.
 
+**Section visibility.** `ApplicationController#section_visible?(key)` (view helper) and `require_visible_section(key)` (before_action guard) gate the public Hospitales/Proveedores sections against `SiteSetting`. When a section is off, its controllers redirect to root and its links/cards/filters are hidden across navbar, footer, home, onboarding, dashboard, and doctor pages. Defaults to visible when no row exists.
+
 ## Frontend
 
 - Tailwind CSS 4.2 via `tailwindcss-rails` gem
@@ -198,3 +216,5 @@ Uses Pundit (`app/policies/application_policy.rb`). Admin check via `User#admin?
 - Hotwire: Turbo (turbo-frames, turbo-streams) + Stimulus
 - Import maps for JS (no webpack/esbuild)
 - ViewComponent for reusable components
+- **Icons:** `icon(name, **opts)` helper (`app/helpers/icon_helper.rb`) renders a curated set of Heroicons v2 outline (stroke-width 1.5) — the single source of iconography. Callers pass size/color via `class:`.
+- **Flash:** rendered as dismissable toasts (top-right, auto-dismiss ~5s) via `shared/_flash` + the `flash` Stimulus controller (`app/javascript/controllers/flash_controller.js`).

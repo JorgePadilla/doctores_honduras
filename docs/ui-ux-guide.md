@@ -252,7 +252,16 @@ Implementation: Tailwind `dark:` variant. Toggled via `dark-mode` Stimulus contr
 
 ## Icons
 
-SVGs inline with `w-5 h-5` or `w-6 h-6`, colored via `text-gray-400` / `text-sky-500`. Use `fill="none" stroke="currentColor"` for outline icons.
+Use the **`icon(name, **opts)`** helper (`app/helpers/icon_helper.rb`) — the single source of iconography. It renders a curated set of Heroicons v2 **outline** icons at `stroke-width="1.5"`. The caller passes size + color via `class:`:
+
+```erb
+<%= icon(:calendar_days, class: "w-5 h-5 mr-2") %>
+<%= icon(:user, class: "w-6 h-6 text-sky-600 dark:text-sky-400") %>
+```
+
+- Sizes: `w-5 h-5` (default) or `w-6 h-6`; color via `text-*` utilities.
+- Decorative icons get `aria-hidden="true"` automatically; unknown names render nothing.
+- Add a new icon by pasting its Heroicons v2 outline `<path>` into the `ICONS` hash. Brand/social SVGs stay inline (not Heroicons).
 
 ---
 
@@ -263,7 +272,7 @@ SVGs inline with `w-5 h-5` or `w-6 h-6`, colored via `text-gray-400` / `text-sky
 | Button hover | `transition-all hover:shadow-lg` |
 | Card hover | `hover:shadow-lg transition-all` |
 | Color change | `transition-colors duration-200` |
-| Flash messages | Custom CSS keyframes in `custom.css` |
+| Flash messages | Toasts (top-right, auto-dismiss ~5s) via `shared/_flash` + `flash` Stimulus controller |
 
 ---
 

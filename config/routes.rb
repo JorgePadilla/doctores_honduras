@@ -110,6 +110,11 @@ Rails.application.routes.draw do
     get "cities", on: :member
   end
 
+  # Country departments JSON endpoint (cascading location filter)
+  resources :countries, only: [] do
+    get "departments", on: :member
+  end
+
   # Service find or create endpoint
   post "services/find_or_create", to: "services#find_or_create"
 

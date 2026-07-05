@@ -4,6 +4,7 @@
 # Always seed subscription plans, departments, services, and site settings (idempotent)
 load File.join(Rails.root, 'db', 'seeds', 'subscription_plans.rb')
 load File.join(Rails.root, 'db', 'seeds', 'services.rb')
+load File.join(Rails.root, 'db', 'seeds', 'countries.rb')
 load File.join(Rails.root, 'db', 'seeds', 'departments.rb')
 load File.join(Rails.root, 'db', 'seeds', 'site_settings.rb')
 load File.join(Rails.root, 'db', 'seeds', 'search_synonyms.rb')

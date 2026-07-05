@@ -1,4 +1,5 @@
 require "test_helper"
+require "minitest/mock"
 
 class DoctorsControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -61,5 +62,35 @@ class DoctorsControllerTest < ActionDispatch::IntegrationTest
     SearchSynonym.create!(term: "apendicitis", keywords: "Apendicectomía")
     get doctors_url, params: { q: "apendicitis" }
     assert_select "a[href=?]", doctor_path(@doctor)
+  end
+
+  # Location filter: department (parent of city).
+  test "department filter matches doctors in that department and excludes others" do
+    get doctors_url, params: { department_id: departments(:one).id }
+    assert_select "a[href=?]", doctor_path(@doctor)
+
+    get doctors_url, params: { department_id: departments(:two).id }
+    assert_select "a[href=?]", doctor_path(@doctor), count: 0
+  end
+
+  # Geolocation preselect: on a fresh visit, scope results to the visitor's region.
+  test "geolocation preselects the visitor's department and filters" do
+    IpGeolocator.stub(:available?, true) do
+      # Visitor detected in Cortés — @doctor is in Francisco Morazán, so excluded.
+      IpGeolocator.stub(:from_request, { country: "Honduras", region: departments(:two).name }) do
+        get doctors_url
+        assert_response :success
+        assert_select "a[href=?]", doctor_path(@doctor), count: 0
+      end
+    end
+  end
+
+  test "geolocation preselect is skipped when all=1" do
+    IpGeolocator.stub(:available?, true) do
+      IpGeolocator.stub(:from_request, { country: "Honduras", region: departments(:two).name }) do
+        get doctors_url, params: { all: 1 }
+        assert_select "a[href=?]", doctor_path(@doctor)
+      end
+    end
   end
 end

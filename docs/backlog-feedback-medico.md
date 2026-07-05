@@ -201,22 +201,6 @@ La agenda es el **diferenciador** del producto. La conversación identificó dos
 
 ---
 
-## EPIC D — Destacados / Monetización
-
-### D1 · Médicos destacados priorizados según plan  `P2` · `L` · 🔲
-**Historia:** Como negocio, quiero que los médicos con plan superior aparezcan **destacados/priorizados** en el listado, para monetizar el directorio.
-
-**Contexto:** *"los destacados… nos falta definir la priorización de cómo dejar los destacados"*. Existe documentación de planes (`docs/subscription-plans`).
-
-**Criterios de aceptación:**
-- Regla clara de priorización de resultados por plan (definir con negocio).
-- Los destacados se distinguen visualmente y aparecen primero (con orden justo entre ellos).
-- Configurable/auditable.
-
-**Notas técnicas:** `products` y `suppliers` ya tienen `featured`, pero **`doctor_profiles` NO**. Añadir `featured` (o derivar del tier del plan) a `DoctorProfile` y ordenar en `DoctorsController#index` por destacado + plan. Primero **definir la política** con el socio (qué plan destaca, orden entre destacados, límites por ciudad/especialidad).
-
----
-
 ## EPIC E — Ya entregado (contexto de la sesión)
 
 ### E1 · Centro de notificaciones (campana) — ✅ hecho
@@ -244,6 +228,5 @@ Ya implementado en esta iteración: `Notification` unificado + campana con dropd
 | C3 | Estado "sobrecupo" condicional | Agenda | P2 | L | 🔲 |
 | C4 | Horarios por ubicación visibles | Agenda | P2 | M | 🔲 |
 | C5 | Exponer asignación de secretaria | Agenda | P2 | S | 🟡 |
-| D1 | Médicos destacados por plan | Monetización | P2 | L | 🔲 |
 
 **Sugerencia de primer sprint (mayor impacto / esfuerzo contenido):** A1 → B1 → B2 → A3. Son el "core" que el médico repite (encontrar por procedimiento + contactar rápido) y desbloquean valor inmediato sin tocar la parte compleja de la agenda.

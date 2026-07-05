@@ -332,22 +332,53 @@ Indices: `(doctor_branch_id, appointment_date, start_time)`, `(doctor_profile_id
 
 Custom validations: `within_branch_schedule` (appointment times must be within branch operating hours), `no_overlapping_appointments` (no two active appointments can overlap on same branch/date).
 
-### appointment_notifications
+### notifications
 
-Notificaciones in-app para citas.
+Notificaciones in-app unificadas para todas las personas (antes `appointment_notifications`).
 
 | Column | Type | Notes |
 |---|---|---|
 | id | bigint | PK |
-| user_id | bigint | FK -> users |
-| appointment_id | bigint | FK -> appointments |
-| notification_type | string | `nueva_cita`, `cambio_estado` |
+| user_id | bigint | FK -> users (recipient) |
+| notification_type | string | e.g. `nueva_cita`, `cambio_estado`, `nuevo_lead`, `pago_exitoso`, `pago_fallido`, `invitacion_secretaria` |
+| title | string | short heading |
 | message | text | |
+| url | string | click target |
+| icon | string | `icon()` helper name |
+| notifiable_type / notifiable_id | string / bigint | polymorphic subject (optional), indexed |
 | read | boolean | default false |
 | read_at | datetime | |
 | created_at, updated_at | datetime | |
 
-Index on `(user_id, read)`.
+Index on `(user_id, read)` and `(notifiable_type, notifiable_id)`. Created via `Notification.notify(...)`.
+
+## Site configuration & search
+
+### site_settings
+
+Per-section public visibility toggles managed from the admin panel.
+
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint | PK |
+| key | string | required, unique index (`establishments`, `suppliers`) |
+| enabled | boolean | default true |
+| created_at, updated_at | datetime | |
+
+A section defaults to visible when its row is missing (`SiteSetting.section_enabled?` → true).
+
+### search_synonyms
+
+Lay→clinical search dictionary for the doctor search (admin CRUD).
+
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint | PK |
+| term | string | required, unique index; lowercased with accents (e.g. `caries`, `apéndice`) |
+| keywords | text | required; comma-separated clinical keywords (e.g. `Endodoncia, Limpieza Dental`) |
+| created_at, updated_at | datetime | |
+
+`SearchSynonym.expand(query)` returns lowercased `%keyword%` LIKE patterns; matching is accent-insensitive.
 
 ## Other tables
 

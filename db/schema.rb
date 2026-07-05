@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_05_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -143,10 +143,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_120000) do
     t.index ["department_id"], name: "index_cities_on_department_id"
   end
 
+  create_table "countries", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "iso_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_countries_on_name", unique: true
+  end
+
   create_table "departments", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "country_id", null: false
+    t.index ["country_id"], name: "index_departments_on_country_id"
     t.index ["name"], name: "index_departments_on_name", unique: true
   end
 
@@ -567,6 +577,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_05_120000) do
   add_foreign_key "articles", "users", column: "author_id"
   add_foreign_key "branch_schedules", "doctor_branches"
   add_foreign_key "cities", "departments"
+  add_foreign_key "departments", "countries"
   add_foreign_key "doctor_agenda_settings", "doctor_profiles"
   add_foreign_key "doctor_branches", "cities"
   add_foreign_key "doctor_branches", "departments"
