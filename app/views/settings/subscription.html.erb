@@ -33,51 +33,14 @@
     <div>
       <h2 class="card-title">Planes Disponibles</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <% @plans&.each do |plan| %>
-          <div class="card overflow-hidden flex flex-col h-full <%= @subscription&.subscription_plan_id == plan.id ? 'ring-2 ring-primary-500 border-primary-500' : (plan.name == 'Plan Premium' ? 'border-primary-300' : '') %>">
-            <div class="p-4 <%= @subscription&.subscription_plan_id == plan.id ? 'bg-primary-100 dark:bg-sky-900/30' : (plan.name == 'Plan Premium' ? 'bg-primary-50 dark:bg-sky-900/20' : 'bg-slate-50 dark:bg-slate-700') %> border-b border-line dark:border-slate-700">
-              <h4 class="text-lg font-medium text-ink dark:text-white"><%= plan.name %></h4>
-              <p class="text-2xl font-bold mt-1 text-ink dark:text-white">$<%= sprintf('%.2f', plan.price / 100.0) %><span class="text-sm text-muted dark:text-slate-400">/mes</span></p>
-              <% if plan.patient_limit? %>
-                <span class="inline-flex items-center mt-2 px-2 py-0.5 rounded-full text-xs font-medium bg-sky-100 dark:bg-sky-900/40 text-sky-800 dark:text-sky-300">
-                  <%= icon(:user, class: "h-3.5 w-3.5 mr-1") %>
-                  <%= plan.patient_limit_label %>
-                </span>
-              <% end %>
-            </div>
-            <div class="p-4 flex flex-col flex-grow">
-              <ul class="space-y-2">
-                <% plan.features.to_s.split(',').each do |feature| %>
-                  <li class="flex items-start text-ink dark:text-slate-300">
-                    <%= icon(:check, class: "h-5 w-5 text-green-500 mr-2 shrink-0") %>
-                    <%= feature.strip %>
-                  </li>
-                <% end %>
-              </ul>
+      <%# Plan recomendado: el de pago más barato. %>
+      <% recommended = @plans&.select { |p| p.price.to_i > 0 }&.min_by(&:price) %>
 
-              <div class="mt-auto pt-4">
-                <% if @subscription&.subscription_plan_id == plan.id %>
-                  <div class="btn-primary w-full pointer-events-none">
-                    <%= icon(:check, class: "h-5 w-5") %>
-                    Plan Actual
-                  </div>
-                <% else %>
-                  <% if plan.price > 0 %>
-                    <%= button_to stripe_checkout_path(plan_id: plan.id), method: :post, class: "btn-primary w-full" do %>
-                      <%= icon(:credit_card, class: "h-5 w-5") %>
-                      Suscribirse
-                    <% end %>
-                  <% else %>
-                    <%= button_to settings_subscribe_path(plan_id: plan.id), method: :post, class: "btn-primary w-full" do %>
-                      <%= icon(:plus, class: "h-5 w-5") %>
-                      Elegir gratis
-                    <% end %>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch pt-3">
+        <% @plans&.each do |plan| %>
+          <%= render "settings/plan_card", plan: plan,
+                current: @subscription&.subscription_plan_id == plan.id,
+                recommended: plan == recommended %>
         <% end %>
       </div>
     </div>
