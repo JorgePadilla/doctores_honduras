@@ -1,0 +1,39 @@
+<%# Menú de usuario — compartido por el dropdown desktop y el menú móvil.
+    Un solo origen de verdad (mata la deriva desktop/móvil). El contenedor
+    (ancho/sombra) lo pone quien lo renderiza. %>
+<% sections = user_menu_items(Current.user).group_by { |i| i[:section] } %>
+<% badge = menu_plan_badge(Current.user) %>
+
+<%# Header: avatar + nombre + email + badge de plan %>
+<div class="flex items-center gap-3 px-4 py-3 border-b border-line dark:border-slate-700">
+  <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/40 font-display text-sm font-semibold text-sky-700 dark:text-sky-300">
+    <%= menu_avatar_initials(Current.user) %>
+  </span>
+  <div class="min-w-0 flex-1">
+    <p class="truncate text-sm font-semibold text-ink dark:text-white"><%= menu_display_name(Current.user) %></p>
+    <p class="truncate text-xs text-muted"><%= Current.user.email %></p>
+  </div>
+  <span class="shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium <%= badge[:classes] %>"><%= badge[:label] %></span>
+</div>
+
+<div class="py-1">
+  <% item_class = "flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700 transition-colors" %>
+  <% rendered = false %>
+  <% %i[work account mode].each do |section| %>
+    <% next if sections[section].blank? %>
+    <% if rendered %><div class="my-1 border-t border-line dark:border-slate-700"></div><% end %>
+    <% rendered = true %>
+    <% sections[section].each do |item| %>
+      <%= link_to item[:path], class: "#{item_class}#{' bg-sky-50/60 dark:bg-slate-700/40 font-medium' if item[:admin]}" do %>
+        <%= icon(item[:icon], class: "w-5 h-5 shrink-0 #{item[:admin] ? 'text-sky-500' : 'text-slate-400'}") %>
+        <span class="truncate"><%= item[:label] %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="my-1 border-t border-line dark:border-slate-700"></div>
+  <%= button_to session_path, method: :delete, class: "w-full #{item_class}" do %>
+    <%= icon(:arrow_right_start_on_rectangle, class: "w-5 h-5 shrink-0 text-slate-400") %>
+    <span>Cerrar sesión</span>
+  <% end %>
+</div>

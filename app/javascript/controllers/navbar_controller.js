@@ -1,8 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Navbar sticky "glass": añade .is-scrolled cuando la página se desplaza,
-// para mostrar el borde inferior + sombra sutil (ver CSS .nav-glass).
+// Navbar sticky "glass": añade .is-scrolled al desplazar (borde+sombra, ver
+// .nav-glass) y controla el menú hamburguesa móvil (reemplaza el script inline).
 export default class extends Controller {
+  static targets = ["mobileMenu"]
+
   connect() {
     this.onScroll = this.onScroll.bind(this)
     window.addEventListener("scroll", this.onScroll, { passive: true })
@@ -11,6 +13,10 @@ export default class extends Controller {
 
   onScroll() {
     this.element.classList.toggle("is-scrolled", window.scrollY > 8)
+  }
+
+  toggleMobile() {
+    if (this.hasMobileMenuTarget) this.mobileMenuTarget.classList.toggle("hidden")
   }
 
   disconnect() {
