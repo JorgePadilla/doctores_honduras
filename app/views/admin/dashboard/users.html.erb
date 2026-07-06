@@ -13,15 +13,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Total Usuarios</p>
-        <p class="text-2xl font-bold text-ink dark:text-white"><%= @users&.size || 0 %></p>
+        <p class="text-2xl font-bold text-ink dark:text-white"><%= @total_users %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Administradores</p>
-        <p class="text-2xl font-bold text-sky-600 dark:text-sky-400"><%= @users&.count(&:admin?) || 0 %></p>
+        <p class="text-2xl font-bold text-sky-600 dark:text-sky-400"><%= @admins_count %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Usuarios con Perfil</p>
-        <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= @users&.count { |u| u.profile_type.present? } || 0 %></p>
+        <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= @users_with_profile %></p>
       </div>
     </div>
   </div>
@@ -55,27 +55,23 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <% if user.admin? %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-sky-100 dark:bg-sky-900/30 text-sky-800 dark:text-sky-300">
-                      Administrador
-                    </span>
+                    <span class="badge badge-primary">Administrador</span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-slate-100 dark:bg-slate-600 text-slate-700 dark:text-slate-300">
-                      Usuario
-                    </span>
+                    <span class="badge badge-neutral">Usuario</span>
                   <% end %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
                   <% case user.profile_type %>
                   <% when "doctor" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Doctor</span>
+                    <span class="badge badge-success">Doctor</span>
                   <% when "hospital", "clinic" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300"><%= user.profile_type.capitalize %></span>
+                    <span class="badge badge-primary"><%= user.profile_type.capitalize %></span>
                   <% when "vendor" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">Proveedor</span>
+                    <span class="badge badge-primary">Proveedor</span>
                   <% when "paciente" %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">Paciente</span>
+                    <span class="badge badge-primary">Paciente</span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Sin perfil</span>
+                    <span class="badge badge-warning">Sin perfil</span>
                   <% end %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
@@ -101,4 +97,10 @@
       </table>
     </div>
   </div>
+
+  <% if @total_pages > 1 %>
+    <nav class="mt-6 flex justify-center" aria-label="Paginación">
+      <%= pagination_links(@page, @total_pages, {}) %>
+    </nav>
+  <% end %>
 </div>

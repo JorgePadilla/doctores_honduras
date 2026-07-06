@@ -34,15 +34,48 @@ class Admin::DashboardController < ApplicationController
   end
 
   def users
+    @page = (params[:page] || 1).to_i
+    @per_page = 25
+
+    # Totals over the FULL scope (not the paginated page)
+    @total_users = User.count
+    @admins_count = User.where(admin: true).count
+    @users_with_profile = User.where.not(profile_type: [ nil, "" ]).count
+
+    @total_pages = (@total_users.to_f / @per_page).ceil
     @users = User.includes(:sessions).order(created_at: :desc)
+                 .offset((@page - 1) * @per_page).limit(@per_page)
   end
 
   def doctors
+    @page = (params[:page] || 1).to_i
+    @per_page = 25
+
+    # Totals over the FULL scope (not the paginated page)
+    @total_doctors = DoctorProfile.count
+    @hidden_doctors = DoctorProfile.where(hidden: true).count
+    @active_doctors = @total_doctors - @hidden_doctors
+    @doctors_with_image = DoctorProfile.where.not(image_url: [ nil, "" ]).count
+
+    @total_pages = (@total_doctors.to_f / @per_page).ceil
     @doctors = DoctorProfile.includes(:user, :city, :department, :specialty, :subspecialty).order(created_at: :desc)
+                            .offset((@page - 1) * @per_page).limit(@per_page)
   end
 
   def subscriptions
+    @page = (params[:page] || 1).to_i
+    @per_page = 25
+
+    # Totals / revenue math over the FULL scope (not the paginated page)
+    @total_subscriptions = Subscription.count
+    @active_subscriptions_count = Subscription.where(status: "active").count
+    @canceled_subscriptions = Subscription.where(status: "canceled").count
+    @monthly_revenue = Subscription.where(status: "active").joins(:subscription_plan).sum("subscription_plans.price")
+    @active_counts_by_plan = Subscription.where(status: "active").group(:subscription_plan_id).count
+
+    @total_pages = (@total_subscriptions.to_f / @per_page).ceil
     @subscriptions = Subscription.includes(:user, :subscription_plan).order(created_at: :desc)
+                                 .offset((@page - 1) * @per_page).limit(@per_page)
     @subscription_plans = SubscriptionPlan.all.to_a
   end
 

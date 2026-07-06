@@ -9,27 +9,23 @@
   <%= render "admin/dashboard/nav", active: :doctors %>
 
   <!-- Stats -->
-  <% total = @doctors&.size || 0 %>
-  <% active_count = @doctors&.count { |d| !d.hidden? } || 0 %>
-  <% hidden_count = total - active_count %>
-  <% with_image = @doctors&.count { |d| d.image_url.present? } || 0 %>
   <div class="card p-6 mb-6">
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Total Doctores</p>
-        <p class="text-2xl font-bold text-ink dark:text-white"><%= total %></p>
+        <p class="text-2xl font-bold text-ink dark:text-white"><%= @total_doctors %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Perfiles Activos</p>
-        <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= active_count %></p>
+        <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= @active_doctors %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Perfiles Ocultos</p>
-        <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400"><%= hidden_count %></p>
+        <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400"><%= @hidden_doctors %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Con Imagen</p>
-        <p class="text-2xl font-bold text-sky-600 dark:text-sky-400"><%= with_image %></p>
+        <p class="text-2xl font-bold text-sky-600 dark:text-sky-400"><%= @doctors_with_image %></p>
       </div>
     </div>
   </div>
@@ -81,13 +77,9 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <% if doctor.hidden? %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">
-                      Oculto
-                    </span>
+                    <span class="badge badge-warning">Oculto</span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
-                      Activo
-                    </span>
+                    <span class="badge badge-success">Activo</span>
                   <% end %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -115,4 +107,10 @@
       </table>
     </div>
   </div>
+
+  <% if @total_pages > 1 %>
+    <nav class="mt-6 flex justify-center" aria-label="Paginación">
+      <%= pagination_links(@page, @total_pages, {}) %>
+    </nav>
+  <% end %>
 </div>

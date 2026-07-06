@@ -9,26 +9,23 @@
   <%= render "admin/dashboard/nav", active: :subscriptions %>
 
   <!-- Stats -->
-  <% subs = @subscriptions || [] %>
-  <% active_subs = subs.select { |s| s.status == "active" } %>
-  <% monthly_revenue = active_subs.sum { |s| s.subscription_plan&.price || 0 } %>
   <div class="card p-6 mb-6">
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Total Suscripciones</p>
-        <p class="text-2xl font-bold text-ink dark:text-white"><%= subs.size %></p>
+        <p class="text-2xl font-bold text-ink dark:text-white"><%= @total_subscriptions %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Activas</p>
-        <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= active_subs.size %></p>
+        <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= @active_subscriptions_count %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Canceladas</p>
-        <p class="text-2xl font-bold text-red-600 dark:text-red-400"><%= subs.count { |s| s.status == "canceled" } %></p>
+        <p class="text-2xl font-bold text-red-600 dark:text-red-400"><%= @canceled_subscriptions %></p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-muted dark:text-slate-400">Ingreso Mensual</p>
-        <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">$<%= monthly_revenue %></p>
+        <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">$<%= @monthly_revenue %></p>
       </div>
     </div>
   </div>
@@ -48,8 +45,8 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-line dark:divide-slate-700">
-          <% if subs.present? %>
-            <% subs.each do |subscription| %>
+          <% if @subscriptions.present? %>
+            <% @subscriptions.each do |subscription| %>
               <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
@@ -67,21 +64,13 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                   <% case subscription.status %>
                   <% when 'active' %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
-                      Activa
-                    </span>
+                    <span class="badge badge-success">Activa</span>
                   <% when 'canceled' %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
-                      Cancelada
-                    </span>
+                    <span class="badge badge-error">Cancelada</span>
                   <% when 'past_due' %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">
-                      Vencida
-                    </span>
+                    <span class="badge badge-warning">Vencida</span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-slate-100 dark:bg-slate-600 text-slate-700 dark:text-slate-300">
-                      <%= subscription.status %>
-                    </span>
+                    <span class="badge badge-neutral"><%= subscription.status %></span>
                   <% end %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
@@ -107,15 +96,21 @@
     </div>
   </div>
 
+  <% if @total_pages > 1 %>
+    <nav class="mt-6 flex justify-center" aria-label="Paginación">
+      <%= pagination_links(@page, @total_pages, {}) %>
+    </nav>
+  <% end %>
+
   <!-- Revenue Breakdown -->
   <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Plan Distribution -->
     <div class="card p-6">
       <h2 class="card-title">Distribución por Plan</h2>
       <div class="space-y-3">
-        <% active_total = active_subs.size %>
+        <% active_total = @active_subscriptions_count %>
         <% @subscription_plans.each do |plan| %>
-          <% plan_count = active_subs.count { |s| s.subscription_plan_id == plan.id } %>
+          <% plan_count = @active_counts_by_plan[plan.id] || 0 %>
           <% if plan_count > 0 %>
             <div class="flex justify-between items-center">
               <span class="text-sm text-muted dark:text-slate-400"><%= plan.name %></span>
@@ -134,7 +129,7 @@
       <h2 class="card-title">Ingresos por Plan</h2>
       <div class="space-y-3">
         <% @subscription_plans.each do |plan| %>
-          <% plan_count = active_subs.count { |s| s.subscription_plan_id == plan.id } %>
+          <% plan_count = @active_counts_by_plan[plan.id] || 0 %>
           <% plan_revenue = plan_count * plan.price %>
           <% if plan_revenue > 0 %>
             <div class="flex justify-between items-center">
@@ -142,7 +137,7 @@
               <span class="text-sm font-medium text-ink dark:text-white">$<%= plan_revenue %></span>
             </div>
             <div class="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2">
-              <div class="bg-green-600 h-2 rounded-full" style="width: <%= monthly_revenue > 0 ? (plan_revenue.to_f / monthly_revenue * 100).round : 0 %>%"></div>
+              <div class="bg-green-600 h-2 rounded-full" style="width: <%= @monthly_revenue > 0 ? (plan_revenue.to_f / @monthly_revenue * 100).round : 0 %>%"></div>
             </div>
           <% end %>
         <% end %>
