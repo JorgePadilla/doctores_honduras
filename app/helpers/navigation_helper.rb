@@ -24,9 +24,9 @@ module NavigationHelper
     end
 
     # ── :account — identidad y cuenta ──
+    # "Mi cuenta" (Fase 2) fusiona el antiguo Panel de control + Configuración.
     items << profile_menu_item(user)
-    items << { label: "Panel de control", path: dashboard_path, icon: :squares_2x2, section: :account }
-    items << { label: "Configuración", path: settings_path, icon: :cog_6_tooth, section: :account }
+    items << { label: "Mi cuenta", path: settings_path, icon: :squares_2x2, section: :account }
 
     # ── :mode — cambio de modo ──
     if user.admin?

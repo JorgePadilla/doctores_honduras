@@ -2,22 +2,17 @@
   <nav class="space-y-1">
     <%
       items = [
-        { path: settings_path, icon: "fa-cog", label: "General", key: "general" },
-        { path: settings_subscription_path, icon: "fa-credit-card", label: "Suscripción", key: "subscription" },
-        { path: settings_notifications_path, icon: "fa-bell", label: "Notificaciones", key: "notifications" },
-        { path: settings_security_path, icon: "fa-shield-alt", label: "Seguridad", key: "security" },
-        { path: settings_language_path, icon: "fa-language", label: "Idioma", key: "language" },
+        { path: settings_path,              icon: :squares_2x2, label: "Resumen",     key: "resumen" },
+        { path: settings_subscription_path, icon: :credit_card, label: "Suscripción", key: "subscription" },
+        { path: settings_security_path,     icon: :lock_closed, label: "Seguridad",   key: "security" },
+        { path: settings_preferences_path,  icon: :bell,        label: "Preferencias", key: "preferences" },
       ]
     %>
     <% items.each do |item| %>
-      <% if item[:key] == local_assigns[:current] %>
-        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 font-medium">
-          <i class="fas <%= item[:icon] %> mr-2"></i><%= item[:label] %>
-        </a>
-      <% else %>
-        <a href="<%= item[:path] %>" class="block px-3 py-2 rounded-md text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white">
-          <i class="fas <%= item[:icon] %> mr-2"></i><%= item[:label] %>
-        </a>
+      <% active = item[:key] == local_assigns[:current] %>
+      <%= link_to item[:path], class: "flex items-center gap-2 px-3 py-2 rounded-md text-sm #{active ? 'bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 font-medium' : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white'}" do %>
+        <%= icon(item[:icon], class: "w-5 h-5 shrink-0") %>
+        <span><%= item[:label] %></span>
       <% end %>
     <% end %>
   </nav>

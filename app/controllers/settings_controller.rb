@@ -1,13 +1,45 @@
 class SettingsController < ApplicationController
   before_action :require_authentication
 
+  # Resumen del hub "Mi cuenta" — absorbe el antiguo Panel de Control.
   def index
     @user = Current.user
+    @profile_type = @user.profile_type
     @subscription = @user.subscription
-  end
+    @plan = @subscription&.subscription_plan
 
-  def account
-    @user = Current.user
+    case @profile_type
+    when "doctor"
+      @doctor_profile = @user.doctor_profile
+      @completeness = compute_doctor_completeness
+      if @doctor_profile
+        @profile_views_total = @doctor_profile.profile_views.count
+        @profile_views_week = @doctor_profile.profile_views.this_week.count
+      end
+    when "hospital", "clinic"
+      @establishment = @user.establishments.first
+      @completeness = compute_establishment_completeness
+      if @establishment
+        @profile_views_total = @establishment.profile_views.count
+        @profile_views_week = @establishment.profile_views.this_week.count
+      end
+    when "vendor"
+      @supplier = @user.supplier
+      @products_count = @supplier&.products&.count || 0
+      @leads_count = @supplier&.lead_contacts&.count || 0
+      @completeness = compute_vendor_completeness
+      if @supplier
+        @profile_views_total = @supplier.profile_views.count
+        @profile_views_week = @supplier.profile_views.this_week.count
+      end
+    when "paciente"
+      @patient_profile = @user.patient_profile
+      @upcoming_appointments = @user.patient_appointments.active.upcoming.includes(doctor_profile: :specialty, doctor_branch: []).order(:appointment_date, :start_time).limit(10)
+      @past_appointments = @user.patient_appointments.where("appointment_date < ? OR (appointment_date = ? AND end_time < ?)", Date.current, Date.current, Time.current).includes(doctor_profile: :specialty, doctor_branch: []).order(appointment_date: :desc, start_time: :desc).limit(10)
+      @completeness = compute_patient_completeness
+    else
+      @completeness = 0
+    end
   end
 
   def subscription
@@ -22,7 +54,8 @@ class SettingsController < ApplicationController
     end
   end
 
-  def notifications
+  # Preferencias: notificaciones + idioma en una sola pestaña.
+  def preferences
     @user = Current.user
     @notification_preferences = @user.notification_preference || @user.build_notification_preference
   end
@@ -30,10 +63,6 @@ class SettingsController < ApplicationController
   def security
     @user = Current.user
     @active_sessions = @user.sessions.order(created_at: :desc)
-  end
-
-  def language
-    @user = Current.user
   end
 
   def update_language
@@ -59,9 +88,9 @@ class SettingsController < ApplicationController
       success_message = new_language == "es" ? "Idioma actualizado correctamente." : "Language updated successfully."
 
       flash[:success] = success_message
-      redirect_to settings_language_path
+      redirect_to settings_preferences_path
     else
-      render :language, status: :unprocessable_entity
+      render :preferences, status: :unprocessable_entity
     end
   end
 
@@ -71,9 +100,9 @@ class SettingsController < ApplicationController
 
     if @notification_preferences.update(notification_params)
       flash[:success] = "Preferencias de notificaciones actualizadas correctamente."
-      redirect_to settings_notifications_path
+      redirect_to settings_preferences_path
     else
-      render :notifications, status: :unprocessable_entity
+      render :preferences, status: :unprocessable_entity
     end
   end
 
@@ -183,5 +212,38 @@ class SettingsController < ApplicationController
 
   def notification_params
     params.require(:notification_preference).permit(:email_notifications, :marketing_emails, :new_features_notifications, :security_alerts)
+  end
+
+  # Completitud del perfil para el Resumen (movido del antiguo DashboardController).
+  def compute_doctor_completeness
+    return 0 unless @doctor_profile
+    fields = [ @doctor_profile.name, @doctor_profile.specialty_id, @doctor_profile.department_id,
+               @doctor_profile.city_id, @doctor_profile.description, @doctor_profile.image_url,
+               @doctor_profile.medical_license ]
+    (fields.count(&:present?).to_f / fields.size * 100).round
+  end
+
+  def compute_establishment_completeness
+    return 0 unless @establishment
+    fields = [ @establishment.name, @establishment.address, @establishment.phone,
+               @establishment.department_id, @establishment.city_id, @establishment.description,
+               @establishment.logo_url ]
+    (fields.count(&:present?).to_f / fields.size * 100).round
+  end
+
+  def compute_vendor_completeness
+    return 0 unless @supplier
+    fields = [ @supplier.name, @supplier.phone, @supplier.category,
+               @supplier.description, @supplier.email, @supplier.website,
+               @supplier.department_id ]
+    (fields.count(&:present?).to_f / fields.size * 100).round
+  end
+
+  def compute_patient_completeness
+    return 0 unless @patient_profile
+    fields = [ @patient_profile.name, @patient_profile.phone,
+               @patient_profile.date_of_birth, @patient_profile.department_id,
+               @patient_profile.city_id ]
+    (fields.count(&:present?).to_f / fields.size * 100).round
   end
 end
