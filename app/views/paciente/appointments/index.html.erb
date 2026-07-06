@@ -8,7 +8,7 @@
       <div class="space-y-3">
         <% @upcoming.each do |apt| %>
           <%= link_to paciente_appointment_path(apt), class: "block card card-hover card-accent #{apt.status_classes[:border]} p-5" do %>
-            <div class="flex items-center justify-between">
+            <div class="flex items-start justify-between gap-3">
               <div>
                 <p class="font-semibold text-ink dark:text-white"><%= apt.doctor_profile.display_name %></p>
                 <p class="text-sm text-muted dark:text-slate-400"><%= apt.doctor_profile.specialty&.name %></p>
@@ -42,7 +42,7 @@
       <div class="space-y-3">
         <% @past.each do |apt| %>
           <%= link_to paciente_appointment_path(apt), class: "block card card-hover card-accent #{apt.status_classes[:border]} p-5 opacity-75 hover:opacity-100" do %>
-            <div class="flex items-center justify-between">
+            <div class="flex items-start justify-between gap-3">
               <div>
                 <p class="font-semibold text-ink dark:text-white"><%= apt.doctor_profile.display_name %></p>
                 <p class="text-sm text-muted dark:text-slate-400"><%= apt.doctor_profile.specialty&.name %></p>

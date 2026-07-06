@@ -6,7 +6,7 @@
     <%# Resumen del plan %>
     <div class="rounded-2xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-900/20 p-6">
       <h3 class="text-lg font-semibold mb-2 text-sky-800 dark:text-sky-300">Resumen de la Suscripción</h3>
-      <div class="flex justify-between items-center">
+      <div class="flex flex-wrap justify-between items-center gap-3">
         <div>
           <p class="text-ink dark:text-white font-medium"><%= @plan.name %></p>
           <p class="text-muted dark:text-slate-400 text-sm">Renovación automática mensual</p>
@@ -31,7 +31,7 @@
             <%= f.text_field :card_number, class: "form-input", placeholder: "1234 5678 9012 3456" %>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <%= f.label :expiry, "Fecha de Expiración", class: "form-label" %>
               <%= f.text_field :expiry, class: "form-input", placeholder: "MM/AA" %>
@@ -63,7 +63,7 @@
             <%= f.text_field :address, class: "form-input" %>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <%= f.label :city, "Ciudad", class: "form-label" %>
               <%= f.text_field :city, class: "form-input" %>

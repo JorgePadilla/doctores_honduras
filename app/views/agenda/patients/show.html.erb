@@ -40,7 +40,7 @@
   <div class="space-y-3">
     <% @appointments.each do |apt| %>
       <%= link_to agenda_appointment_path(apt), class: "block card card-hover card-accent #{apt.status_classes[:border]} p-5" do %>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-3">
           <div>
             <p class="text-sm text-ink dark:text-white font-medium">
               <%= apt.appointment_date.strftime("%d/%m/%Y") %> &middot; <%= apt.start_time.strftime("%H:%M") %> - <%= apt.end_time.strftime("%H:%M") %>
@@ -50,7 +50,7 @@
               <p class="text-sm text-muted dark:text-slate-500 mt-1"><%= truncate(apt.reason, length: 60) %></p>
             <% end %>
           </div>
-          <span class="text-sm px-3 py-1 rounded-full font-medium <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>
+          <span class="shrink-0 whitespace-nowrap self-start text-sm px-3 py-1 rounded-full font-medium <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>
         </div>
       <% end %>
     <% end %>

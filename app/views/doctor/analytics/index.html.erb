@@ -82,7 +82,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6">
     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Tendencia de visitas</h2>
     <% if series.any? { |_l, c| c > 0 } %>
-      <div class="flex items-end gap-1 h-40">
+      <div class="flex items-end h-40 <%= series.size > 45 ? 'gap-px' : 'gap-1' %>">
         <% series.each do |label, count| %>
           <div class="flex-1 flex flex-col justify-end items-center h-full group" title="<%= label %>: <%= count %> visita(s)">
             <div class="w-full max-w-[26px] mx-auto bg-sky-400 dark:bg-sky-500 rounded-t group-hover:bg-sky-500 dark:group-hover:bg-sky-400 transition-all" style="height: <%= (count.to_f / max * 100).round(1) %>%"></div>

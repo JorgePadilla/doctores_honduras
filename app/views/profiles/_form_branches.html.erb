@@ -2,7 +2,7 @@
 <div class="card p-6 mb-6"
      data-controller="nested-fields"
      data-nested-fields-max-entries-value="<%= max_branches %>">
-  <div class="flex items-center justify-between mb-5 pb-4 border-b border-line dark:border-slate-700">
+  <div class="flex flex-wrap items-center justify-between gap-y-3 mb-5 pb-4 border-b border-line dark:border-slate-700">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-lg bg-primary-soft dark:bg-sky-900/30 flex items-center justify-center text-primary dark:text-sky-400">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,7 +20,7 @@
         <% end %>
       </div>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
       <button type="button" data-action="nested-fields#add"
               data-nested-fields-target="addButton"
               class="btn-secondary btn-sm">
@@ -31,7 +31,7 @@
         <a href="<%= settings_subscription_path %>"
            data-nested-fields-target="upgrade"
            style="display: none;"
-           class="btn-secondary btn-sm">
+           class="btn-secondary btn-sm whitespace-normal text-center w-full sm:w-auto">
           <%= icon(:sparkles, class: "w-4 h-4") %>
           Mejorar plan para más ubicaciones
         </a>

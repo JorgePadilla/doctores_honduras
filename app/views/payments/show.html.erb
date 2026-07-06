@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-8 max-w-3xl">
+<div class="mx-auto py-8 max-w-3xl">
   <div class="text-center mb-10">
     <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Completar Pago</h1>
     <p class="text-lg text-gray-600 dark:text-slate-400">Complete el pago para activar su suscripción</p>
@@ -14,17 +14,17 @@
       <div class="mb-6">
         <h4 class="font-medium text-gray-700 dark:text-slate-300 mb-4">Resumen de la suscripción:</h4>
         <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg">
-          <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-slate-600">
+          <div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between py-2 border-b border-gray-200 dark:border-slate-600">
             <span class="text-gray-600 dark:text-slate-400">Plan:</span>
             <span class="font-medium dark:text-white"><%= @plan.name %></span>
           </div>
 
-          <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-slate-600">
+          <div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between py-2 border-b border-gray-200 dark:border-slate-600">
             <span class="text-gray-600 dark:text-slate-400">Precio:</span>
             <span class="font-medium dark:text-white"><%= @plan.price_in_dollars %> / <%= @plan.interval_display %></span>
           </div>
 
-          <div class="flex items-center justify-between py-2">
+          <div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between py-2">
             <span class="text-gray-600 dark:text-slate-400">Método de pago:</span>
             <span class="font-medium dark:text-white">Tarjeta de crédito/débito</span>
           </div>

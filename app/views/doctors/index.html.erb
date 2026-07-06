@@ -7,7 +7,9 @@
   <div class="max-w-3xl mx-auto mb-6" data-controller="live-search">
     <div class="flex items-center gap-2 bg-white dark:bg-slate-800 rounded-full border border-line dark:border-slate-700 shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)] p-2 pl-5">
       <%= icon(:magnifying_glass, class: "w-5 h-5 text-primary shrink-0") %>
-      <form action="/doctors" method="get" data-turbo-frame="doctors-list" class="flex flex-1 items-center gap-2">
+      <%# min-w-0: sin esto el form no puede encogerse (min-width:auto = ancho
+    intrínseco del input) y el botón Buscar se sale de la píldora en mobile. %>
+<form action="/doctors" method="get" data-turbo-frame="doctors-list" class="flex flex-1 min-w-0 items-center gap-2">
         <%# Preserva los filtros activos al buscar por texto (si no, se perderían). %>
         <% %w[specialty service country_id department_id city_id establishment_id].each do |k| %>
           <% if params[k].present? %><%= hidden_field_tag k, params[k] %><% end %>
@@ -18,7 +20,7 @@
                data-live-search-target="input"
                data-action="input->live-search#search"
                autocomplete="off">
-        <button type="submit" class="shrink-0 inline-flex items-center bg-primary-hover hover:bg-primary-deep text-white font-semibold rounded-full px-6 py-3 transition-colors">
+        <button type="submit" class="shrink-0 inline-flex items-center bg-primary-hover hover:bg-primary-deep text-white font-semibold rounded-full px-4 py-2.5 sm:px-6 sm:py-3 transition-colors">
           Buscar
         </button>
       </form>

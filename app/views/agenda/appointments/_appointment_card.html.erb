@@ -1,6 +1,6 @@
 <%= link_to agenda_appointment_path(appointment), class: "block card card-hover card-accent #{appointment.status_classes[:border]} p-4" do %>
   <div class="flex justify-between items-start">
-    <div class="flex-1">
+    <div class="flex-1 min-w-0">
       <div class="flex items-center space-x-2 mb-2">
         <span class="inline-block w-2.5 h-2.5 rounded-full <%= appointment.status_classes[:dot] %>"></span>
         <span class="text-sm font-semibold text-ink dark:text-white"><%= appointment.start_time.strftime("%H:%M") %> - <%= appointment.end_time.strftime("%H:%M") %></span>
@@ -12,6 +12,6 @@
         <p class="text-sm text-muted dark:text-slate-500 mt-1 truncate"><%= appointment.reason %></p>
       <% end %>
     </div>
-    <svg class="w-5 h-5 text-slate-300 dark:text-slate-600 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    <svg class="w-5 h-5 shrink-0 text-slate-300 dark:text-slate-600 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
   </div>
 <% end %>

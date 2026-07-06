@@ -9,7 +9,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="min-w-0">
           <h2 class="text-lg font-semibold text-ink dark:text-white truncate">Hola, <%= menu_display_name(@user) %></h2>
-          <p class="text-sm text-muted"><%= @user.email %></p>
+          <p class="text-sm text-muted truncate"><%= @user.email %></p>
         </div>
         <div class="flex items-center gap-3">
           <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium <%= badge[:classes] %>"><%= badge[:label] %></span>

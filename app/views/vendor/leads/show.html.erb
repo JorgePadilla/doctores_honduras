@@ -9,7 +9,7 @@
       </div>
       <div>
         <p class="text-sm text-muted dark:text-slate-400">Email</p>
-        <p class="font-medium text-ink dark:text-white"><%= @lead.email %></p>
+        <p class="font-medium text-ink dark:text-white break-words"><%= @lead.email %></p>
       </div>
       <div>
         <p class="text-sm text-muted dark:text-slate-400">Teléfono</p>
@@ -28,13 +28,13 @@
     <% if @lead.message.present? %>
       <div>
         <p class="text-sm text-muted dark:text-slate-400">Mensaje</p>
-        <p class="text-ink dark:text-white mt-1 bg-slate-50 dark:bg-slate-700/50 p-3 rounded-lg"><%= @lead.message %></p>
+        <p class="text-ink dark:text-white mt-1 bg-slate-50 dark:bg-slate-700/50 p-3 rounded-lg break-words"><%= @lead.message %></p>
       </div>
     <% end %>
 
     <div class="border-t border-line dark:border-slate-700 pt-4">
       <p class="text-sm text-muted dark:text-slate-400 mb-2">Actualizar estado</p>
-      <%= form_with model: @lead, url: vendor_lead_path(@lead), method: :patch, class: "flex items-center gap-3" do |f| %>
+      <%= form_with model: @lead, url: vendor_lead_path(@lead), method: :patch, class: "flex flex-wrap items-center gap-3" do |f| %>
         <%= f.select :status,
                     options_for_select([["Nuevo", "new"], ["Contactado", "contacted"], ["Convertido", "converted"]], @lead.status),
                     {},

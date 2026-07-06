@@ -42,14 +42,14 @@
       </div>
     </div>
 
-    <div class="flex justify-between pt-2">
+    <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between pt-2">
       <%= form.submit t('establishments.filters.apply'),
-                     class: "inline-flex justify-center items-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600" %>
+                     class: "w-full sm:w-auto inline-flex justify-center items-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all hover:shadow-md transform hover:scale-105 bg-sky-500 hover:bg-sky-600" %>
 
       <% if params[:specialty_id].present? || params[:service_id].present? %>
         <%= link_to t('establishments.filters.clear'),
                    establishments_path(q: params[:q]),
-                   class: "inline-flex justify-center items-center py-2 px-4 border border-gray-300 dark:border-slate-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" %>
+                   class: "w-full sm:w-auto inline-flex justify-center items-center py-2 px-4 border border-gray-300 dark:border-slate-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" %>
       <% end %>
     </div>
   <% end %>

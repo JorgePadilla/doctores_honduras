@@ -66,8 +66,8 @@
     </div>
   <% end %>
 
-  <div class="flex justify-between">
-    <%= link_to "Volver", onboarding_profile_type_path, class: "py-2 px-4 border border-gray-300 dark:border-slate-600 rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" %>
-    <%= f.submit "Crear Perfil y Continuar", class: "py-2 px-4 border border-transparent rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 cursor-pointer" %>
+  <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+    <%= link_to "Volver", onboarding_profile_type_path, class: "w-full sm:w-auto text-center py-2 px-4 border border-gray-300 dark:border-slate-600 rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" %>
+    <%= f.submit "Crear Perfil y Continuar", class: "w-full sm:w-auto py-2 px-4 border border-transparent rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 cursor-pointer" %>
   </div>
 <% end %>

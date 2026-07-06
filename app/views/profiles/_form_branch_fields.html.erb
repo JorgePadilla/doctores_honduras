@@ -127,7 +127,7 @@
               <% schedule.closes_at ||= defaults[:closes_at] %>
             <% end %>
             <%= bf.fields_for :branch_schedules, schedule, child_index: schedule.persisted? ? schedule.id : "#{day_num}_new" do |sf| %>
-              <div class="flex items-center gap-3">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span class="w-24 text-sm text-muted dark:text-slate-400"><%= day_name %></span>
                 <%= sf.hidden_field :day_of_week %>
                 <%= sf.hidden_field :id if schedule.persisted? %>
@@ -143,7 +143,7 @@
         <% else %>
           <% BranchSchedule::DAY_NAMES.each do |day_num, day_name| %>
             <% defaults = BranchSchedule::DEFAULT_HOURS[day_num] %>
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span class="w-24 text-sm text-muted dark:text-slate-400"><%= day_name %></span>
               <input type="hidden" name="doctor_profile[doctor_branches_attributes][NEW_RECORD][branch_schedules_attributes][<%= day_num %>][day_of_week]" value="<%= day_num %>">
               <input type="time" name="doctor_profile[doctor_branches_attributes][NEW_RECORD][branch_schedules_attributes][<%= day_num %>][opens_at]"

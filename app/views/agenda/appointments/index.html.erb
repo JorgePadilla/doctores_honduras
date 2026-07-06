@@ -26,7 +26,8 @@
           <% if @view == "day" %>
             <%= I18n.l(@date, format: :long) %>
           <% else %>
-            <%= I18n.l(@week_start, format: :long) %> – <%= I18n.l(@week_start + 6.days, format: :long) %>
+            <span class="sm:hidden"><%= I18n.l(@week_start, format: :short) %> – <%= I18n.l(@week_start + 6.days, format: :short) %></span>
+            <span class="hidden sm:inline"><%= I18n.l(@week_start, format: :long) %> – <%= I18n.l(@week_start + 6.days, format: :long) %></span>
           <% end %>
         </h2>
         <%= link_to agenda_appointments_path(date: (@view == "day" ? @date + 1.day : @date + 1.week), view: @view), class: "p-2 hover:bg-sky-50 dark:hover:bg-slate-700 rounded-lg transition-colors" do %>

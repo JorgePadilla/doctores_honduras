@@ -16,7 +16,7 @@
 
   <div class="card card-accent <%= @appointment.status_classes[:border] %> p-6 space-y-6">
     <!-- Status badge -->
-    <div class="flex items-center gap-3">
+    <div class="flex flex-wrap items-center gap-3">
       <%= render "agenda/status_badge", appointment: @appointment %>
       <span class="text-sm text-muted dark:text-slate-400">
         <%= @appointment.booking_source == "public_booking" ? "Reserva en línea" : "Cita manual" %>
@@ -31,7 +31,7 @@
           <p class="text-sm text-muted dark:text-slate-300 mt-1"><%= @appointment.patient_phone %></p>
         <% end %>
         <% if @appointment.patient_email.present? %>
-          <p class="text-sm text-muted dark:text-slate-300"><%= @appointment.patient_email %></p>
+          <p class="text-sm text-muted dark:text-slate-300 break-words"><%= @appointment.patient_email %></p>
         <% end %>
       </div>
 
@@ -50,7 +50,7 @@
       <% if @appointment.created_by %>
         <div>
           <h3 class="text-sm font-medium text-muted dark:text-slate-400 mb-1">Creada por</h3>
-          <p class="text-ink dark:text-white"><%= @appointment.created_by.email %></p>
+          <p class="text-ink dark:text-white break-words"><%= @appointment.created_by.email %></p>
         </div>
       <% end %>
     </div>
@@ -113,7 +113,7 @@
         <% end %>
         <%= form_with url: agenda_appointment_attachments_path(@appointment), method: :post, multipart: true, class: "flex flex-wrap items-center gap-3" do %>
           <input type="file" name="files[]" multiple accept="application/pdf,image/*"
-                 class="text-sm text-muted dark:text-slate-300 file:mr-3 file:rounded-full file:border-0 file:bg-sky-50 dark:file:bg-sky-900/30 file:px-4 file:py-2 file:text-sky-700 dark:file:text-sky-300 file:font-medium">
+                 class="w-full min-w-0 sm:w-auto text-sm text-muted dark:text-slate-300 file:mr-3 file:rounded-full file:border-0 file:bg-sky-50 dark:file:bg-sky-900/30 file:px-4 file:py-2 file:text-sky-700 dark:file:text-sky-300 file:font-medium">
           <%= submit_tag "Subir", class: "btn-primary cursor-pointer" %>
         <% end %>
         <p class="mt-2 text-xs text-muted dark:text-slate-500">PDF o imágenes, hasta 10 MB. Almacenamiento privado con enlaces firmados.</p>

@@ -7,7 +7,7 @@
   <div class="max-w-5xl mx-auto mb-8">
     <div class="flex items-center gap-2 bg-white dark:bg-slate-800 rounded-full border border-line dark:border-slate-700 shadow-[0_12px_32px_-8px_rgb(11_18_32_/_0.14)] p-2 pl-5">
       <%= icon(:magnifying_glass, class: "w-5 h-5 text-primary shrink-0") %>
-      <form action="<%= establishments_path %>" method="get" class="flex flex-1 items-center gap-2">
+      <form action="<%= establishments_path %>" method="get" class="flex flex-1 min-w-0 items-center gap-2">
         <input type="text" name="q" value="<%= params[:q] %>" placeholder="<%= t('common.search') %>…"
                class="flex-1 min-w-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-ink dark:text-white placeholder:text-muted py-2 text-base">
         <button type="submit" class="shrink-0 inline-flex items-center bg-primary-hover hover:bg-primary-deep text-white font-semibold rounded-full px-6 py-3 transition-colors">

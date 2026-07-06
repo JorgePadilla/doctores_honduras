@@ -6,15 +6,15 @@
     </button>
   </div>
 
-  <div class="bg-white rounded-xl shadow p-8">
-    <div class="flex items-start justify-between border-b border-line pb-6 mb-6">
+  <div class="bg-white rounded-xl shadow p-5 sm:p-8">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between border-b border-line pb-6 mb-6">
       <div>
         <p class="text-2xl font-bold text-ink"><%= @appointment.doctor_profile.name %></p>
         <% if @appointment.doctor_profile.medical_license.present? %>
           <p class="text-sm text-muted mt-1">Cédula/Colegiación: <%= @appointment.doctor_profile.medical_license %></p>
         <% end %>
       </div>
-      <div class="text-right text-sm text-muted">
+      <div class="sm:text-right text-sm text-muted">
         <%= I18n.l(@appointment.appointment_date, format: :long) %>
       </div>
     </div>
