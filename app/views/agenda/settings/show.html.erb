@@ -61,4 +61,40 @@
     </div>
   <% end %>
 
+  <%# Read-only availability: weekly opening hours per branch (edited on the profile page). %>
+  <section class="mt-10">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Disponibilidad</h2>
+        <p class="text-sm text-gray-500 dark:text-slate-400">Horarios de atención por consultorio (solo lectura).</p>
+      </div>
+      <%= link_to edit_profile_path, class: "inline-flex items-center gap-1.5 text-sm font-medium text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors" do %>
+        <%= icon(:calendar_days, class: "w-4 h-4") %> Editar horarios
+      <% end %>
+    </div>
+
+    <% if @branches.any? %>
+      <div class="space-y-4">
+        <% @branches.each do |branch| %>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
+            <h3 class="text-base font-semibold text-gray-900 dark:text-white"><%= branch.name %></h3>
+            <% if branch.address.present? %>
+              <p class="text-sm text-gray-500 dark:text-slate-400 mt-0.5"><%= branch.address %></p>
+            <% end %>
+            <% if branch.branch_schedules.any? %>
+              <%= render "shared/branch_schedule", branch: branch %>
+            <% else %>
+              <p class="mt-3 text-sm text-gray-400 dark:text-slate-500">Sin horarios configurados.</p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 text-sm text-gray-500 dark:text-slate-400">
+        Aún no has agregado consultorios.
+        <%= link_to "Agregar ubicaciones", edit_profile_path, class: "text-sky-600 dark:text-sky-400 font-medium hover:underline" %>.
+      </div>
+    <% end %>
+  </section>
+
 </div>

@@ -65,6 +65,23 @@ class SettingsController < ApplicationController
     @active_sessions = @user.sessions.order(created_at: :desc)
   end
 
+  # Cambio de contraseña real (has_secure_password). Nunca registramos la
+  # contraseña; solo leemos los tres campos necesarios directamente.
+  def update_password
+    @user = Current.user
+
+    unless @user.authenticate(params[:current_password])
+      redirect_to settings_security_path, alert: "La contraseña actual es incorrecta."
+      return
+    end
+
+    if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
+      redirect_to settings_security_path, notice: "Contraseña actualizada."
+    else
+      redirect_to settings_security_path, alert: @user.errors.full_messages.to_sentence
+    end
+  end
+
   def update_language
     @user = Current.user
     old_language = @user.language

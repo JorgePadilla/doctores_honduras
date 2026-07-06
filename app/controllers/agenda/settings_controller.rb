@@ -2,6 +2,7 @@ class Agenda::SettingsController < Agenda::BaseController
   def show
     @setting = current_doctor_profile.agenda_setting || current_doctor_profile.build_agenda_setting
     @tier = current_doctor_profile.user.subscription&.subscription_plan&.tier || "gratis"
+    load_branches
   end
 
   def update
@@ -15,11 +16,18 @@ class Agenda::SettingsController < Agenda::BaseController
     if @setting.update(permitted)
       redirect_to agenda_settings_path, notice: "Configuración guardada."
     else
+      load_branches
       render :show, status: :unprocessable_entity
     end
   end
 
   private
+
+  # Branches + weekly opening hours, read-only surface for the Disponibilidad
+  # section. includes(:branch_schedules) avoids N+1 when rendering per-branch hours.
+  def load_branches
+    @branches = current_doctor_profile.doctor_branches.ordered.includes(:branch_schedules)
+  end
 
   def setting_params
     params.require(:doctor_agenda_setting).permit(:appointment_duration, :buffer_minutes, :public_booking_enabled)

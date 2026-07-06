@@ -92,6 +92,7 @@ Rails.application.routes.draw do
   post "settings/process_payment" => "settings#process_payment", as: :settings_process_payment
   delete "settings/cancel_subscription" => "settings#cancel_subscription", as: :settings_cancel_subscription
   get "settings/security" => "settings#security", as: :settings_security
+  patch "settings/password" => "settings#update_password", as: :settings_password
   get "settings/preferences" => "settings#preferences", as: :settings_preferences
   # Notificaciones + Idioma se editan desde Preferencias; solo los PATCH sobreviven.
   patch "settings/notifications" => "settings#update_notifications", as: :settings_notifications

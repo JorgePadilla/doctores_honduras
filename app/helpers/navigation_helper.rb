@@ -4,9 +4,6 @@ module NavigationHelper
   #   { label:, path:, icon:, section: }  (+ admin: true para resaltar Panel admin)
   # Secciones (orden de render): :work (uso diario) · :account (identidad/cuenta)
   # · :mode (cambio de modo). "Cerrar sesión" se renderiza aparte (button_to DELETE).
-  #
-  # Fase 1: se conservan "Panel de control" y "Configuración"; la fusión en un
-  # solo hub "Mi cuenta" llega en la Fase 2.
   def user_menu_items(user)
     items = []
     pt = user.profile_type
@@ -47,7 +44,7 @@ module NavigationHelper
   def profile_menu_item(user)
     case user.profile_type
     when "doctor"
-      { label: "Mi perfil", path: profile_path, icon: :user_circle, section: :account }
+      { label: "Mi perfil", path: (user.doctor_profile ? edit_profile_path : new_profile_path), icon: :user_circle, section: :account }
     when "hospital", "clinic"
       { label: "Mi perfil", path: edit_establishment_profile_path, icon: :user_circle, section: :account }
     when "vendor"

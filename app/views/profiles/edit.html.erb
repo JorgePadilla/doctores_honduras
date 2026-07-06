@@ -1,8 +1,15 @@
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-4xl mx-auto">
     <div class="mb-6">
-      <h1 class="text-2xl font-bold mb-2 text-primary-700 dark:text-sky-400">Editar Perfil de Doctor</h1>
-      <p class="text-lg text-gray-600 dark:text-slate-400">Actualiza la información de tu perfil</p>
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold mb-2 text-primary-700 dark:text-sky-400">Editar Perfil de Doctor</h1>
+          <p class="text-lg text-gray-600 dark:text-slate-400">Actualiza la información de tu perfil</p>
+        </div>
+        <% if Current.user.doctor_profile.present? %>
+          <%= link_to "Ver perfil público", doctor_path(Current.user.doctor_profile), class: "shrink-0 text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
+        <% end %>
+      </div>
     </div>
 
     <%= form_with model: @doctor_profile, url: profile_path, method: :patch, multipart: true do |form| %>
