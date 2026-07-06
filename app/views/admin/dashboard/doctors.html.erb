@@ -36,69 +36,65 @@
       <table class="min-w-full divide-y divide-line dark:divide-slate-700">
         <thead>
           <tr>
-            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Doctor</th>
-            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Especialización</th>
-            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Ubicación</th>
-            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Usuario</th>
-            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Estado</th>
-            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Acciones</th>
+            <th class="px-4 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-xs font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Doctor</th>
+            <th class="px-4 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-xs font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Especialidad</th>
+            <th class="px-4 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-xs font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Ubicación</th>
+            <th class="px-4 py-3 bg-slate-50 dark:bg-slate-700/50 text-right text-xs font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Acciones</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-line dark:divide-slate-700">
           <% if @doctors.present? %>
             <% @doctors.each do |doctor| %>
-              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
+              <tr class="align-top hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                <%# Doctor: foto + nombre + email + estado (absorbe las columnas Usuario y Estado) %>
+                <td class="px-4 py-3">
+                  <div class="flex items-start gap-3">
                     <% if doctor.image_url.present? %>
-                      <img src="<%= doctor.image_thumb_url.presence || doctor.image_url %>" alt="<%= doctor.name %>" loading="lazy" class="w-10 h-10 rounded-full object-cover" />
+                      <img src="<%= doctor.image_thumb_url.presence || doctor.image_url %>" alt="<%= doctor.name %>" loading="lazy" class="w-10 h-10 shrink-0 rounded-full object-cover" />
                     <% else %>
-                      <div class="w-10 h-10 bg-slate-200 dark:bg-slate-600 rounded-full flex items-center justify-center">
+                      <div class="w-10 h-10 shrink-0 bg-slate-200 dark:bg-slate-600 rounded-full flex items-center justify-center">
                         <span class="text-sm font-medium text-slate-700 dark:text-slate-300"><%= doctor.name[0].upcase %></span>
                       </div>
                     <% end %>
-                    <div class="ml-4">
+                    <div class="min-w-0">
                       <div class="text-sm font-medium text-ink dark:text-white"><%= doctor.name %></div>
-                      <div class="text-sm text-muted dark:text-slate-400"><%= doctor.medical_license %></div>
+                      <div class="text-xs text-muted dark:text-slate-400 break-all"><%= doctor.user.email %></div>
+                      <div class="mt-1">
+                        <% if doctor.hidden? %>
+                          <span class="badge badge-warning">Oculto</span>
+                        <% else %>
+                          <span class="badge badge-success">Activo</span>
+                        <% end %>
+                      </div>
                     </div>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
+                <td class="px-4 py-3 text-sm text-muted dark:text-slate-400">
                   <%= doctor.specialty&.name %>
                   <% if doctor.subspecialty.present? %>
-                    <br><span class="text-sm text-muted dark:text-slate-500"><%= doctor.subspecialty.name %></span>
+                    <span class="block text-xs text-muted dark:text-slate-500"><%= doctor.subspecialty.name %></span>
                   <% end %>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
-                  <%= doctor.city&.name %>, <%= doctor.department&.name %>
+                <td class="px-4 py-3 text-sm text-muted dark:text-slate-400">
+                  <%= [doctor.city&.name, doctor.department&.name].compact.join(", ") %>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
-                  <%= doctor.user.email %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <% if doctor.hidden? %>
-                    <span class="badge badge-warning">Oculto</span>
-                  <% else %>
-                    <span class="badge badge-success">Activo</span>
-                  <% end %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <%= form_with url: admin_toggle_doctor_visibility_path(doctor), method: :post, class: "inline-flex items-center", data: { turbo: true } do |form| %>
-                    <button type="submit" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 <%= doctor.hidden? ? 'bg-slate-200 dark:bg-slate-600' : 'bg-sky-500' %>">
-                      <span class="sr-only"><%= doctor.hidden? ? 'Activar' : 'Desactivar' %></span>
-                      <span aria-hidden="true" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out <%= doctor.hidden? ? 'translate-x-0' : 'translate-x-5' %>"></span>
-                    </button>
-                    <span class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300">
-                      <%= doctor.hidden? ? 'Desactivado' : 'Activado' %>
-                    </span>
-                  <% end %>
-                  <%= link_to "Ver", doctor_path(doctor), class: "ml-4 text-sky-600 dark:text-sky-400 hover:underline", target: "_blank" %>
+                <%# Acciones: toggle (control + indicador) + Ver %>
+                <td class="px-4 py-3">
+                  <div class="flex items-center justify-end gap-3">
+                    <%= form_with url: admin_toggle_doctor_visibility_path(doctor), method: :post, class: "inline-flex", data: { turbo: true } do |form| %>
+                      <button type="submit" title="<%= doctor.hidden? ? 'Activar' : 'Desactivar' %>" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 <%= doctor.hidden? ? 'bg-slate-200 dark:bg-slate-600' : 'bg-primary' %>">
+                        <span class="sr-only"><%= doctor.hidden? ? 'Activar' : 'Desactivar' %></span>
+                        <span aria-hidden="true" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out <%= doctor.hidden? ? 'translate-x-0' : 'translate-x-5' %>"></span>
+                      </button>
+                    <% end %>
+                    <%= link_to "Ver", doctor_path(doctor), class: "text-sm font-medium text-primary hover:text-primary-hover", target: "_blank" %>
+                  </div>
                 </td>
               </tr>
             <% end %>
           <% else %>
             <tr>
-              <td colspan="6" class="px-6 py-8 text-center text-muted dark:text-slate-400">
+              <td colspan="4" class="px-4 py-8 text-center text-muted dark:text-slate-400">
                 No hay doctores registrados
               </td>
             </tr>
