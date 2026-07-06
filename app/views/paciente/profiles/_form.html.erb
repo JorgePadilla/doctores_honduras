@@ -1,75 +1,67 @@
 <%= form_with model: patient_profile, url: paciente_profile_path, method: :patch, class: "space-y-6" do |f| %>
-  <% if patient_profile.errors.any? %>
-    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4" role="alert">
-      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400">
-        <% patient_profile.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "shared/form_errors", model: patient_profile %>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
        data-controller="location-filter"
        data-location-filter-department-blank-value="Selecciona un departamento"
        data-location-filter-city-blank-value="Selecciona una ciudad">
     <div>
-      <%= f.label :name, "Nombre completo *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-      <%= f.text_field :name, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
+      <%= f.label :name, "Nombre completo *", class: "form-label" %>
+      <%= f.text_field :name, class: "form-input", required: true %>
     </div>
 
     <div>
-      <%= f.label :identity_document, "Número de identidad (DNI) *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-      <%= f.text_field :identity_document, placeholder: "0801-1990-12345", class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
+      <%= f.label :identity_document, "Número de identidad (DNI) *", class: "form-label" %>
+      <%= f.text_field :identity_document, placeholder: "0801-1990-12345", class: "form-input", required: true %>
     </div>
 
     <div>
-      <%= label_tag :email, "Correo electrónico *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-      <%= email_field_tag :email, Current.user.email, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
+      <%= label_tag :email, "Correo electrónico *", class: "form-label" %>
+      <%= email_field_tag :email, Current.user.email, class: "form-input", required: true %>
     </div>
 
     <div>
-      <%= f.label :phone, "Teléfono *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-      <%= f.telephone_field :phone, placeholder: "+504 0000-0000", class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true %>
+      <%= f.label :phone, "Teléfono *", class: "form-label" %>
+      <%= f.telephone_field :phone, placeholder: "+504 0000-0000", class: "form-input", required: true %>
     </div>
 
     <div>
-      <%= f.label :date_of_birth, "Fecha de nacimiento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.label :date_of_birth, "Fecha de nacimiento", class: "form-label" %>
       <%= f.text_field :date_of_birth,
             value: patient_profile.date_of_birth&.to_s,
             data: { controller: "datepicker", datepicker_mode_value: "past" },
             placeholder: "Selecciona una fecha",
             autocomplete: "off",
-            class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+            class: "form-input" %>
     </div>
 
     <div>
-      <%= f.label :country_id, "País *", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.label :country_id, "País *", class: "form-label" %>
       <%= f.select :country_id, options_from_collection_for_select(countries, :id, :name, patient_profile.country_id),
           { include_blank: "Selecciona un país" },
-          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500", required: true,
+          { class: "form-input form-select", required: true,
             data: { location_filter_target: "country", action: "change->location-filter#loadDepartments" } } %>
     </div>
 
     <div>
-      <%= f.label :department_id, "Departamento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.label :department_id, "Departamento", class: "form-label" %>
       <%= f.select :department_id, options_from_collection_for_select(departments, :id, :name, patient_profile.department_id),
           { include_blank: "Selecciona un departamento" },
-          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500",
+          { class: "form-input form-select",
             data: { location_filter_target: "department", action: "change->location-filter#loadCities" } } %>
     </div>
 
     <div>
-      <%= f.label :city_id, "Ciudad", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+      <%= f.label :city_id, "Ciudad", class: "form-label" %>
       <%= f.select :city_id, options_from_collection_for_select(cities, :id, :name, patient_profile.city_id),
           { include_blank: "Selecciona una ciudad" },
-          { class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500",
+          { class: "form-input form-select",
             data: { location_filter_target: "city" } } %>
     </div>
   </div>
 
-  <div class="flex justify-end space-x-3">
-    <%= link_to "Cancelar", paciente_profile_path, class: "inline-flex items-center border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-5 py-2 rounded-full font-medium transition-all" %>
-    <%= f.submit "Guardar cambios", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer" %>
+  <div class="flex items-center justify-end gap-3">
+    <%= link_to "Cancelar", paciente_profile_path, class: "btn-secondary" %>
+    <%= f.submit "Guardar cambios", class: "btn-primary" %>
   </div>
 <% end %>

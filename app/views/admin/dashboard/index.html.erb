@@ -1,12 +1,10 @@
 <div class="max-w-6xl mx-auto">
-  <!-- Page header -->
-  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-    <div class="flex items-center gap-3">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Panel de Control</h1>
-      <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
-    </div>
-    <span class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= Current.user.email %></span>
-  </div>
+  <%# Header %>
+  <% actions = capture do %>
+    <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
+    <span class="text-sm text-muted dark:text-slate-400 truncate max-w-[14rem]"><%= Current.user.email %></span>
+  <% end %>
+  <%= render "shared/page_header", title: "Panel de Control", actions: actions %>
 
   <%= render "admin/dashboard/nav", active: :dashboard %>
 
@@ -29,12 +27,12 @@
          "amber"  => "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
        } %>
     <% stats.each do |s| %>
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 hover:shadow-lg transition-all">
+      <div class="card card-hover p-6">
         <div class="flex items-start justify-between">
           <div class="min-w-0">
-            <p class="text-sm font-medium text-gray-500 dark:text-slate-400 truncate"><%= s[:label] %></p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1"><%= s[:value] %></p>
-            <p class="text-sm text-gray-500 dark:text-slate-400 mt-1"><%= s[:sub] %></p>
+            <p class="text-sm font-medium text-muted dark:text-slate-400 truncate"><%= s[:label] %></p>
+            <p class="text-2xl font-bold text-ink dark:text-white mt-1"><%= s[:value] %></p>
+            <p class="text-sm text-muted dark:text-slate-400 mt-1"><%= s[:sub] %></p>
           </div>
           <div class="p-3 rounded-full <%= accent_classes[s[:accent]] %> flex-shrink-0">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,8 +47,8 @@
   <!-- Quick actions + system status -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     <!-- Quick Actions -->
-    <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Acciones Rápidas</h2>
+    <div class="lg:col-span-2 card p-6">
+      <h2 class="card-title">Acciones Rápidas</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <% actions = [
              { title: "Gestionar Doctores", desc: "Activar/desactivar perfiles", cta: "Ir a Doctores", path: admin_doctors_path, accent: "sky",
@@ -86,8 +84,8 @@
                 </svg>
               </div>
               <div class="ml-4">
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-white"><%= a[:title] %></h3>
-                <p class="text-sm text-gray-600 dark:text-slate-400"><%= a[:desc] %></p>
+                <h3 class="text-sm font-semibold text-ink dark:text-white"><%= a[:title] %></h3>
+                <p class="text-sm text-muted dark:text-slate-400"><%= a[:desc] %></p>
               </div>
             </div>
             <%= link_to a[:cta], a[:path], class: "mt-3 inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg #{action_link[a[:accent]]}" %>
@@ -97,32 +95,32 @@
     </div>
 
     <!-- System Status -->
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Estado del Sistema</h2>
+    <div class="card p-6">
+      <h2 class="card-title">Estado del Sistema</h2>
       <div class="space-y-4">
         <% active_pct = @doctors_count > 0 ? [((@doctors_count - @hidden_profiles).to_f / @doctors_count * 100).round, 100].min : 0 %>
         <div class="flex justify-between items-center">
-          <span class="text-sm font-medium text-gray-600 dark:text-slate-400">Perfiles Activos</span>
+          <span class="text-sm font-medium text-muted dark:text-slate-400">Perfiles Activos</span>
           <span class="text-sm font-medium text-green-600 dark:text-green-400"><%= @doctors_count - @hidden_profiles %>/<%= @doctors_count %></span>
         </div>
-        <div class="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-2">
+        <div class="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2">
           <div class="bg-green-500 h-2 rounded-full" style="width: <%= active_pct %>%"></div>
         </div>
 
         <div class="flex justify-between items-center">
-          <span class="text-sm font-medium text-gray-600 dark:text-slate-400">Perfiles Completos</span>
+          <span class="text-sm font-medium text-muted dark:text-slate-400">Perfiles Completos</span>
           <span class="text-sm font-medium text-sky-600 dark:text-sky-400"><%= @completion_rate %>%</span>
         </div>
-        <div class="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-2">
+        <div class="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2">
           <div class="bg-sky-500 h-2 rounded-full" style="width: <%= @completion_rate %>%"></div>
         </div>
 
         <% subs_pct = @users_count > 0 ? [(@active_subscriptions.to_f / @users_count * 100).round, 100].min : 0 %>
         <div class="flex justify-between items-center">
-          <span class="text-sm font-medium text-gray-600 dark:text-slate-400">Suscripciones Activas</span>
+          <span class="text-sm font-medium text-muted dark:text-slate-400">Suscripciones Activas</span>
           <span class="text-sm font-medium text-purple-600 dark:text-purple-400"><%= @active_subscriptions %></span>
         </div>
-        <div class="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-2">
+        <div class="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2">
           <div class="bg-purple-500 h-2 rounded-full" style="width: <%= subs_pct %>%"></div>
         </div>
       </div>
@@ -130,9 +128,7 @@
       <% if @hidden_profiles > 0 || @incomplete_profiles > 0 %>
         <div class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
           <div class="flex items-center">
-            <svg class="w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-            </svg>
+            <%= icon(:exclamation_triangle, class: "w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0") %>
             <div class="ml-2">
               <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">Acciones Pendientes</p>
               <p class="text-sm text-yellow-600 dark:text-yellow-400">
@@ -145,9 +141,7 @@
       <% else %>
         <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
           <div class="flex items-center">
-            <svg class="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+            <%= icon(:check_circle, class: "w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0") %>
             <div class="ml-2">
               <p class="text-sm font-medium text-green-800 dark:text-green-300">Todo en orden</p>
               <p class="text-sm text-green-600 dark:text-green-400">No hay acciones pendientes</p>
@@ -161,18 +155,18 @@
   <!-- Recent activity -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Recent Users -->
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Usuarios Recientes</h2>
+    <div class="card p-6">
+      <h2 class="card-title">Usuarios Recientes</h2>
       <div class="space-y-3">
         <% @recent_users.each do |user| %>
-          <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700 last:border-0">
+          <div class="flex items-center justify-between py-2 border-b border-line dark:border-slate-700 last:border-0">
             <div class="flex items-center min-w-0">
-              <div class="w-8 h-8 bg-gray-200 dark:bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
-                <span class="text-sm font-medium text-gray-700 dark:text-slate-300"><%= user.email[0].upcase %></span>
+              <div class="w-8 h-8 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-sm font-medium text-slate-700 dark:text-slate-300"><%= user.email[0].upcase %></span>
               </div>
               <div class="ml-3 min-w-0">
-                <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><%= user.email %></p>
-                <p class="text-sm text-gray-500 dark:text-slate-400">Registrado: <%= time_ago_in_words(user.created_at) %> atrás</p>
+                <p class="text-sm font-medium text-ink dark:text-white truncate"><%= user.email %></p>
+                <p class="text-sm text-muted dark:text-slate-400">Registrado: <%= time_ago_in_words(user.created_at) %> atrás</p>
               </div>
             </div>
             <% if user.admin? %>
@@ -185,22 +179,22 @@
     </div>
 
     <!-- Recent Doctors -->
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Doctores Recientes</h2>
+    <div class="card p-6">
+      <h2 class="card-title">Doctores Recientes</h2>
       <div class="space-y-3">
         <% @recent_doctors.each do |doctor| %>
-          <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700 last:border-0">
+          <div class="flex items-center justify-between py-2 border-b border-line dark:border-slate-700 last:border-0">
             <div class="flex items-center min-w-0">
               <% if doctor.image_url.present? %>
                 <%= image_tag doctor.image_thumb_url.presence || doctor.image_url, loading: "lazy", class: "w-8 h-8 rounded-full object-cover flex-shrink-0" %>
               <% else %>
-                <div class="w-8 h-8 bg-gray-200 dark:bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span class="text-sm font-medium text-gray-700 dark:text-slate-300"><%= doctor.name[0].upcase %></span>
+                <div class="w-8 h-8 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-sm font-medium text-slate-700 dark:text-slate-300"><%= doctor.name[0].upcase %></span>
                 </div>
               <% end %>
               <div class="ml-3 min-w-0">
-                <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><%= doctor.name %></p>
-                <p class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= doctor.specialty&.name %></p>
+                <p class="text-sm font-medium text-ink dark:text-white truncate"><%= doctor.name %></p>
+                <p class="text-sm text-muted dark:text-slate-400 truncate"><%= doctor.specialty&.name %></p>
               </div>
             </div>
             <% if doctor.hidden? %>

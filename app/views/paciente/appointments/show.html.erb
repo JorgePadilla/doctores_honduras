@@ -1,52 +1,47 @@
-<div class="container mx-auto px-4 py-8 max-w-2xl">
-  <div class="mb-6">
-    <%= link_to "← Volver a mis citas", paciente_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
-  </div>
+<div class="max-w-2xl mx-auto">
+  <%= render "shared/page_header", title: "Detalle de Cita", back: { label: "Volver a mis citas", path: paciente_appointments_path } %>
 
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 border-l-4 <%= @appointment.status_classes[:border] %> p-6">
-    <div class="flex items-center justify-between mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
-      <div>
-        <h1 class="text-xl font-bold text-primary-700 dark:text-sky-400">Detalle de Cita</h1>
-        <span class="inline-block mt-1 text-sm px-3 py-1 rounded-full font-medium <%= @appointment.status_classes[:bg] %> <%= @appointment.status_classes[:text] %>"><%= @appointment.status_label %></span>
-      </div>
+  <div class="card card-accent <%= @appointment.status_classes[:border] %> p-6">
+    <div class="mb-6 pb-6 border-b border-line dark:border-slate-700">
+      <span class="inline-block text-sm px-3 py-1 rounded-full font-medium <%= @appointment.status_classes[:bg] %> <%= @appointment.status_classes[:text] %>"><%= @appointment.status_label %></span>
     </div>
 
     <div class="space-y-4">
       <!-- Doctor -->
       <div>
-        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Doctor</h3>
-        <p class="text-gray-900 dark:text-white font-semibold"><%= @appointment.doctor_profile.display_name %></p>
+        <h3 class="text-sm font-medium text-muted dark:text-slate-400">Doctor</h3>
+        <p class="text-ink dark:text-white font-semibold"><%= @appointment.doctor_profile.display_name %></p>
         <% if @appointment.doctor_profile.specialty %>
-          <p class="text-sm text-gray-600 dark:text-slate-300"><%= @appointment.doctor_profile.specialty.name %></p>
+          <p class="text-sm text-muted dark:text-slate-300"><%= @appointment.doctor_profile.specialty.name %></p>
         <% end %>
       </div>
 
       <!-- Branch -->
       <% if @appointment.doctor_branch %>
         <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Ubicación</h3>
-          <p class="text-gray-900 dark:text-white"><%= @appointment.doctor_branch.name %></p>
-          <p class="text-sm text-gray-600 dark:text-slate-300"><%= @appointment.doctor_branch.address %></p>
+          <h3 class="text-sm font-medium text-muted dark:text-slate-400">Ubicación</h3>
+          <p class="text-ink dark:text-white"><%= @appointment.doctor_branch.name %></p>
+          <p class="text-sm text-muted dark:text-slate-300"><%= @appointment.doctor_branch.address %></p>
         </div>
       <% end %>
 
       <!-- Date & Time -->
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Fecha</h3>
-          <p class="text-gray-900 dark:text-white"><%= @appointment.appointment_date.strftime("%A %d de %B, %Y") %></p>
+          <h3 class="text-sm font-medium text-muted dark:text-slate-400">Fecha</h3>
+          <p class="text-ink dark:text-white"><%= @appointment.appointment_date.strftime("%A %d de %B, %Y") %></p>
         </div>
         <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Horario</h3>
-          <p class="text-gray-900 dark:text-white"><%= @appointment.start_time.strftime("%H:%M") %> - <%= @appointment.end_time.strftime("%H:%M") %></p>
+          <h3 class="text-sm font-medium text-muted dark:text-slate-400">Horario</h3>
+          <p class="text-ink dark:text-white"><%= @appointment.start_time.strftime("%H:%M") %> - <%= @appointment.end_time.strftime("%H:%M") %></p>
         </div>
       </div>
 
       <!-- Reason -->
       <% if @appointment.reason.present? %>
         <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Motivo de consulta</h3>
-          <p class="text-gray-900 dark:text-white"><%= @appointment.reason %></p>
+          <h3 class="text-sm font-medium text-muted dark:text-slate-400">Motivo de consulta</h3>
+          <p class="text-ink dark:text-white"><%= @appointment.reason %></p>
         </div>
       <% end %>
     </div>
@@ -54,49 +49,49 @@
 
   <!-- Signos vitales -->
   <% if @encounter&.vitals? %>
-    <div class="mt-6 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-      <h2 class="text-lg font-bold text-primary-700 dark:text-sky-400 mb-4">Signos vitales</h2>
+    <div class="mt-6 card p-6">
+      <h2 class="card-title">Signos vitales</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <% if @encounter.blood_pressure.present? %>
           <div>
-            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Presión arterial</h3>
-            <p class="text-gray-900 dark:text-white"><%= @encounter.blood_pressure %></p>
+            <h3 class="text-sm font-medium text-muted dark:text-slate-400">Presión arterial</h3>
+            <p class="text-ink dark:text-white"><%= @encounter.blood_pressure %></p>
           </div>
         <% end %>
         <% if @encounter.heart_rate.present? %>
           <div>
-            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Frec. cardíaca</h3>
-            <p class="text-gray-900 dark:text-white"><%= @encounter.heart_rate %> lpm</p>
+            <h3 class="text-sm font-medium text-muted dark:text-slate-400">Frec. cardíaca</h3>
+            <p class="text-ink dark:text-white"><%= @encounter.heart_rate %> lpm</p>
           </div>
         <% end %>
         <% if @encounter.temperature.present? %>
           <div>
-            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Temperatura</h3>
-            <p class="text-gray-900 dark:text-white"><%= @encounter.temperature %> °C</p>
+            <h3 class="text-sm font-medium text-muted dark:text-slate-400">Temperatura</h3>
+            <p class="text-ink dark:text-white"><%= @encounter.temperature %> °C</p>
           </div>
         <% end %>
         <% if @encounter.respiratory_rate.present? %>
           <div>
-            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Frec. respiratoria</h3>
-            <p class="text-gray-900 dark:text-white"><%= @encounter.respiratory_rate %> rpm</p>
+            <h3 class="text-sm font-medium text-muted dark:text-slate-400">Frec. respiratoria</h3>
+            <p class="text-ink dark:text-white"><%= @encounter.respiratory_rate %> rpm</p>
           </div>
         <% end %>
         <% if @encounter.oxygen_saturation.present? %>
           <div>
-            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Saturación O₂</h3>
-            <p class="text-gray-900 dark:text-white"><%= @encounter.oxygen_saturation %> %</p>
+            <h3 class="text-sm font-medium text-muted dark:text-slate-400">Saturación O₂</h3>
+            <p class="text-ink dark:text-white"><%= @encounter.oxygen_saturation %> %</p>
           </div>
         <% end %>
         <% if @encounter.weight.present? %>
           <div>
-            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Peso</h3>
-            <p class="text-gray-900 dark:text-white"><%= @encounter.weight %> kg</p>
+            <h3 class="text-sm font-medium text-muted dark:text-slate-400">Peso</h3>
+            <p class="text-ink dark:text-white"><%= @encounter.weight %> kg</p>
           </div>
         <% end %>
         <% if @encounter.height.present? %>
           <div>
-            <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Altura</h3>
-            <p class="text-gray-900 dark:text-white"><%= @encounter.height %> cm</p>
+            <h3 class="text-sm font-medium text-muted dark:text-slate-400">Altura</h3>
+            <p class="text-ink dark:text-white"><%= @encounter.height %> cm</p>
           </div>
         <% end %>
       </div>
@@ -105,22 +100,22 @@
 
   <!-- Receta -->
   <% if @prescription&.any_items? %>
-    <div class="mt-6 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-      <h2 class="text-lg font-bold text-primary-700 dark:text-sky-400 mb-4">Receta</h2>
+    <div class="mt-6 card p-6">
+      <h2 class="card-title">Receta</h2>
       <ul class="space-y-3">
         <% @prescription.prescription_items.each do |item| %>
           <li>
-            <p class="text-gray-900 dark:text-white font-semibold"><%= item.medication %></p>
-            <p class="text-sm text-gray-600 dark:text-slate-300">
+            <p class="text-ink dark:text-white font-semibold"><%= item.medication %></p>
+            <p class="text-sm text-muted dark:text-slate-300">
               <%= [ item.dosage, item.frequency, item.duration ].reject(&:blank?).join(" · ") %>
             </p>
           </li>
         <% end %>
       </ul>
       <% if @prescription.instructions.present? %>
-        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
-          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Indicaciones</h3>
-          <p class="text-gray-900 dark:text-white"><%= @prescription.instructions %></p>
+        <div class="mt-4 pt-4 border-t border-line dark:border-slate-700">
+          <h3 class="text-sm font-medium text-muted dark:text-slate-400">Indicaciones</h3>
+          <p class="text-ink dark:text-white"><%= @prescription.instructions %></p>
         </div>
       <% end %>
     </div>
@@ -128,13 +123,13 @@
 
   <!-- Adjuntos / resultados de laboratorio -->
   <% if @appointment.lab_attachments.attached? %>
-    <div class="mt-6 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-      <h2 class="text-lg font-bold text-primary-700 dark:text-sky-400 mb-4">Resultados y adjuntos</h2>
+    <div class="mt-6 card p-6">
+      <h2 class="card-title">Resultados y adjuntos</h2>
       <ul class="space-y-2">
         <% @appointment.lab_attachments.each do |att| %>
           <li class="flex items-center justify-between gap-3 text-sm">
             <%= link_to att.filename, rails_blob_path(att, disposition: "attachment"), target: "_blank", class: "text-sky-600 dark:text-sky-400 hover:underline truncate" %>
-            <span class="text-gray-400 dark:text-slate-500 text-xs whitespace-nowrap"><%= number_to_human_size(att.byte_size) %></span>
+            <span class="text-muted dark:text-slate-500 text-xs whitespace-nowrap"><%= number_to_human_size(att.byte_size) %></span>
           </li>
         <% end %>
       </ul>

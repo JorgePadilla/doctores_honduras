@@ -1,60 +1,58 @@
 <div class="max-w-6xl mx-auto">
-  <!-- Page header -->
-  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-    <div class="flex items-center gap-3">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Sinónimos de búsqueda</h1>
-      <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
-    </div>
-    <span class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= Current.user.email %></span>
-  </div>
+  <%# Header %>
+  <% actions = capture do %>
+    <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
+    <span class="text-sm text-muted dark:text-slate-400 truncate max-w-[14rem]"><%= Current.user.email %></span>
+  <% end %>
+  <%= render "shared/page_header", title: "Sinónimos de búsqueda", actions: actions %>
 
   <%= render "admin/dashboard/nav", active: :synonyms %>
 
   <!-- Cómo funciona -->
-  <div class="bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-900/40 rounded-xl p-4 mb-6 text-sm text-gray-700 dark:text-slate-300">
+  <div class="bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-900/40 rounded-xl p-4 mb-6 text-sm text-slate-700 dark:text-slate-300">
     <p class="mb-1"><strong>¿Cómo funciona?</strong> Cuando un paciente busca con una palabra común, la traducimos a los términos clínicos para encontrar al especialista correcto.</p>
-    <p class="text-gray-500 dark:text-slate-400">Ejemplo: el paciente escribe <span class="font-medium text-sky-700 dark:text-sky-400">caries</span> → mostramos médicos con <span class="font-medium text-sky-700 dark:text-sky-400">endodoncia, limpieza dental, odontología</span>.</p>
+    <p class="text-muted dark:text-slate-400">Ejemplo: el paciente escribe <span class="font-medium text-sky-700 dark:text-sky-400">caries</span> → mostramos médicos con <span class="font-medium text-sky-700 dark:text-sky-400">endodoncia, limpieza dental, odontología</span>.</p>
   </div>
 
   <!-- Agregar nuevo sinónimo -->
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6">
-    <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-3">Agregar sinónimo</h2>
+  <div class="card p-6 mb-6">
+    <h2 class="text-base font-semibold text-ink dark:text-white mb-3">Agregar sinónimo</h2>
     <%= form_with model: @synonym, url: admin_synonyms_path, method: :post, class: "flex flex-col sm:flex-row sm:items-end gap-3" do |f| %>
       <div class="sm:w-64">
-        <%= f.label :term, "Palabra del paciente", class: "block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1" %>
+        <%= f.label :term, "Palabra del paciente", class: "form-label" %>
         <%= f.text_field :term, placeholder: "ej. caries", class: "form-input", required: true %>
       </div>
       <div class="flex-1">
-        <%= f.label :keywords, "Términos clínicos (separados por comas)", class: "block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1" %>
+        <%= f.label :keywords, "Términos clínicos (separados por comas)", class: "form-label" %>
         <%= f.text_field :keywords, placeholder: "ej. endodoncia, limpieza dental, odontología", class: "form-input", required: true %>
       </div>
-      <button type="submit" class="inline-flex items-center justify-center gap-1 px-4 h-10 rounded-lg bg-sky-500 hover:bg-sky-600 text-white text-sm font-medium transition-colors cursor-pointer shrink-0">
+      <button type="submit" class="btn-primary shrink-0">
         <%= icon(:plus, class: "w-4 h-4") %> Agregar
       </button>
     <% end %>
 
     <% if @synonym.errors.any? %>
-      <div role="alert" class="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 p-3 rounded-md mt-4 text-sm border border-red-200 dark:border-red-800">
+      <div role="alert" class="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 p-4 rounded-xl mt-4 text-sm border border-red-200 dark:border-red-800">
         <%= @synonym.errors.full_messages.to_sentence %>
       </div>
     <% end %>
   </div>
 
   <!-- Lista editable -->
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-    <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-      Diccionario <span class="text-sm font-normal text-gray-400 dark:text-slate-500">(<%= @synonyms.size %> <%= "sinónimo".pluralize(@synonyms.size) %>)</span>
+  <div class="card p-6">
+    <h2 class="text-base font-semibold text-ink dark:text-white mb-4">
+      Diccionario <span class="text-sm font-normal text-muted dark:text-slate-500">(<%= @synonyms.size %> <%= "sinónimo".pluralize(@synonyms.size) %>)</span>
     </h2>
 
     <% if @synonyms.any? %>
       <!-- Encabezados de columna (desktop) -->
-      <div class="hidden sm:flex gap-3 px-1 pb-2 mb-1 border-b border-gray-100 dark:border-slate-700 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+      <div class="hidden sm:flex gap-3 px-1 pb-2 mb-1 border-b border-line dark:border-slate-700 text-xs font-semibold uppercase tracking-wide text-muted dark:text-slate-500">
         <span class="w-64">Palabra del paciente</span>
         <span class="flex-1">Términos clínicos</span>
         <span class="w-[92px] text-right">Acciones</span>
       </div>
 
-      <div class="divide-y divide-gray-100 dark:divide-slate-700">
+      <div class="divide-y divide-line dark:divide-slate-700">
         <% @synonyms.each do |synonym| %>
           <div class="flex flex-col sm:flex-row sm:items-center gap-2 py-3">
             <%= form_with model: synonym, url: admin_synonym_path(synonym), method: :patch, class: "flex flex-col sm:flex-row sm:items-center gap-2 flex-1" do |f| %>
@@ -64,7 +62,7 @@
               <div class="flex-1">
                 <%= f.text_field :keywords, class: "form-input", required: true, "aria-label": "Términos clínicos" %>
               </div>
-              <button type="submit" class="inline-flex items-center justify-center px-3 h-10 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 text-sm font-medium transition-colors cursor-pointer shrink-0" title="Guardar cambios">
+              <button type="submit" class="inline-flex items-center justify-center px-3 h-10 rounded-lg border border-line dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium transition-colors cursor-pointer shrink-0" title="Guardar cambios">
                 <%= icon(:check, class: "w-4 h-4") %>
               </button>
             <% end %>
@@ -77,7 +75,7 @@
         <% end %>
       </div>
     <% else %>
-      <p class="text-center text-sm text-gray-500 dark:text-slate-400 py-6">Aún no hay sinónimos. Agrega el primero arriba.</p>
+      <p class="text-center text-sm text-muted dark:text-slate-400 py-6">Aún no hay sinónimos. Agrega el primero arriba.</p>
     <% end %>
   </div>
 </div>

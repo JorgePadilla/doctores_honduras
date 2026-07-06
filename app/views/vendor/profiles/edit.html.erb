@@ -1,87 +1,77 @@
-<div class="container mx-auto px-4 py-8 max-w-3xl">
-  <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Editar Perfil de Proveedor</h1>
+<div class="max-w-3xl mx-auto">
+  <%= render "shared/page_header", title: "Editar Perfil de Proveedor" %>
 
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden border border-gray-200 dark:border-slate-700">
-    <div class="p-6">
-      <%= form_with model: @supplier, url: vendor_profile_path, method: :patch, class: "space-y-6" do |f| %>
-        <%= render "shared/image_upload_field",
-            form: f,
-            attr: :logo_file,
-            current_url: @supplier.logo_url,
-            title: "Logo de la empresa",
-            subtitle: "PNG, JPG o WebP hasta 5MB" %>
+  <%= form_with model: @supplier, url: vendor_profile_path, method: :patch, class: "space-y-6" do |f| %>
+    <%= render "shared/form_errors", model: @supplier %>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <%= f.label :name, "Nombre de la empresa", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.text_field :name, class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm", required: true %>
-          </div>
-          <div>
-            <%= f.label :phone, "Teléfono", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.telephone_field :phone, class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm", required: true %>
-          </div>
-          <div>
-            <%= f.label :email, "Email", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.email_field :email, class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" %>
-          </div>
-          <div>
-            <%= f.label :website, "Sitio web", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.url_field :website, class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" %>
-          </div>
-          <div>
-            <%= f.label :category, "Categoría", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.select :category,
-                        options_for_select([
-                          ["Equipos Médicos", "equipos_medicos"],
-                          ["Suministros Médicos", "suministros_medicos"],
-                          ["Farmacéuticos", "farmaceuticos"],
-                          ["Tecnología Médica", "tecnologia_medica"],
-                          ["Mobiliario Hospitalario", "mobiliario_hospitalario"],
-                          ["Otro", "otro"]
-                        ], @supplier.category),
-                        { include_blank: "Selecciona una categoría" },
-                        { class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" } %>
-          </div>
-          <div>
-            <%= f.label :address, "Dirección", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.text_field :address, class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" %>
-          </div>
-          <div>
-            <%= f.label :department_id, "Departamento", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.select :department_id,
-                        options_for_select(@departments.map { |d| [d.name, d.id] }, @supplier.department_id),
-                        { include_blank: "Selecciona un departamento" },
-                        { class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" } %>
-          </div>
-          <div>
-            <%= f.label :city_id, "Ciudad", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <%= f.select :city_id,
-                        options_for_select(@cities.map { |c| [c.name, c.id] }, @supplier.city_id),
-                        { include_blank: "Selecciona una ciudad" },
-                        { class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" } %>
-          </div>
-        </div>
+    <%= render "shared/image_upload_field",
+        form: f,
+        attr: :logo_file,
+        current_url: @supplier.logo_url,
+        title: "Logo de la empresa",
+        subtitle: "PNG, JPG o WebP hasta 5MB" %>
 
+    <div class="card p-6 space-y-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
-          <%= f.label :description, "Descripción", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-          <%= f.text_area :description, rows: 4, class: "mt-1 block w-full border border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" %>
+          <%= f.label :name, "Nombre de la empresa", class: "form-label" %>
+          <%= f.text_field :name, class: "form-input", required: true %>
         </div>
-
-        <% if @supplier.errors.any? %>
-          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
-            <ul class="text-sm text-red-600 dark:text-red-300 list-disc list-inside">
-              <% @supplier.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-
-        <div class="flex justify-between">
-          <%= link_to "Cancelar", vendor_profile_path, class: "py-2 px-4 border border-gray-300 dark:border-slate-600 rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600" %>
-          <%= f.submit "Guardar Cambios", class: "py-2 px-4 border border-transparent rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 cursor-pointer" %>
+        <div>
+          <%= f.label :phone, "Teléfono", class: "form-label" %>
+          <%= f.telephone_field :phone, class: "form-input", required: true %>
         </div>
-      <% end %>
+        <div>
+          <%= f.label :email, "Email", class: "form-label" %>
+          <%= f.email_field :email, class: "form-input" %>
+        </div>
+        <div>
+          <%= f.label :website, "Sitio web", class: "form-label" %>
+          <%= f.url_field :website, class: "form-input" %>
+        </div>
+        <div>
+          <%= f.label :category, "Categoría", class: "form-label" %>
+          <%= f.select :category,
+                      options_for_select([
+                        ["Equipos Médicos", "equipos_medicos"],
+                        ["Suministros Médicos", "suministros_medicos"],
+                        ["Farmacéuticos", "farmaceuticos"],
+                        ["Tecnología Médica", "tecnologia_medica"],
+                        ["Mobiliario Hospitalario", "mobiliario_hospitalario"],
+                        ["Otro", "otro"]
+                      ], @supplier.category),
+                      { include_blank: "Selecciona una categoría" },
+                      { class: "form-input form-select" } %>
+        </div>
+        <div>
+          <%= f.label :address, "Dirección", class: "form-label" %>
+          <%= f.text_field :address, class: "form-input" %>
+        </div>
+        <div>
+          <%= f.label :department_id, "Departamento", class: "form-label" %>
+          <%= f.select :department_id,
+                      options_for_select(@departments.map { |d| [d.name, d.id] }, @supplier.department_id),
+                      { include_blank: "Selecciona un departamento" },
+                      { class: "form-input form-select" } %>
+        </div>
+        <div>
+          <%= f.label :city_id, "Ciudad", class: "form-label" %>
+          <%= f.select :city_id,
+                      options_for_select(@cities.map { |c| [c.name, c.id] }, @supplier.city_id),
+                      { include_blank: "Selecciona una ciudad" },
+                      { class: "form-input form-select" } %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :description, "Descripción", class: "form-label" %>
+        <%= f.text_area :description, rows: 4, class: "form-input" %>
+      </div>
     </div>
-  </div>
+
+    <div class="mt-6 flex items-center justify-end gap-3">
+      <%= link_to "Cancelar", vendor_profile_path, class: "btn-secondary" %>
+      <%= f.submit "Guardar cambios", class: "btn-primary" %>
+    </div>
+  <% end %>
 </div>

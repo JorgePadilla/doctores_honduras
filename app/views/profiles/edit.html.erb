@@ -1,48 +1,28 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-4xl mx-auto">
-    <div class="mb-6">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h1 class="text-2xl font-bold mb-2 text-primary-700 dark:text-sky-400">Editar Perfil de Doctor</h1>
-          <p class="text-lg text-gray-600 dark:text-slate-400">Actualiza la información de tu perfil</p>
-        </div>
-        <% if Current.user.doctor_profile.present? %>
-          <%= link_to "Ver perfil público", doctor_path(Current.user.doctor_profile), class: "shrink-0 text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
-        <% end %>
-      </div>
-    </div>
-
-    <%= form_with model: @doctor_profile, url: profile_path, method: :patch, multipart: true do |form| %>
-      <% if @doctor_profile.errors.any? %>
-        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-6">
-          <h2 class="text-red-800 dark:text-red-300 font-medium mb-2">
-            <%= pluralize(@doctor_profile.errors.count, "error") %> impidieron guardar el perfil:
-          </h2>
-          <ul class="list-disc list-inside text-red-700 dark:text-red-400">
-            <% @doctor_profile.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
-
-      <%= render "profiles/form_personal_info", form: form %>
-      <%= render "profiles/form_professional_info", form: form %>
-      <%= render "profiles/form_location", form: form %>
-      <%= render "profiles/form_contact_social", form: form %>
-      <%= render "profiles/form_languages", form: form %>
-      <%= render "profiles/form_services", form: form %>
-      <%= render "profiles/form_education", form: form %>
-      <%= render "profiles/form_certifications", form: form %>
-      <%= render "profiles/form_branches", form: form %>
-      <%= render "profiles/form_image", form: form %>
-
-      <div class="mt-8 flex justify-end space-x-4">
-        <a href="<%= profile_path %>" class="px-6 py-2.5 border border-sky-500 dark:border-sky-400 rounded-full text-sky-600 dark:text-sky-400 font-medium transition-all hover:shadow-md transform hover:scale-105 hover:bg-sky-50 dark:hover:bg-sky-900/20">
-          Cancelar
-        </a>
-        <%= form.submit "Actualizar Perfil", class: "px-6 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-500" %>
-      </div>
+<div class="max-w-3xl mx-auto">
+  <% actions = capture do %>
+    <% if Current.user.doctor_profile.present? %>
+      <%= link_to "Ver perfil público", doctor_path(Current.user.doctor_profile), class: "btn-secondary" %>
     <% end %>
-  </div>
+  <% end %>
+  <%= render "shared/page_header", title: "Editar perfil de doctor", subtitle: "Actualiza la información de tu perfil", actions: actions %>
+
+  <%= form_with model: @doctor_profile, url: profile_path, method: :patch, multipart: true do |form| %>
+    <%= render "shared/form_errors", model: @doctor_profile %>
+
+    <%= render "profiles/form_personal_info", form: form %>
+    <%= render "profiles/form_professional_info", form: form %>
+    <%= render "profiles/form_location", form: form %>
+    <%= render "profiles/form_contact_social", form: form %>
+    <%= render "profiles/form_languages", form: form %>
+    <%= render "profiles/form_services", form: form %>
+    <%= render "profiles/form_education", form: form %>
+    <%= render "profiles/form_certifications", form: form %>
+    <%= render "profiles/form_branches", form: form %>
+    <%= render "profiles/form_image", form: form %>
+
+    <div class="mt-6 flex items-center justify-end gap-3">
+      <%= link_to "Cancelar", profile_path, class: "btn-secondary" %>
+      <%= form.submit "Guardar cambios", class: "btn-primary" %>
+    </div>
+  <% end %>
 </div>

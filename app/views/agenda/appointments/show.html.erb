@@ -1,90 +1,91 @@
-<div class="container mx-auto px-4 py-8 max-w-3xl">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Detalle de Cita</h1>
-    <div class="flex items-center space-x-3">
-      <%= link_to "Editar", edit_agenda_appointment_path(@appointment), class: "inline-flex items-center border border-sky-500 text-sky-600 dark:text-sky-400 bg-transparent hover:bg-sky-50 dark:hover:bg-sky-900/20 px-5 py-2 rounded-full font-medium transition-all" %>
-      <% unless @appointment.cancelada? %>
-        <%= button_to "Cancelar Cita", agenda_appointment_path(@appointment), method: :delete,
-            class: "inline-flex items-center bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg",
-            data: { turbo_confirm: "¿Estás seguro de cancelar esta cita?" } %>
-      <% end %>
-    </div>
-  </div>
+<div class="max-w-3xl mx-auto">
+  <% actions = capture do %>
+    <%= link_to "Editar", edit_agenda_appointment_path(@appointment), class: "btn-secondary" %>
+    <% unless @appointment.cancelada? %>
+      <%= button_to "Cancelar cita", agenda_appointment_path(@appointment), method: :delete,
+          class: "btn-danger",
+          data: { turbo_confirm: "¿Estás seguro de cancelar esta cita?" } %>
+    <% end %>
+  <% end %>
+  <%= render "shared/page_header",
+        title: "Detalle de cita",
+        back: { label: "Volver a la agenda", path: agenda_appointments_path },
+        actions: actions %>
 
   <%= render "agenda/patients/allergy_alert", patient: @appointment.patient %>
 
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 border-l-4 <%= @appointment.status_classes[:border] %> p-6 space-y-6">
+  <div class="card card-accent <%= @appointment.status_classes[:border] %> p-6 space-y-6">
     <!-- Status badge -->
     <div class="flex items-center gap-3">
       <%= render "agenda/status_badge", appointment: @appointment %>
-      <span class="text-sm text-gray-500 dark:text-slate-400">
+      <span class="text-sm text-muted dark:text-slate-400">
         <%= @appointment.booking_source == "public_booking" ? "Reserva en línea" : "Cita manual" %>
       </span>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Paciente</h3>
+        <h3 class="text-sm font-medium text-muted dark:text-slate-400 mb-1">Paciente</h3>
         <p class="text-sky-700 dark:text-sky-400 font-semibold text-lg"><%= @appointment.patient_name %></p>
         <% if @appointment.patient_phone.present? %>
-          <p class="text-sm text-gray-600 dark:text-slate-300 mt-1"><%= @appointment.patient_phone %></p>
+          <p class="text-sm text-muted dark:text-slate-300 mt-1"><%= @appointment.patient_phone %></p>
         <% end %>
         <% if @appointment.patient_email.present? %>
-          <p class="text-sm text-gray-600 dark:text-slate-300"><%= @appointment.patient_email %></p>
+          <p class="text-sm text-muted dark:text-slate-300"><%= @appointment.patient_email %></p>
         <% end %>
       </div>
 
       <div>
-        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Fecha y Hora</h3>
-        <p class="text-gray-900 dark:text-white font-semibold"><%= I18n.l(@appointment.appointment_date, format: :long) %></p>
-        <p class="text-sm text-gray-600 dark:text-slate-300 mt-1"><%= @appointment.start_time.strftime("%H:%M") %> - <%= @appointment.end_time.strftime("%H:%M") %> (<%= @appointment.duration_minutes %> min)</p>
+        <h3 class="text-sm font-medium text-muted dark:text-slate-400 mb-1">Fecha y Hora</h3>
+        <p class="text-ink dark:text-white font-semibold"><%= I18n.l(@appointment.appointment_date, format: :long) %></p>
+        <p class="text-sm text-muted dark:text-slate-300 mt-1"><%= @appointment.start_time.strftime("%H:%M") %> - <%= @appointment.end_time.strftime("%H:%M") %> (<%= @appointment.duration_minutes %> min)</p>
       </div>
 
       <div>
-        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Ubicación</h3>
-        <p class="text-gray-900 dark:text-white font-semibold"><%= @appointment.doctor_branch.name %></p>
-        <p class="text-sm text-gray-600 dark:text-slate-300 mt-1"><%= @appointment.doctor_branch.address %></p>
+        <h3 class="text-sm font-medium text-muted dark:text-slate-400 mb-1">Ubicación</h3>
+        <p class="text-ink dark:text-white font-semibold"><%= @appointment.doctor_branch.name %></p>
+        <p class="text-sm text-muted dark:text-slate-300 mt-1"><%= @appointment.doctor_branch.address %></p>
       </div>
 
       <% if @appointment.created_by %>
         <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Creada por</h3>
-          <p class="text-gray-900 dark:text-white"><%= @appointment.created_by.email %></p>
+          <h3 class="text-sm font-medium text-muted dark:text-slate-400 mb-1">Creada por</h3>
+          <p class="text-ink dark:text-white"><%= @appointment.created_by.email %></p>
         </div>
       <% end %>
     </div>
 
     <% if @appointment.reason.present? %>
-      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
-        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Motivo</h3>
-        <p class="text-gray-700 dark:text-slate-300"><%= @appointment.reason %></p>
+      <div class="border-t border-line dark:border-slate-700 pt-6">
+        <h3 class="text-sm font-medium text-muted dark:text-slate-400 mb-1">Motivo</h3>
+        <p class="text-ink dark:text-slate-300"><%= @appointment.reason %></p>
       </div>
     <% end %>
 
     <% if @appointment.doctor_notes.present? %>
-      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
-        <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">Notas del doctor</h3>
-        <p class="text-gray-700 dark:text-slate-300"><%= @appointment.doctor_notes %></p>
+      <div class="border-t border-line dark:border-slate-700 pt-6">
+        <h3 class="text-sm font-medium text-muted dark:text-slate-400 mb-1">Notas del doctor</h3>
+        <p class="text-ink dark:text-slate-300"><%= @appointment.doctor_notes %></p>
       </div>
     <% end %>
   </div>
 
   <!-- Documentación clínica de la consulta (H1 nota + H3 vitales + H2 receta) — Elite -->
   <% if current_doctor_elite? %>
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mt-6 space-y-6">
-      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Documentación clínica</h2>
+    <div class="card p-6 mt-6 space-y-6">
+      <h2 class="card-title">Documentación clínica</h2>
 
       <div>
         <div class="flex items-center justify-between mb-2">
-          <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300">Nota de evolución y signos vitales</h3>
+          <h3 class="text-sm font-semibold text-ink dark:text-slate-300">Nota de evolución y signos vitales</h3>
           <%= link_to (@appointment.encounter&.any_data? ? "Editar" : "Documentar"), edit_agenda_appointment_encounter_path(@appointment), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
         </div>
         <%= render "agenda/appointments/encounter_summary", encounter: @appointment.encounter %>
       </div>
 
-      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+      <div class="border-t border-line dark:border-slate-700 pt-6">
         <div class="flex items-center justify-between mb-2">
-          <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300">Receta</h3>
+          <h3 class="text-sm font-semibold text-ink dark:text-slate-300">Receta</h3>
           <div class="flex items-center gap-3">
             <%= link_to "Editar receta", edit_agenda_appointment_prescription_path(@appointment), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
             <% if @appointment.prescription&.any_items? %>
@@ -95,27 +96,27 @@
         <%= render "agenda/appointments/prescription_summary", prescription: @appointment.prescription %>
       </div>
 
-      <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
-        <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Adjuntos / resultados de laboratorio</h3>
+      <div class="border-t border-line dark:border-slate-700 pt-6">
+        <h3 class="text-sm font-semibold text-ink dark:text-slate-300 mb-2">Adjuntos / resultados de laboratorio</h3>
         <% if @appointment.lab_attachments.attached? %>
           <ul class="space-y-2 mb-3">
             <% @appointment.lab_attachments.each do |att| %>
               <li class="flex items-center justify-between gap-3 text-sm">
                 <%= link_to att.filename, rails_blob_path(att, disposition: "attachment"), target: "_blank", class: "text-sky-600 dark:text-sky-400 hover:underline truncate" %>
-                <span class="text-gray-400 dark:text-slate-500 text-xs whitespace-nowrap"><%= number_to_human_size(att.byte_size) %></span>
+                <span class="text-muted dark:text-slate-500 text-xs whitespace-nowrap"><%= number_to_human_size(att.byte_size) %></span>
                 <%= button_to "Eliminar", agenda_appointment_attachment_path(@appointment, att.id), method: :delete, class: "text-xs text-red-600 dark:text-red-400 hover:underline", form: { data: { turbo_confirm: "¿Eliminar este adjunto?" } } %>
               </li>
             <% end %>
           </ul>
         <% else %>
-          <p class="text-sm text-gray-500 dark:text-slate-400 mb-3">Sin adjuntos.</p>
+          <p class="text-sm text-muted dark:text-slate-400 mb-3">Sin adjuntos.</p>
         <% end %>
         <%= form_with url: agenda_appointment_attachments_path(@appointment), method: :post, multipart: true, class: "flex flex-wrap items-center gap-3" do %>
           <input type="file" name="files[]" multiple accept="application/pdf,image/*"
-                 class="text-sm text-gray-600 dark:text-slate-300 file:mr-3 file:rounded-full file:border-0 file:bg-sky-50 dark:file:bg-sky-900/30 file:px-4 file:py-2 file:text-sky-700 dark:file:text-sky-300 file:font-medium">
-          <%= submit_tag "Subir", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg cursor-pointer" %>
+                 class="text-sm text-muted dark:text-slate-300 file:mr-3 file:rounded-full file:border-0 file:bg-sky-50 dark:file:bg-sky-900/30 file:px-4 file:py-2 file:text-sky-700 dark:file:text-sky-300 file:font-medium">
+          <%= submit_tag "Subir", class: "btn-primary cursor-pointer" %>
         <% end %>
-        <p class="mt-2 text-xs text-gray-400 dark:text-slate-500">PDF o imágenes, hasta 10 MB. Almacenamiento privado con enlaces firmados.</p>
+        <p class="mt-2 text-xs text-muted dark:text-slate-500">PDF o imágenes, hasta 10 MB. Almacenamiento privado con enlaces firmados.</p>
       </div>
     </div>
   <% else %>
@@ -124,8 +125,4 @@
       <%= link_to "Ver planes", settings_subscription_path, class: "underline font-medium" %>
     </div>
   <% end %>
-
-  <div class="mt-6">
-    <%= link_to "← Volver a la agenda", agenda_appointments_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
-  </div>
 </div>

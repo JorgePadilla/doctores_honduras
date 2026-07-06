@@ -1,57 +1,55 @@
 <div class="max-w-6xl mx-auto">
-  <!-- Page header -->
-  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-    <div class="flex items-center gap-3">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gestión de Usuarios</h1>
-      <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
-    </div>
-    <span class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= Current.user.email %></span>
-  </div>
+  <%# Header %>
+  <% actions = capture do %>
+    <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
+    <span class="text-sm text-muted dark:text-slate-400 truncate max-w-[14rem]"><%= Current.user.email %></span>
+  <% end %>
+  <%= render "shared/page_header", title: "Gestión de Usuarios", actions: actions %>
 
   <%= render "admin/dashboard/nav", active: :users %>
 
   <!-- Stats -->
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6">
+  <div class="card p-6 mb-6">
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="text-center">
-        <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Total Usuarios</p>
-        <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= @users&.size || 0 %></p>
+        <p class="text-sm font-medium text-muted dark:text-slate-400">Total Usuarios</p>
+        <p class="text-2xl font-bold text-ink dark:text-white"><%= @users&.size || 0 %></p>
       </div>
       <div class="text-center">
-        <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Administradores</p>
+        <p class="text-sm font-medium text-muted dark:text-slate-400">Administradores</p>
         <p class="text-2xl font-bold text-sky-600 dark:text-sky-400"><%= @users&.count(&:admin?) || 0 %></p>
       </div>
       <div class="text-center">
-        <p class="text-sm font-medium text-gray-500 dark:text-slate-400">Usuarios con Perfil</p>
+        <p class="text-sm font-medium text-muted dark:text-slate-400">Usuarios con Perfil</p>
         <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= @users&.count { |u| u.profile_type.present? } || 0 %></p>
       </div>
     </div>
   </div>
 
   <!-- Users Table -->
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
+  <div class="card overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+      <table class="min-w-full divide-y divide-line dark:divide-slate-700">
         <thead>
           <tr>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Usuario</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Tipo</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Perfil</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Registro</th>
-            <th class="px-6 py-3 bg-gray-50 dark:bg-slate-700/50 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Última Sesión</th>
+            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Usuario</th>
+            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Tipo</th>
+            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Perfil</th>
+            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Registro</th>
+            <th class="px-6 py-3 bg-slate-50 dark:bg-slate-700/50 text-left text-sm font-medium text-muted dark:text-slate-400 uppercase tracking-wider">Última Sesión</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200 dark:divide-slate-700">
+        <tbody class="divide-y divide-line dark:divide-slate-700">
           <% if @users.present? %>
             <% @users.each do |user| %>
-              <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
-                    <div class="w-8 h-8 bg-gray-200 dark:bg-slate-600 rounded-full flex items-center justify-center">
-                      <span class="text-sm font-medium text-gray-700 dark:text-slate-300"><%= user.email[0].upcase %></span>
+                    <div class="w-8 h-8 bg-slate-200 dark:bg-slate-600 rounded-full flex items-center justify-center">
+                      <span class="text-sm font-medium text-slate-700 dark:text-slate-300"><%= user.email[0].upcase %></span>
                     </div>
                     <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900 dark:text-white"><%= user.email %></div>
+                      <div class="text-sm font-medium text-ink dark:text-white"><%= user.email %></div>
                     </div>
                   </div>
                 </td>
@@ -61,12 +59,12 @@
                       Administrador
                     </span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-slate-600 text-gray-800 dark:text-slate-300">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-slate-100 dark:bg-slate-600 text-slate-700 dark:text-slate-300">
                       Usuario
                     </span>
                   <% end %>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
                   <% case user.profile_type %>
                   <% when "doctor" %>
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Doctor</span>
@@ -80,10 +78,10 @@
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Sin perfil</span>
                   <% end %>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
                   <%= user.created_at.strftime('%d/%m/%Y') %>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">
                   <% if user.sessions.any? %>
                     <%= time_ago_in_words(user.sessions.last.created_at) %> atrás
                   <% else %>
@@ -94,7 +92,7 @@
             <% end %>
           <% else %>
             <tr>
-              <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
+              <td colspan="5" class="px-6 py-8 text-center text-muted dark:text-slate-400">
                 No hay usuarios registrados
               </td>
             </tr>

@@ -1,25 +1,25 @@
-<div class="max-w-3xl mx-auto px-4 py-8">
+<div class="max-w-3xl mx-auto">
   <div class="no-print flex items-center justify-between mb-6">
     <%= link_to "← Volver a la cita", agenda_appointment_path(@appointment), class: "text-sky-600 hover:underline text-sm font-medium" %>
-    <button onclick="window.print()" class="inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg cursor-pointer">
+    <button onclick="window.print()" class="btn-primary">
       Imprimir
     </button>
   </div>
 
   <div class="bg-white rounded-xl shadow p-8">
-    <div class="flex items-start justify-between border-b border-gray-200 pb-6 mb-6">
+    <div class="flex items-start justify-between border-b border-line pb-6 mb-6">
       <div>
-        <p class="text-2xl font-bold text-gray-900"><%= @appointment.doctor_profile.name %></p>
+        <p class="text-2xl font-bold text-ink"><%= @appointment.doctor_profile.name %></p>
         <% if @appointment.doctor_profile.medical_license.present? %>
-          <p class="text-sm text-gray-600 mt-1">Cédula/Colegiación: <%= @appointment.doctor_profile.medical_license %></p>
+          <p class="text-sm text-muted mt-1">Cédula/Colegiación: <%= @appointment.doctor_profile.medical_license %></p>
         <% end %>
       </div>
-      <div class="text-right text-sm text-gray-600">
+      <div class="text-right text-sm text-muted">
         <%= I18n.l(@appointment.appointment_date, format: :long) %>
       </div>
     </div>
 
-    <p class="text-gray-900 mb-1"><span class="font-semibold">Paciente:</span> <%= @appointment.patient_name %></p>
+    <p class="text-ink mb-1"><span class="font-semibold">Paciente:</span> <%= @appointment.patient_name %></p>
     <% if @appointment.patient&.identity_document.present? %>
       <p class="text-gray-700 text-sm mb-6"><span class="font-semibold">DNI:</span> <%= @appointment.patient.identity_document %></p>
     <% else %>
@@ -27,14 +27,14 @@
     <% end %>
 
     <div class="mb-8">
-      <p class="text-3xl font-serif italic text-gray-900 mb-4">Rp.</p>
+      <p class="text-3xl font-serif italic text-ink mb-4">Rp.</p>
       <ol class="space-y-4">
         <% @prescription.prescription_items.each do |item| %>
           <% details = [ item.dosage, item.frequency, item.duration ].reject(&:blank?).join(" · ") %>
-          <li class="text-gray-900">
+          <li class="text-ink">
             <span class="font-bold"><%= item.medication %></span>
             <% if details.present? %>
-              <span class="text-gray-600"> — <%= details %></span>
+              <span class="text-muted"> — <%= details %></span>
             <% end %>
           </li>
         <% end %>
@@ -44,13 +44,13 @@
     <% if @prescription.instructions.present? %>
       <div class="mb-8">
         <p class="text-sm font-semibold text-gray-700 mb-1">Indicaciones generales</p>
-        <p class="text-gray-900 whitespace-pre-line"><%= @prescription.instructions %></p>
+        <p class="text-ink whitespace-pre-line"><%= @prescription.instructions %></p>
       </div>
     <% end %>
 
     <div class="mt-16 pt-2">
       <hr class="border-t border-gray-400 w-64 mx-auto">
-      <p class="text-center text-sm text-gray-600 mt-2">Firma y sello</p>
+      <p class="text-center text-sm text-muted mt-2">Firma y sello</p>
     </div>
   </div>
 </div>

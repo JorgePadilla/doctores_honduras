@@ -1,43 +1,41 @@
 <div class="max-w-6xl mx-auto">
-  <!-- Page header -->
-  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-    <div class="flex items-center gap-3">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Configuración del Sitio</h1>
-      <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
-    </div>
-    <span class="text-sm text-gray-500 dark:text-slate-400 truncate"><%= Current.user.email %></span>
-  </div>
+  <%# Header %>
+  <% actions = capture do %>
+    <span class="px-3 py-1 text-sm font-medium rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Admin</span>
+    <span class="text-sm text-muted dark:text-slate-400 truncate max-w-[14rem]"><%= Current.user.email %></span>
+  <% end %>
+  <%= render "shared/page_header", title: "Configuración del Sitio", actions: actions %>
 
   <%= render "admin/dashboard/nav", active: :settings %>
 
   <!-- Section visibility -->
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6">
-    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Secciones visibles</h2>
-    <p class="text-sm text-gray-500 dark:text-slate-400 mb-6">
+  <div class="card p-6">
+    <h2 class="text-lg font-semibold text-ink dark:text-white mb-1">Secciones visibles</h2>
+    <p class="text-sm text-muted dark:text-slate-400 mb-6">
       Desactiva una sección para ocultarla del menú, el pie de página y la página de inicio, y bloquear el acceso directo por URL.
     </p>
 
     <%= form_with url: admin_settings_path, method: :patch do %>
-      <div class="divide-y divide-gray-100 dark:divide-slate-700 border-y border-gray-100 dark:border-slate-700">
+      <div class="divide-y divide-line dark:divide-slate-700 border-y border-line dark:border-slate-700">
         <% SiteSetting::SECTIONS.each do |key, label| %>
           <div class="flex items-center justify-between gap-4 py-4">
             <div>
-              <p class="font-medium text-gray-900 dark:text-white"><%= label %></p>
-              <p class="text-sm <%= section_visible?(key) ? "text-green-600 dark:text-green-400" : "text-gray-400 dark:text-slate-500" %>">
+              <p class="font-medium text-ink dark:text-white"><%= label %></p>
+              <p class="text-sm <%= section_visible?(key) ? "text-green-600 dark:text-green-400" : "text-muted dark:text-slate-500" %>">
                 <%= section_visible?(key) ? "Visible para los visitantes" : "Oculta" %>
               </p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer shrink-0">
               <input type="hidden" name="sections[<%= key %>]" value="0">
               <input type="checkbox" name="sections[<%= key %>]" value="1" class="sr-only peer" <%= "checked" if section_visible?(key) %>>
-              <div class="w-11 h-6 bg-gray-200 dark:bg-slate-600 rounded-full peer peer-checked:bg-sky-500 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+              <div class="w-11 h-6 bg-slate-200 dark:bg-slate-600 rounded-full peer peer-checked:bg-sky-500 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
             </label>
           </div>
         <% end %>
       </div>
 
-      <div class="mt-6">
-        <%= submit_tag "Guardar cambios", class: "px-5 py-2.5 rounded-lg bg-sky-500 hover:bg-sky-600 text-white text-sm font-medium transition-colors cursor-pointer" %>
+      <div class="mt-6 flex items-center justify-end">
+        <%= submit_tag "Guardar cambios", class: "btn-primary" %>
       </div>
     <% end %>
   </div>

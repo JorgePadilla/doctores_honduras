@@ -1,57 +1,52 @@
-<div class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-6">Mi cuenta</h1>
+<div class="max-w-6xl mx-auto">
+  <%= render "shared/page_header", title: "Mi cuenta", subtitle: "Preferencias" %>
+  <%= render "settings/nav", active: :preferences %>
 
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <%= render "settings/sidebar", current: "preferences" %>
-
-    <div class="md:col-span-3 space-y-6">
-      <%# Notificaciones %>
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500">
-        <h2 class="text-xl font-semibold mb-4 dark:text-white">Notificaciones por correo</h2>
-        <%= form_with model: @notification_preferences, url: settings_notifications_path, method: :patch, class: "space-y-6" do |f| %>
-          <div class="space-y-4">
-            <% [
-              [:email_notifications, "Notificaciones por correo electrónico", "Recibe notificaciones importantes por correo electrónico."],
-              [:marketing_emails, "Correos de marketing", "Recibe información sobre promociones y ofertas especiales."],
-              [:new_features_notifications, "Nuevas características", "Recibe notificaciones cuando se añadan nuevas características a la plataforma."],
-              [:security_alerts, "Alertas de seguridad", "Recibe alertas importantes relacionadas con la seguridad de tu cuenta."],
-            ].each do |field, label, hint| %>
-              <div class="flex items-start">
-                <div class="flex items-center h-5">
-                  <%= f.check_box field, class: "focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700" %>
-                </div>
-                <div class="ml-3 text-sm">
-                  <%= f.label field, label, class: "font-medium text-gray-700 dark:text-slate-300" %>
-                  <p class="text-gray-500 dark:text-slate-400"><%= hint %></p>
-                </div>
+  <div class="space-y-6">
+    <%# Notificaciones %>
+    <div class="card p-6">
+      <h2 class="card-title">Notificaciones por correo</h2>
+      <%= form_with model: @notification_preferences, url: settings_notifications_path, method: :patch, class: "space-y-6" do |f| %>
+        <div class="space-y-4">
+          <% [
+            [:email_notifications, "Notificaciones por correo electrónico", "Recibe notificaciones importantes por correo electrónico."],
+            [:marketing_emails, "Correos de marketing", "Recibe información sobre promociones y ofertas especiales."],
+            [:new_features_notifications, "Nuevas características", "Recibe notificaciones cuando se añadan nuevas características a la plataforma."],
+            [:security_alerts, "Alertas de seguridad", "Recibe alertas importantes relacionadas con la seguridad de tu cuenta."],
+          ].each do |field, label, hint| %>
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <%= f.check_box field, class: "form-check" %>
               </div>
-            <% end %>
-          </div>
-          <div class="flex justify-end">
-            <%= f.submit "Guardar notificaciones", class: "inline-flex justify-center py-2 px-5 border border-transparent shadow-sm text-sm font-medium rounded-full text-white transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 bg-sky-500 hover:bg-sky-600" %>
-          </div>
-        <% end %>
-      </div>
-
-      <%# Idioma %>
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500">
-        <h2 class="text-xl font-semibold mb-4 dark:text-white">Idioma</h2>
-        <%= form_with model: @user, url: settings_language_path, method: :patch, class: "space-y-6" do |f| %>
-          <div>
-            <%= f.label :language, "Selecciona tu idioma preferido", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-            <div class="mt-1">
-              <%= f.select :language,
-                    options_for_select([ [ "Español", "es" ], [ "English", "en" ] ], @user.language),
-                    {},
-                    { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md dark:bg-slate-700 dark:text-white" } %>
+              <div class="ml-3 text-sm">
+                <%= f.label field, label, class: "font-medium text-ink dark:text-slate-300" %>
+                <p class="text-muted dark:text-slate-400"><%= hint %></p>
+              </div>
             </div>
-            <p class="mt-2 text-sm text-gray-500 dark:text-slate-400">Este idioma se utilizará en toda la plataforma.</p>
-          </div>
-          <div class="flex justify-end">
-            <%= f.submit "Guardar idioma", class: "inline-flex justify-center py-2 px-5 border border-transparent shadow-sm text-sm font-medium rounded-full text-white transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 bg-sky-500 hover:bg-sky-600" %>
-          </div>
-        <% end %>
-      </div>
+          <% end %>
+        </div>
+        <div class="flex justify-end">
+          <%= f.submit "Guardar notificaciones", class: "btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Idioma %>
+    <div class="card p-6">
+      <h2 class="card-title">Idioma</h2>
+      <%= form_with model: @user, url: settings_language_path, method: :patch, class: "space-y-6" do |f| %>
+        <div class="max-w-md">
+          <%= f.label :language, "Selecciona tu idioma preferido", class: "form-label" %>
+          <%= f.select :language,
+                options_for_select([ [ "Español", "es" ], [ "English", "en" ] ], @user.language),
+                {},
+                { class: "form-input form-select" } %>
+          <p class="form-hint">Este idioma se utilizará en toda la plataforma.</p>
+        </div>
+        <div class="flex justify-end">
+          <%= f.submit "Guardar idioma", class: "btn-primary" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

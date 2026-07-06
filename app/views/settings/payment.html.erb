@@ -1,138 +1,113 @@
-<div class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-4xl font-bold text-primary-700 dark:text-sky-400 mb-6">Completar Suscripción</h1>
+<div class="max-w-6xl mx-auto">
+  <%= render "shared/page_header", title: "Mi cuenta", subtitle: "Completar suscripción" %>
+  <%= render "settings/nav", active: :subscription %>
 
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <%= render "settings/sidebar", current: "subscription" %>
+  <div class="max-w-2xl space-y-6">
+    <%# Resumen del plan %>
+    <div class="rounded-2xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-900/20 p-6">
+      <h3 class="text-lg font-semibold mb-2 text-sky-800 dark:text-sky-300">Resumen de la Suscripción</h3>
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-ink dark:text-white font-medium"><%= @plan.name %></p>
+          <p class="text-muted dark:text-slate-400 text-sm">Renovación automática mensual</p>
+        </div>
+        <div class="bg-sky-100 dark:bg-sky-900/30 px-4 py-2 rounded-md">
+          <p class="text-xl font-bold text-sky-800 dark:text-sky-300">$<%= sprintf('%.2f', @plan.price / 100.0) %>/mes</p>
+        </div>
+      </div>
+    </div>
 
-    <!-- Main Content -->
-    <div class="md:col-span-3 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border-l-4 border-l-sky-300 dark:border-l-sky-500">
-      <h2 class="text-xl font-semibold mb-4 dark:text-white">Información de Pago</h2>
+    <%= form_with url: settings_process_payment_path(plan_id: @plan.id), method: :post, class: "space-y-6" do |f| %>
+      <%# Información de tarjeta %>
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2 text-ink dark:text-white">
+          <%= icon(:credit_card, class: "h-6 w-6 text-sky-600 dark:text-sky-400") %>
+          Información de Tarjeta
+        </h3>
 
-      <!-- Plan Summary -->
-      <div class="bg-sky-50 dark:bg-sky-900/20 p-4 rounded-lg mb-6 border border-sky-200 dark:border-sky-800">
-        <h3 class="text-lg font-medium mb-2 text-sky-800 dark:text-sky-300">Resumen de la Suscripción</h3>
-        <div class="flex justify-between items-center">
+        <div class="grid grid-cols-1 gap-6">
           <div>
-            <p class="text-gray-900 dark:text-white font-medium"><%= @plan.name %></p>
-            <p class="text-gray-600 dark:text-slate-400 text-sm">Renovación automática mensual</p>
+            <%= f.label :card_number, "Número de Tarjeta", class: "form-label" %>
+            <%= f.text_field :card_number, class: "form-input", placeholder: "1234 5678 9012 3456" %>
           </div>
-          <div class="bg-sky-100 dark:bg-sky-900/30 px-4 py-2 rounded-md">
-            <p class="text-xl font-bold text-sky-800 dark:text-sky-300">$<%= sprintf('%.2f', @plan.price / 100.0) %>/mes</p>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <%= f.label :expiry, "Fecha de Expiración", class: "form-label" %>
+              <%= f.text_field :expiry, class: "form-input", placeholder: "MM/AA" %>
+            </div>
+
+            <div>
+              <%= f.label :cvv, "Código de Seguridad (CVV)", class: "form-label" %>
+              <%= f.text_field :cvv, class: "form-input", placeholder: "123" %>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Payment Form -->
-      <%= form_with url: settings_process_payment_path(plan_id: @plan.id), method: :post, class: "space-y-6" do |f| %>
-        <!-- Credit Card Information -->
-        <div class="bg-white dark:bg-slate-700 p-5 border border-gray-200 dark:border-slate-600 rounded-lg shadow-sm">
-          <h3 class="text-lg font-medium mb-4 flex items-center dark:text-white">
-            <%= icon(:credit_card, class: "h-6 w-6 text-sky-600 dark:text-sky-400 mr-2") %>
-            Información de Tarjeta
-          </h3>
+      <%# Información de facturación %>
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2 text-ink dark:text-white">
+          <%= icon(:user, class: "h-6 w-6 text-sky-600 dark:text-sky-400") %>
+          Información de Facturación
+        </h3>
 
-          <div class="grid grid-cols-1 gap-4">
+        <div class="grid grid-cols-1 gap-6">
+          <div>
+            <%= f.label :name, "Nombre en la Tarjeta", class: "form-label" %>
+            <%= f.text_field :name, class: "form-input" %>
+          </div>
+
+          <div>
+            <%= f.label :address, "Dirección", class: "form-label" %>
+            <%= f.text_field :address, class: "form-input" %>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
             <div>
-              <%= f.label :card_number, "Número de Tarjeta", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-              <div class="mt-1">
-                <%= f.text_field :card_number, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-600 dark:text-white", placeholder: "1234 5678 9012 3456" %>
-              </div>
+              <%= f.label :city, "Ciudad", class: "form-label" %>
+              <%= f.text_field :city, class: "form-input" %>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <%= f.label :expiry, "Fecha de Expiración", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-                <div class="mt-1">
-                  <%= f.text_field :expiry, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-600 dark:text-white", placeholder: "MM/AA" %>
-                </div>
-              </div>
-
-              <div>
-                <%= f.label :cvv, "Código de Seguridad (CVV)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-                <div class="mt-1">
-                  <%= f.text_field :cvv, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-600 dark:text-white", placeholder: "123" %>
-                </div>
-              </div>
+            <div>
+              <%= f.label :postal_code, "Código Postal", class: "form-label" %>
+              <%= f.text_field :postal_code, class: "form-input" %>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Billing Information -->
-        <div class="bg-white dark:bg-slate-700 p-5 border border-gray-200 dark:border-slate-600 rounded-lg shadow-sm">
-          <h3 class="text-lg font-medium mb-4 flex items-center dark:text-white">
-            <%= icon(:user, class: "h-6 w-6 text-sky-600 dark:text-sky-400 mr-2") %>
-            Información de Facturación
-          </h3>
-
-          <div class="grid grid-cols-1 gap-4">
-            <div>
-              <%= f.label :name, "Nombre en la Tarjeta", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-              <div class="mt-1">
-                <%= f.text_field :name, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-600 dark:text-white" %>
-              </div>
-            </div>
-
-            <div>
-              <%= f.label :address, "Dirección", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-              <div class="mt-1">
-                <%= f.text_field :address, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-600 dark:text-white" %>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <%= f.label :city, "Ciudad", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-                <div class="mt-1">
-                  <%= f.text_field :city, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-600 dark:text-white" %>
-                </div>
-              </div>
-
-              <div>
-                <%= f.label :postal_code, "Código Postal", class: "block text-sm font-medium text-gray-700 dark:text-slate-300" %>
-                <div class="mt-1">
-                  <%= f.text_field :postal_code, class: "shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-600 dark:text-white" %>
-                </div>
-              </div>
-            </div>
+      <%# Términos y condiciones %>
+      <div class="card p-6">
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <%= f.check_box :terms, class: "form-check" %>
           </div>
-        </div>
-
-        <!-- Terms and Conditions -->
-        <div class="bg-white dark:bg-slate-700 p-5 border border-gray-200 dark:border-slate-600 rounded-lg shadow-sm">
-          <div class="flex items-start">
-            <div class="flex items-center h-5">
-              <%= f.check_box :terms, class: "focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300 dark:border-slate-600 rounded dark:bg-slate-600" %>
-            </div>
-            <div class="ml-3 text-sm">
-              <%= f.label :terms, class: "font-medium text-gray-700 dark:text-slate-300" do %>
-                Acepto los <a href="#" class="text-sky-600 dark:text-sky-400 hover:text-sky-500">Términos y Condiciones</a> y la <a href="#" class="text-sky-600 dark:text-sky-400 hover:text-sky-500">Política de Privacidad</a>
-              <% end %>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <div class="mt-6 flex flex-col sm:flex-row sm:justify-between items-center">
-            <a href="<%= settings_subscription_path %>" class="w-full sm:w-auto mb-3 sm:mb-0 py-2 px-4 border border-gray-300 dark:border-slate-600 shadow-sm text-sm font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 text-center">
-              <span class="flex items-center justify-center">
-                <%= icon(:arrow_left, class: "h-5 w-5 mr-2") %>
-                Cancelar
-              </span>
-            </a>
-            <%= f.button type: "submit", class: "w-full sm:w-auto py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-full transition-all hover:shadow-md transform hover:scale-105 text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" do %>
-              <span class="flex items-center justify-center">
-                <%= icon(:credit_card, class: "h-5 w-5 mr-2") %>
-                Completar Pago
-              </span>
+          <div class="ml-3 text-sm">
+            <%= f.label :terms, class: "font-medium text-ink dark:text-slate-300" do %>
+              Acepto los <a href="#" class="text-sky-600 dark:text-sky-400 hover:text-sky-500">Términos y Condiciones</a> y la <a href="#" class="text-sky-600 dark:text-sky-400 hover:text-sky-500">Política de Privacidad</a>
             <% end %>
           </div>
         </div>
-      <% end %>
-
-      <!-- Secure Payment Notice -->
-      <div class="mt-6 flex items-center justify-center">
-        <%= icon(:lock_closed, class: "h-5 w-5 text-gray-400 dark:text-slate-500 mr-2") %>
-        <p class="text-sm text-gray-500 dark:text-slate-400">Pago seguro con encriptación SSL</p>
       </div>
+
+      <%# Botones %>
+      <div class="flex flex-wrap items-center justify-end gap-3">
+        <%= link_to settings_subscription_path, class: "btn-secondary" do %>
+          <%= icon(:arrow_left, class: "h-5 w-5") %>
+          Cancelar
+        <% end %>
+        <%= f.button type: "submit", class: "btn-primary btn-lg" do %>
+          <%= icon(:credit_card, class: "h-5 w-5") %>
+          Completar Pago
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# Aviso de pago seguro %>
+    <div class="flex items-center justify-center">
+      <%= icon(:lock_closed, class: "h-5 w-5 text-muted dark:text-slate-500 mr-2") %>
+      <p class="text-sm text-muted dark:text-slate-400">Pago seguro con encriptación SSL</p>
     </div>
   </div>
 </div>

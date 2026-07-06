@@ -1,22 +1,19 @@
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-  <div class="mb-6">
-    <%= link_to "← Volver a pacientes", agenda_patients_path, class: "text-sky-600 dark:text-sky-400 hover:underline text-sm font-medium" %>
-  </div>
-
-  <h1 class="text-2xl font-bold text-primary-700 dark:text-sky-400 mb-2"><%= @patient.name %></h1>
-  <% if @patient.identity_document.present? %>
-    <p class="text-sm text-gray-600 dark:text-slate-300">DNI: <%= @patient.identity_document %></p>
-  <% end %>
-  <% if @patient.display_contact.present? %>
-    <p class="text-sm text-gray-500 dark:text-slate-400 mb-6"><%= @patient.display_contact %></p>
-  <% end %>
+<div class="max-w-4xl mx-auto">
+  <% subtitle = [
+       ("DNI: #{@patient.identity_document}" if @patient.identity_document.present?),
+       @patient.display_contact.presence
+     ].compact.join(" · ").presence %>
+  <%= render "shared/page_header",
+        title: @patient.name,
+        subtitle: subtitle,
+        back: { label: "Volver a pacientes", path: agenda_patients_path } %>
 
   <%= render "agenda/patients/allergy_alert", patient: @patient %>
 
   <!-- Expediente clínico (ficha) -->
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 mb-6">
+  <div class="card p-6 mb-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Expediente clínico</h2>
+      <h2 class="text-lg font-semibold text-ink dark:text-white">Expediente clínico</h2>
       <% if current_doctor_elite? %>
         <% if @clinical_record %>
           <%= link_to "Editar ficha", edit_agenda_patient_clinical_record_path(@patient), class: "text-sm font-medium text-sky-600 dark:text-sky-400 hover:underline" %>
@@ -34,23 +31,23 @@
     <% elsif @clinical_record && !@clinical_record.blank_record? %>
       <%= render "agenda/patients/clinical_summary", record: @clinical_record %>
     <% else %>
-      <p class="text-sm text-gray-500 dark:text-slate-400">Aún no hay ficha clínica para este paciente.</p>
+      <p class="text-sm text-muted dark:text-slate-400">Aún no hay ficha clínica para este paciente.</p>
     <% end %>
   </div>
 
-  <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Historial de Citas (<%= @appointments.size %>)</h2>
+  <h2 class="text-lg font-semibold text-ink dark:text-white mb-4">Historial de Citas (<%= @appointments.size %>)</h2>
 
   <div class="space-y-3">
     <% @appointments.each do |apt| %>
-      <%= link_to agenda_appointment_path(apt), class: "block bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-5 border-l-4 #{apt.status_classes[:border]} transition-all hover:shadow-lg" do %>
+      <%= link_to agenda_appointment_path(apt), class: "block card card-hover card-accent #{apt.status_classes[:border]} p-5" do %>
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm text-gray-900 dark:text-white font-medium">
+            <p class="text-sm text-ink dark:text-white font-medium">
               <%= apt.appointment_date.strftime("%d/%m/%Y") %> &middot; <%= apt.start_time.strftime("%H:%M") %> - <%= apt.end_time.strftime("%H:%M") %>
             </p>
-            <p class="text-sm text-gray-500 dark:text-slate-400"><%= apt.doctor_branch&.name %></p>
+            <p class="text-sm text-muted dark:text-slate-400"><%= apt.doctor_branch&.name %></p>
             <% if apt.reason.present? %>
-              <p class="text-sm text-gray-400 dark:text-slate-500 mt-1"><%= truncate(apt.reason, length: 60) %></p>
+              <p class="text-sm text-muted dark:text-slate-500 mt-1"><%= truncate(apt.reason, length: 60) %></p>
             <% end %>
           </div>
           <span class="text-sm px-3 py-1 rounded-full font-medium <%= apt.status_classes[:bg] %> <%= apt.status_classes[:text] %>"><%= apt.status_label %></span>

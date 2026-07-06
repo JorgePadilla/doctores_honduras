@@ -1,13 +1,16 @@
-<div class="container mx-auto px-4 py-8 max-w-5xl">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Mis Productos</h1>
-    <% unless product_limit_reached? %>
-      <%= link_to "Nuevo Producto", new_vendor_product_path, class: "py-2 px-4 border border-transparent rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600" %>
+<% unless product_limit_reached? %>
+  <% actions = capture do %>
+    <%= link_to new_vendor_product_path, class: "btn-primary" do %>
+      <%= icon(:plus, class: "w-4 h-4") %> Nuevo producto
     <% end %>
-  </div>
+  <% end %>
+<% end %>
+
+<div class="max-w-6xl mx-auto">
+  <%= render "shared/page_header", title: "Mis Productos", actions: actions %>
 
   <% unless paid_plan? %>
-    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4 mb-6">
+    <div class="mb-6 rounded-xl border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
       <p class="text-sm text-yellow-800 dark:text-yellow-300">
         Plan gratuito: <%= current_supplier.products.count %>/5 productos.
         <%= link_to "Actualizar plan", settings_subscription_path, class: "font-medium underline" %> para productos ilimitados.
@@ -16,45 +19,52 @@
   <% end %>
 
   <% if @products.any? %>
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-        <thead class="bg-gray-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Producto</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">SKU</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Categoría</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Precio</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Estado</th>
-            <th class="px-6 py-3 text-right text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
-          <% @products.each do |product| %>
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-line dark:divide-slate-700">
+          <thead class="bg-slate-50 dark:bg-slate-700/50">
             <tr>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"><%= product.name %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= product.sku %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= product.category %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">$<%= number_with_precision(product.price, precision: 2) %></td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <% if product.active? %>
-                  <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Activo</span>
-                <% else %>
-                  <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-gray-100 dark:bg-slate-600 text-gray-800 dark:text-slate-300">Inactivo</span>
-                <% end %>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%= link_to "Editar", edit_vendor_product_path(product), class: "text-sky-600 dark:text-sky-400 hover:text-sky-900 dark:hover:text-sky-300 mr-3" %>
-                <%= button_to "Eliminar", vendor_product_path(product), method: :delete, class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300", data: { turbo_confirm: "¿Eliminar este producto?" } %>
-              </td>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Producto</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">SKU</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Categoría</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Precio</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Estado</th>
+              <th class="px-6 py-3 text-right text-sm font-medium text-muted uppercase tracking-wider">Acciones</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-line dark:divide-slate-700">
+            <% @products.each do |product| %>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-ink dark:text-white"><%= product.name %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400"><%= product.sku %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400"><%= product.category %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400">$<%= number_with_precision(product.price, precision: 2) %></td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if product.active? %>
+                    <span class="px-2.5 py-0.5 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Activo</span>
+                  <% else %>
+                    <span class="px-2.5 py-0.5 inline-flex text-sm leading-5 font-semibold rounded-full bg-slate-100 dark:bg-slate-600 text-slate-700 dark:text-slate-300">Inactivo</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center justify-end gap-2">
+                    <%= link_to "Editar", edit_vendor_product_path(product), class: "btn-secondary btn-sm" %>
+                    <%= button_to "Eliminar", vendor_product_path(product), method: :delete, class: "btn-danger btn-sm", data: { turbo_confirm: "¿Eliminar este producto?" } %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   <% else %>
-    <div class="text-center py-12 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50">
-      <p class="text-gray-500 dark:text-slate-400 mb-4">Aún no tienes productos registrados.</p>
-      <%= link_to "Agregar primer producto", new_vendor_product_path, class: "py-2 px-4 border border-transparent rounded-full transition-all hover:shadow-md transform hover:scale-105 shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600" %>
+    <div class="card p-8 text-center">
+      <%= icon(:cube, class: "w-12 h-12 mx-auto text-slate-300 dark:text-slate-600") %>
+      <p class="mt-3 mb-4 text-muted dark:text-slate-400">Aún no tienes productos registrados.</p>
+      <%= link_to new_vendor_product_path, class: "btn-primary" do %>
+        <%= icon(:plus, class: "w-4 h-4") %> Agregar primer producto
+      <% end %>
     </div>
   <% end %>
 </div>

@@ -1,63 +1,55 @@
 <%= form_with(model: @encounter, url: agenda_appointment_encounter_path(@appointment), method: :patch, class: "space-y-6") do |f| %>
-  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 space-y-6">
-    <% if @encounter.errors.any? %>
-      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
-        <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400">
-          <% @encounter.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+  <%= render "shared/form_errors", model: @encounter %>
 
+  <div class="card p-6 space-y-6">
     <div>
-      <%= f.label :evolution_note, "Nota de evolución", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-      <%= f.text_area :evolution_note, rows: 4, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
-      <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Uso interno del médico; no se muestra al paciente.</p>
+      <%= f.label :evolution_note, "Nota de evolución", class: "form-label" %>
+      <%= f.text_area :evolution_note, rows: 4, class: "form-input" %>
+      <p class="form-hint">Uso interno del médico; no se muestra al paciente.</p>
     </div>
 
-    <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300 border-t border-gray-200 dark:border-slate-700 pt-6">Signos vitales</h3>
+    <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-300 border-t border-line dark:border-slate-700 pt-6">Signos vitales</h3>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div>
-        <%= f.label :blood_pressure, "Presión arterial", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-        <%= f.text_field :blood_pressure, placeholder: "120/80", class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <%= f.label :blood_pressure, "Presión arterial", class: "form-label" %>
+        <%= f.text_field :blood_pressure, placeholder: "120/80", class: "form-input" %>
       </div>
 
       <div>
-        <%= f.label :heart_rate, "Frec. cardíaca (lpm)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-        <%= f.number_field :heart_rate, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <%= f.label :heart_rate, "Frec. cardíaca (lpm)", class: "form-label" %>
+        <%= f.number_field :heart_rate, class: "form-input" %>
       </div>
 
       <div>
-        <%= f.label :temperature, "Temperatura (°C)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-        <%= f.number_field :temperature, step: 0.1, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <%= f.label :temperature, "Temperatura (°C)", class: "form-label" %>
+        <%= f.number_field :temperature, step: 0.1, class: "form-input" %>
       </div>
 
       <div>
-        <%= f.label :respiratory_rate, "Frec. respiratoria (rpm)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-        <%= f.number_field :respiratory_rate, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <%= f.label :respiratory_rate, "Frec. respiratoria (rpm)", class: "form-label" %>
+        <%= f.number_field :respiratory_rate, class: "form-input" %>
       </div>
 
       <div>
-        <%= f.label :oxygen_saturation, "Saturación O₂ (%)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-        <%= f.number_field :oxygen_saturation, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <%= f.label :oxygen_saturation, "Saturación O₂ (%)", class: "form-label" %>
+        <%= f.number_field :oxygen_saturation, class: "form-input" %>
       </div>
 
       <div>
-        <%= f.label :weight, "Peso (kg)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-        <%= f.number_field :weight, step: 0.01, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <%= f.label :weight, "Peso (kg)", class: "form-label" %>
+        <%= f.number_field :weight, step: 0.01, class: "form-input" %>
       </div>
 
       <div>
-        <%= f.label :height, "Altura (cm)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
-        <%= f.number_field :height, step: 0.01, class: "w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-sky-500 focus:border-sky-500" %>
+        <%= f.label :height, "Altura (cm)", class: "form-label" %>
+        <%= f.number_field :height, step: 0.01, class: "form-input" %>
       </div>
     </div>
+  </div>
 
-    <div class="flex justify-end space-x-3">
-      <%= link_to "Cancelar", agenda_appointment_path(@appointment), class: "inline-flex items-center border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-5 py-2 rounded-full font-medium transition-all" %>
-      <%= f.submit "Guardar", class: "inline-flex items-center bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer" %>
-    </div>
+  <div class="mt-6 flex items-center justify-end gap-3">
+    <%= link_to "Cancelar", agenda_appointment_path(@appointment), class: "btn-secondary" %>
+    <%= f.submit "Guardar", class: "btn-primary" %>
   </div>
 <% end %>

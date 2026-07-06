@@ -1,47 +1,52 @@
-<div class="container mx-auto px-4 py-8 max-w-5xl">
-  <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Contactos Recibidos</h1>
+<div class="max-w-6xl mx-auto">
+  <%= render "shared/page_header", title: "Contactos Recibidos" %>
 
   <% if @leads.any? %>
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50 overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-        <thead class="bg-gray-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Nombre</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Email</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Organización</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Estado</th>
-            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Fecha</th>
-            <th class="px-6 py-3 text-right text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Ver</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
-          <% @leads.each do |lead| %>
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-line dark:divide-slate-700">
+          <thead class="bg-slate-50 dark:bg-slate-700/50">
             <tr>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"><%= lead.name %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= lead.email %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= lead.organization || "-" %></td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <% case lead.status %>
-                <% when "new" %>
-                  <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-800 dark:text-sky-300">Nuevo</span>
-                <% when "contacted" %>
-                  <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Contactado</span>
-                <% when "converted" %>
-                  <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Convertido</span>
-                <% end %>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400"><%= lead.created_at.strftime("%d/%m/%Y") %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%= link_to "Ver", vendor_lead_path(lead), class: "text-sky-600 dark:text-sky-400 hover:text-sky-900 dark:hover:text-sky-300" %>
-              </td>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Nombre</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Organización</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Estado</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-muted uppercase tracking-wider">Fecha</th>
+              <th class="px-6 py-3 text-right text-sm font-medium text-muted uppercase tracking-wider">Ver</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-line dark:divide-slate-700">
+            <% @leads.each do |lead| %>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-ink dark:text-white"><%= lead.name %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400"><%= lead.email %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400"><%= lead.organization || "-" %></td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% case lead.status %>
+                  <% when "new" %>
+                    <span class="px-2.5 py-0.5 inline-flex text-sm leading-5 font-semibold rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-800 dark:text-sky-300">Nuevo</span>
+                  <% when "contacted" %>
+                    <span class="px-2.5 py-0.5 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Contactado</span>
+                  <% when "converted" %>
+                    <span class="px-2.5 py-0.5 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Convertido</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted dark:text-slate-400"><%= lead.created_at.strftime("%d/%m/%Y") %></td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center justify-end">
+                    <%= link_to "Ver", vendor_lead_path(lead), class: "btn-secondary btn-sm" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   <% else %>
-    <div class="text-center py-12 bg-white dark:bg-slate-800 rounded-xl shadow-md dark:shadow-slate-900/50">
-      <p class="text-gray-500 dark:text-slate-400">Aún no has recibido contactos.</p>
+    <div class="card p-8 text-center">
+      <%= icon(:envelope, class: "w-12 h-12 mx-auto text-slate-300 dark:text-slate-600") %>
+      <p class="mt-3 text-muted dark:text-slate-400">Aún no has recibido contactos.</p>
     </div>
   <% end %>
 </div>
