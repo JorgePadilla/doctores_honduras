@@ -1,0 +1,41 @@
+<%# Botones de acción del perfil público, en escalera de prioridad. Exactamente
+    UN .btn-primary por estado (DESIGN.md: el primario gana por escasez). Fuente
+    única para el header móvil y la card de contacto sticky.
+    Locals: doctor, bookable, video_url, full: false (w-full apilado en la card). %>
+<% w = local_assigns[:full] ? " w-full" : "" %>
+<% if bookable %>
+  <%= link_to new_doctor_booking_path(doctor), class: "btn-primary#{w}",
+        data: { controller: "analytics", analytics_name_value: "Booking Started",
+                analytics_props_value: { viewable_type: "DoctorProfile", viewable_id: doctor.id }.to_json,
+                action: "click->analytics#track" } do %>
+    <%= icon(:calendar_days, class: "w-4 h-4") %> Reservar cita
+  <% end %>
+<% end %>
+<% if doctor.whatsapp_url.present? %>
+  <%= link_to doctor.whatsapp_url, target: "_blank", rel: "noopener noreferrer",
+        class: "#{bookable ? 'btn-secondary' : 'btn-primary'}#{w}",
+        data: { controller: "analytics", analytics_name_value: "Contact Click",
+                analytics_props_value: { kind: "WhatsApp", viewable_type: "DoctorProfile", viewable_id: doctor.id }.to_json,
+                action: "click->analytics#track" } do %>
+    <%= icon(:whatsapp, class: "w-4 h-4#{' text-green-600 dark:text-green-400' if bookable}", fill: "currentColor", "stroke-width": "0") %> WhatsApp
+  <% end %>
+<% end %>
+<% if doctor.tel_url.present? %>
+  <% tel_primary = !bookable && doctor.whatsapp_url.blank? %>
+  <%= link_to doctor.tel_url, class: "#{tel_primary ? 'btn-primary' : 'btn-secondary'}#{w}",
+        data: { controller: "analytics", analytics_name_value: "Contact Click",
+                analytics_props_value: { kind: "Phone", viewable_type: "DoctorProfile", viewable_id: doctor.id }.to_json,
+                action: "click->analytics#track" } do %>
+    <%= icon(:phone, class: "w-4 h-4") %> Llamar
+  <% end %>
+<% end %>
+<% if video_url.present? %>
+  <% video_primary = !bookable && doctor.whatsapp_url.blank? && doctor.tel_url.blank? %>
+  <%= link_to video_url, target: "_blank", rel: "noopener",
+        class: "#{video_primary ? 'btn-primary' : 'btn-secondary'}#{w}",
+        data: { controller: "analytics", analytics_name_value: "Contact Click",
+                analytics_props_value: { kind: "Video", viewable_type: "DoctorProfile", viewable_id: doctor.id }.to_json,
+                action: "click->analytics#track" } do %>
+    <%= icon(:video_camera, class: "w-4 h-4") %> Consulta virtual
+  <% end %>
+<% end %>

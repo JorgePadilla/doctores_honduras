@@ -166,7 +166,8 @@ class DoctorsController < ApplicationController
 
   def show
     @doctor = DoctorProfile.includes(
-      :city, :department, :specialty, :subspecialty,
+      :city, :department, :specialty, :subspecialty, :agenda_setting,
+      { user: { subscription: :subscription_plan } },
       doctor_branches: [ :department, :city, :branch_schedules ],
       doctor_educations: [],
       doctor_certifications: []

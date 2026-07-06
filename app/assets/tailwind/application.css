@@ -512,6 +512,10 @@ turbo-frame[busy] { opacity: 0.6; transition: opacity .15s; }
 /* Título de sección dentro de un card (clase: las reglas globales h2/h3 sin capa ganarían a las utilities). */
 .card-title { font-size: 1.125rem; font-weight: 600; color: var(--color-ink); margin-bottom: 1rem; }
 .dark .card-title { color: #f1f5f9; }
+/* Subtítulo dentro de un card (p.ej. nombre de sucursal). Clase por la misma
+   razón que .card-title: las reglas globales h3 sin capa ganan a las utilities. */
+.card-subtitle { font-size: 0.9375rem; font-weight: 600; color: var(--color-ink); margin-bottom: 0; }
+.dark .card-subtitle { color: #f1f5f9; }
 
 /* Select nativo estilizado: usar con .form-input → class="form-input form-select". */
 .form-select {

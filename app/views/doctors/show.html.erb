@@ -1,248 +1,229 @@
+<% doctor_plan_tier    = @doctor.user.subscription&.subscription_plan&.tier || "gratis" %>
+<% doctor_has_paid_plan = doctor_plan_tier != "gratis" %>
+<% bookable  = doctor_plan_tier == "elite" && @doctor.agenda_setting&.public_booking_enabled %>
+<% video_url = @doctor.video_consultation_url.presence %>
+<% social_links = [
+     { url: @doctor.facebook_url,  label: "Facebook",  icon: :facebook },
+     { url: @doctor.instagram_url, label: "Instagram", icon: :instagram },
+     { url: @doctor.twitter_url,   label: "X",         icon: :x_twitter },
+     { url: @doctor.linkedin_url,  label: "LinkedIn",  icon: :linkedin },
+     { url: @doctor.tiktok_url,    label: "TikTok",    icon: :tiktok },
+     { url: @doctor.youtube_url,   label: "YouTube",   icon: :youtube }
+   ].select { |l| l[:url].present? } %>
+<% educations    = @doctor.doctor_educations.sort_by { |e| e.position || 0 } %>
+<% certifications = @doctor.doctor_certifications.sort_by { |c| c.position || 0 } %>
+<% branches      = @doctor.doctor_branches.sort_by { |b| b.position || 0 } %>
+
 <div class="container mx-auto px-4 py-8">
-  <div class="max-w-5xl mx-auto mb-6 flex items-center">
-    <a href="/doctors" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors">
-      <%= icon(:arrow_left, class: "h-4 w-4") %>
-      Volver al directorio
-    </a>
+  <div class="max-w-5xl mx-auto mb-6">
+    <%= link_to doctors_path, class: "inline-flex items-center gap-1 text-sm font-medium text-muted hover:text-ink dark:text-slate-400 dark:hover:text-white transition-colors" do %>
+      <%= icon(:arrow_left, class: "w-4 h-4") %><span>Volver al directorio</span>
+    <% end %>
   </div>
-  <div class="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-2xl border border-line dark:border-slate-700 overflow-hidden">
-    <div class="flex flex-col md:flex-row">
-      <div class="md:w-1/3 p-6">
-        <% if @doctor.image_url.present? %>
-          <img src="<%= @doctor.image_url %>" alt="<%= @doctor.display_name %>" class="w-full h-auto rounded-lg object-cover" />
-        <% else %>
-          <div class="w-full h-64 bg-gray-200 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-            <span class="text-gray-500 dark:text-slate-400">Sin imagen</span>
-          </div>
-        <% end %>
 
-        <%# Social media links %>
-        <% social_links = [
-          { url: @doctor.facebook_url, label: "Facebook" },
-          { url: @doctor.instagram_url, label: "Instagram" },
-          { url: @doctor.twitter_url, label: "X" },
-          { url: @doctor.linkedin_url, label: "LinkedIn" },
-          { url: @doctor.tiktok_url, label: "TikTok" },
-          { url: @doctor.youtube_url, label: "YouTube" }
-        ].select { |l| l[:url].present? } %>
+  <div class="max-w-5xl mx-auto">
+    <%# ── HEADER CARD ── %>
+    <div class="card p-6 md:p-8 mb-6">
+      <div class="flex flex-col sm:flex-row gap-6">
+        <div class="sm:w-44 md:w-52 shrink-0">
+          <% if @doctor.image_url.present? %>
+            <img src="<%= @doctor.image_thumb_url.presence || @doctor.image_url %>" alt="<%= @doctor.display_name %>"
+                 class="w-full aspect-[4/5] object-cover rounded-2xl border border-line dark:border-slate-700">
+          <% else %>
+            <div class="w-full aspect-[4/5] rounded-2xl bg-primary-soft dark:bg-slate-700 flex items-center justify-center">
+              <span class="font-display text-6xl font-semibold text-primary/40"><%= @doctor.display_name.first %></span>
+            </div>
+          <% end %>
+        </div>
 
-        <% if social_links.any? %>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <% social_links.each do |link| %>
-              <a href="<%= link[:url] %>" target="_blank" rel="noopener noreferrer"
-                 data-controller="analytics"
-                 data-analytics-name-value="Contact Click"
-                 data-analytics-props-value="<%= { kind: link[:label], viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
-                 data-action="click->analytics#track"
-                 class="inline-flex items-center px-3 py-1.5 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors">
-                <%= link[:label] %>
-              </a>
+        <div class="min-w-0 flex-1">
+          <% if bookable %>
+            <span class="inline-flex items-center gap-1 rounded-full bg-primary-soft dark:bg-sky-900/30 px-2.5 py-1 text-xs font-medium text-primary-hover dark:text-sky-300 mb-2">
+              <%= icon(:calendar_days, class: "w-3.5 h-3.5") %> Reserva en línea
+            </span>
+          <% end %>
+          <h1 class="page-title"><%= @doctor.display_name %></h1>
+
+          <% if @doctor.subspecialty.present? %>
+            <p class="mt-1 text-lg text-slate-600 dark:text-slate-400">Especialista en <%= @doctor.subspecialty.name %></p>
+            <% if @doctor.specialty.present? && !@doctor.general_specialty? %>
+              <p class="text-sm text-muted dark:text-slate-500"><%= @doctor.specialty.name %></p>
+            <% end %>
+          <% elsif @doctor.headline_specialty.present? %>
+            <p class="mt-1 text-lg text-slate-600 dark:text-slate-400">Especialista en <%= @doctor.headline_specialty %></p>
+          <% end %>
+
+          <%# Confianza + meta %>
+          <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <% if @doctor.medical_license.present? %>
+              <span class="inline-flex items-center gap-1 rounded-full bg-primary-soft dark:bg-sky-900/30 px-2.5 py-1 text-xs font-medium text-primary-hover dark:text-sky-300">
+                <%= icon(:shield_check, class: "w-3.5 h-3.5") %> Colegiado N.º <%= @doctor.medical_license %>
+              </span>
+            <% end %>
+            <% geo = [@doctor.city&.name, @doctor.department&.name].compact.join(", ") %>
+            <% if geo.present? %>
+              <span class="inline-flex items-center gap-1 text-sm text-muted dark:text-slate-400"><%= icon(:map_pin, class: "w-4 h-4 text-primary") %><%= geo %></span>
+            <% end %>
+            <% langs = @doctor.languages.to_a.reject(&:blank?) %>
+            <% if langs.any? %>
+              <span class="inline-flex items-center gap-1 text-sm text-muted dark:text-slate-400"><%= icon(:language, class: "w-4 h-4 text-primary") %><%= langs.join(" · ") %></span>
             <% end %>
           </div>
+
+          <%# Sitio web + redes (todos los tamaños) %>
+          <% if @doctor.website.present? || social_links.any? %>
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <% if @doctor.website.present? %>
+                <a href="<%= @doctor.website %>" target="_blank" rel="noopener"
+                   data-controller="analytics" data-analytics-name-value="Contact Click"
+                   data-analytics-props-value="<%= { kind: "Website", viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
+                   data-action="click->analytics#track"
+                   class="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-hover">
+                  <%= icon(:globe, class: "w-4 h-4") %> Sitio web
+                </a>
+              <% end %>
+              <% social_links.each do |link| %>
+                <a href="<%= link[:url] %>" target="_blank" rel="noopener noreferrer" aria-label="<%= link[:label] %>" title="<%= link[:label] %>"
+                   data-controller="analytics" data-analytics-name-value="Contact Click"
+                   data-analytics-props-value="<%= { kind: link[:label], viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
+                   data-action="click->analytics#track"
+                   class="p-2 rounded-full border border-line dark:border-slate-700 text-muted hover:text-primary hover:border-sky-200 dark:hover:border-slate-600 transition-colors">
+                  <%= icon(link[:icon], class: "w-4 h-4", fill: "currentColor", "stroke-width": "0") %>
+                </a>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%# Acciones (móvil/tablet; en desktop van en la card sticky) %>
+          <div class="mt-5 flex flex-wrap gap-2 lg:hidden">
+            <%= render "doctors/primary_action", doctor: @doctor, bookable: bookable, video_url: video_url %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# ── CUERPO: contenido + card de contacto sticky ── %>
+    <div class="flex flex-col lg:flex-row gap-6">
+      <div class="lg:w-2/3 space-y-6">
+        <%# Sobre el médico + servicios %>
+        <% if @doctor.description.present? || @services.any? %>
+          <section class="card p-6">
+            <% if @doctor.description.present? %>
+              <h2 class="card-title">Sobre el médico</h2>
+              <p class="leading-relaxed text-slate-700 dark:text-slate-300"><%= @doctor.description %></p>
+            <% end %>
+            <% if @services.any? %>
+              <p class="<%= "mt-5 " if @doctor.description.present? %>mb-2 text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-muted">Servicios</p>
+              <div class="flex flex-wrap gap-2">
+                <% @services.each do |service| %>
+                  <span class="rounded-full bg-primary-soft dark:bg-sky-900/30 px-3 py-1 text-sm font-medium text-primary-hover dark:text-sky-300"><%= service.name %></span>
+                <% end %>
+              </div>
+            <% end %>
+          </section>
+        <% end %>
+
+        <%# Ubicaciones + horarios (teléfono/horarios gated por plan pago) %>
+        <% if branches.any? %>
+          <section class="card p-6" id="ubicaciones">
+            <h2 class="card-title flex items-center gap-2"><%= icon(:map_pin, class: "w-5 h-5 text-primary") %> Ubicaciones y horarios</h2>
+            <div class="space-y-4">
+              <% branches.each do |branch| %>
+                <div class="rounded-xl border border-line dark:border-slate-700 p-4">
+                  <h3 class="card-subtitle"><%= branch.name %></h3>
+                  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= branch.address %><% if branch.city.present? || branch.department.present? %> · <%= [branch.city&.name, branch.department&.name].compact.join(", ") %><% end %></p>
+                  <div class="mt-3 flex flex-wrap gap-2">
+                    <% if (u = google_maps_url(map_link: branch.map_link, address_parts: [branch.name, branch.address, branch.city&.name, branch.department&.name])) %>
+                      <a href="<%= u %>" target="_blank" rel="noopener" class="btn-secondary btn-sm"><%= icon(:map_pin, class: "w-4 h-4 text-primary") %> Cómo llegar</a>
+                    <% end %>
+                    <% if doctor_has_paid_plan && branch.phone.present? %>
+                      <a href="tel:<%= branch.phone.gsub(/\D/, "") %>" class="btn-secondary btn-sm"><%= icon(:phone, class: "w-4 h-4 text-primary") %> <span class="tabular-nums"><%= branch.phone %></span></a>
+                    <% end %>
+                  </div>
+                  <% if doctor_has_paid_plan %><%= render "shared/branch_schedule", branch: branch %><% end %>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+
+        <%# Consultorios (establecimientos) o fallback de ciudad %>
+        <% if section_visible?("establishments") && @establishments.any? %>
+          <section class="card p-6">
+            <h2 class="card-title flex items-center gap-2"><%= icon(:building_office, class: "w-5 h-5 text-primary") %> Consultorios</h2>
+            <div class="space-y-4">
+              <% @establishments.each do |establishment| %>
+                <div class="rounded-xl border border-line dark:border-slate-700 p-4">
+                  <h3 class="card-subtitle"><%= establishment.name %></h3>
+                  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= establishment.address %></p>
+                  <% if establishment.phone.present? %>
+                    <p class="mt-1 text-sm text-muted">Tel: <a href="tel:<%= establishment.phone.gsub(/\D/, "") %>" class="text-primary hover:text-primary-hover"><%= establishment.phone %></a></p>
+                  <% end %>
+                  <% if (u = google_maps_url(map_link: establishment.map_link, address_parts: [establishment.name, establishment.address])) %>
+                    <a href="<%= u %>" target="_blank" rel="noopener" class="btn-secondary btn-sm mt-3"><%= icon(:map_pin, class: "w-4 h-4 text-primary") %> Cómo llegar</a>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <% elsif branches.empty? %>
+          <section class="card p-6">
+            <h2 class="card-title flex items-center gap-2"><%= icon(:map_pin, class: "w-5 h-5 text-primary") %> Ubicación</h2>
+            <p class="text-sm text-slate-600 dark:text-slate-400"><%= [@doctor.city&.name, @doctor.department&.name].compact.join(", ") %></p>
+            <% if (u = google_maps_url(address_parts: [@doctor.city&.name, @doctor.department&.name, "Honduras"])) %>
+              <a href="<%= u %>" target="_blank" rel="noopener" class="btn-secondary btn-sm mt-3"><%= icon(:map_pin, class: "w-4 h-4 text-primary") %> Cómo llegar</a>
+            <% end %>
+          </section>
+        <% end %>
+
+        <%# Formación académica (timeline) %>
+        <% if educations.any? %>
+          <section class="card p-6">
+            <h2 class="card-title flex items-center gap-2"><%= icon(:academic_cap, class: "w-5 h-5 text-primary") %> Formación académica</h2>
+            <ol class="relative ml-1.5 space-y-5 border-l border-line dark:border-slate-700">
+              <% educations.each do |edu| %>
+                <li class="ml-5">
+                  <span class="absolute -left-[5px] mt-1.5 h-2.5 w-2.5 rounded-full bg-primary"></span>
+                  <p class="font-medium text-ink dark:text-slate-100"><%= edu.institution %></p>
+                  <% if edu.degree.present? %><p class="text-sm text-muted"><%= edu.degree %></p><% end %>
+                  <% if edu.graduation_year.present? %><p class="text-xs text-muted tabular-nums"><%= edu.graduation_year %></p><% end %>
+                </li>
+              <% end %>
+            </ol>
+          </section>
+        <% end %>
+
+        <%# Capacitaciones y certificaciones (timeline) %>
+        <% if certifications.any? %>
+          <section class="card p-6">
+            <h2 class="card-title flex items-center gap-2"><%= icon(:star, class: "w-5 h-5 text-primary") %> Capacitaciones y certificaciones</h2>
+            <ol class="relative ml-1.5 space-y-5 border-l border-line dark:border-slate-700">
+              <% certifications.each do |cert| %>
+                <li class="ml-5">
+                  <span class="absolute -left-[5px] mt-1.5 h-2.5 w-2.5 rounded-full bg-primary"></span>
+                  <p class="font-medium text-ink dark:text-slate-100"><%= cert.name %></p>
+                  <% if cert.institution.present? %><p class="text-sm text-muted"><%= cert.institution %></p><% end %>
+                  <% if cert.year.present? %><p class="text-xs text-muted tabular-nums"><%= cert.year %></p><% end %>
+                </li>
+              <% end %>
+            </ol>
+          </section>
         <% end %>
       </div>
 
-      <div class="md:w-2/3 p-6">
-        <h1 class="page-title mb-2"><%= @doctor.display_name %></h1>
-        <%# Especialidad: headline the subspecialty when present; otherwise the
-            specialty, hiding the generic "Medicina General" placeholder (B5). %>
-        <% if @doctor.subspecialty.present? %>
-          <p class="text-lg text-gray-600 dark:text-slate-400 mb-2">Especialista en <%= @doctor.subspecialty.name %></p>
-          <% if @doctor.specialty.present? && !@doctor.general_specialty? %>
-            <p class="text-lg text-gray-600 dark:text-slate-400 mb-4">Especialidad: <%= @doctor.specialty.name %></p>
+      <%# Card de contacto sticky (desktop) %>
+      <div class="hidden lg:block lg:w-1/3">
+        <div class="card p-5 space-y-3 lg:sticky lg:top-24">
+          <p class="card-title mb-0">Contactar</p>
+          <div class="flex flex-col gap-2">
+            <%= render "doctors/primary_action", doctor: @doctor, bookable: bookable, video_url: video_url, full: true %>
+          </div>
+          <% if @doctor.tel_url.present? %>
+            <a href="<%= @doctor.tel_url %>" class="flex items-center gap-2 pt-1 text-sm text-slate-700 hover:text-primary dark:text-slate-300">
+              <%= icon(:phone, class: "w-4 h-4 text-primary") %><span class="tabular-nums"><%= @doctor.phone %></span>
+            </a>
           <% end %>
-        <% elsif @doctor.headline_specialty.present? %>
-          <p class="text-lg text-gray-600 dark:text-slate-400 mb-4">Especialista en <%= @doctor.headline_specialty %></p>
-        <% end %>
-
-        <% doctor_plan_tier = @doctor.user.subscription&.subscription_plan&.tier || "gratis" %>
-        <% doctor_has_paid_plan = doctor_plan_tier != "gratis" %>
-
-        <% if doctor_plan_tier == "elite" && @doctor.agenda_setting&.public_booking_enabled %>
-          <div class="mb-6">
-            <%= link_to new_doctor_booking_path(@doctor),
-                data: { controller: "analytics", analytics_name_value: "Booking Started", analytics_props_value: { viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json, action: "click->analytics#track" },
-                class: "inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-green-500 hover:bg-green-600" do %>
-              <%= icon(:calendar_days, class: "w-5 h-5 mr-2") %>
-              Reservar Cita
-            <% end %>
-          </div>
-        <% end %>
-
-        <% if @doctor.description.present? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Sobre el médico</h2>
-            <p class="text-gray-700 dark:text-slate-300"><%= @doctor.description %></p>
-          </div>
-        <% end %>
-
-        <%# Languages %>
-        <% if @doctor.languages.present? && @doctor.languages.reject(&:blank?).any? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Idiomas</h2>
-            <div class="flex flex-wrap gap-2">
-              <% @doctor.languages.reject(&:blank?).each do |language| %>
-                <span class="inline-block px-3 py-1 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400"><%= language %></span>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <%# Education %>
-        <% educations = @doctor.doctor_educations.sort_by { |e| e.position || 0 } %>
-        <% if educations.any? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Formación Académica</h2>
-            <div class="space-y-3">
-              <% educations.each do |edu| %>
-                <div class="border-l-4 pl-4 border-sky-300 dark:border-sky-500">
-                  <p class="font-medium text-gray-800 dark:text-slate-200"><%= edu.institution %></p>
-                  <% if edu.degree.present? %>
-                    <p class="text-gray-600 dark:text-slate-400"><%= edu.degree %></p>
-                  <% end %>
-                  <% if edu.graduation_year.present? %>
-                    <p class="text-sm text-gray-500 dark:text-slate-500"><%= edu.graduation_year %></p>
-                  <% end %>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <%# Certifications %>
-        <% certifications = @doctor.doctor_certifications.sort_by { |c| c.position || 0 } %>
-        <% if certifications.any? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Capacitaciones y Certificaciones</h2>
-            <div class="space-y-3">
-              <% certifications.each do |cert| %>
-                <div class="border-l-4 pl-4 border-sky-300 dark:border-sky-500">
-                  <p class="font-medium text-gray-800 dark:text-slate-200"><%= cert.name %></p>
-                  <% if cert.institution.present? %>
-                    <p class="text-gray-600 dark:text-slate-400"><%= cert.institution %></p>
-                  <% end %>
-                  <% if cert.year.present? %>
-                    <p class="text-sm text-gray-500 dark:text-slate-500"><%= cert.year %></p>
-                  <% end %>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <%# Ubicaciones (doctor_branches) - phone and schedules gated by doctor's plan %>
-        <%# ordenar en Ruby preserva el preload anidado (department/city/branch_schedules) %>
-        <% branches = @doctor.doctor_branches.sort_by { |b| b.position || 0 } %>
-        <% if branches.any? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Ubicaciones</h2>
-            <% branches.each do |branch| %>
-              <div class="mb-4 border-l-4 pl-4 border-sky-300 dark:border-sky-500">
-                <h3 class="text-lg font-medium text-sky-600 dark:text-sky-400"><%= branch.name %></h3>
-                <p class="text-gray-600 dark:text-slate-400"><%= branch.address %></p>
-                <% if branch.city.present? || branch.department.present? %>
-                  <p class="text-gray-600 dark:text-slate-400"><%= [branch.city&.name, branch.department&.name].compact.join(", ") %></p>
-                <% end %>
-                <% if doctor_has_paid_plan && branch.phone.present? %>
-                  <p class="text-gray-600 dark:text-slate-400">Tel: <a href="tel:<%= branch.phone.gsub(/\D/, "") %>" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors"><%= branch.phone %></a></p>
-                <% end %>
-                <% branch_maps_url = google_maps_url(map_link: branch.map_link, address_parts: [branch.name, branch.address, branch.city&.name, branch.department&.name]) %>
-                <% if branch_maps_url %>
-                  <a href="<%= branch_maps_url %>" target="_blank" rel="noopener"
-                     class="inline-flex items-center mt-2 px-3 py-1.5 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors">
-                    <%= icon(:map_pin, class: "w-4 h-4 mr-1.5") %>
-                    Cómo llegar
-                  </a>
-                <% end %>
-                <% if doctor_has_paid_plan %>
-                  <%= render "shared/branch_schedule", branch: branch %>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-
-        <% if section_visible?("establishments") && @establishments.any? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Consultorios</h2>
-
-            <% @establishments.each do |establishment| %>
-              <div class="mb-4 border-l-4 pl-4 border-sky-300 dark:border-sky-500">
-                <h3 class="text-lg font-medium text-sky-600 dark:text-sky-400"><%= establishment.name %></h3>
-                <p class="text-gray-600 dark:text-slate-400"><%= establishment.address %></p>
-                <% if establishment.phone.present? %>
-                  <p class="text-gray-600 dark:text-slate-400">Tel: <a href="tel:<%= establishment.phone.gsub(/\D/, "") %>" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors"><%= establishment.phone %></a></p>
-                <% end %>
-                <% est_maps_url = google_maps_url(map_link: establishment.map_link, address_parts: [establishment.name, establishment.address]) %>
-                <% if est_maps_url %>
-                  <a href="<%= est_maps_url %>" target="_blank" rel="noopener"
-                     class="inline-flex items-center mt-2 px-3 py-1.5 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors">
-                    <%= icon(:map_pin, class: "w-4 h-4 mr-1.5") %>
-                    Cómo llegar
-                  </a>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        <% elsif branches.empty? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Ubicación</h2>
-            <div class="mb-4 border-l-4 pl-4 border-sky-300 dark:border-sky-500">
-              <p class="text-gray-600 dark:text-slate-400"><%= [@doctor.city&.name, @doctor.department&.name].compact.join(", ") %></p>
-              <% city_maps_url = google_maps_url(address_parts: [@doctor.city&.name, @doctor.department&.name, "Honduras"]) %>
-              <% if city_maps_url %>
-                <a href="<%= city_maps_url %>" target="_blank" rel="noopener"
-                   class="inline-flex items-center mt-2 px-3 py-1.5 text-sm rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors">
-                  <%= icon(:map_pin, class: "w-4 h-4 mr-1.5") %>
-                  Cómo llegar
-                </a>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <%# Servicios %>
-        <% if @services.any? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Servicios</h2>
-            <div class="flex flex-wrap gap-2">
-              <% @services.each do |service| %>
-                <span class="inline-block px-3 py-1 text-sm rounded-full text-white bg-sky-500"><%= service.name %></span>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <%# Contacto %>
-        <% if @doctor.whatsapp_url.present? || @doctor.tel_url.present? %>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600 dark:text-sky-400">Contacto</h2>
-            <div class="flex flex-wrap gap-2">
-              <% if @doctor.tel_url.present? %>
-                <a href="<%= @doctor.tel_url %>"
-                   data-controller="analytics"
-                   data-analytics-name-value="Contact Click"
-                   data-analytics-props-value="<%= { kind: "Phone", viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
-                   data-action="click->analytics#track"
-                   class="inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-sky-500 hover:bg-sky-600">
-                  <%= icon(:phone, class: "w-5 h-5 mr-2") %>
-                  Llamar
-                </a>
-              <% end %>
-              <% if @doctor.whatsapp_url.present? %>
-                <a href="<%= @doctor.whatsapp_url %>" target="_blank" rel="noopener noreferrer"
-                   data-controller="analytics"
-                   data-analytics-name-value="Contact Click"
-                   data-analytics-props-value="<%= { kind: "WhatsApp", viewable_type: "DoctorProfile", viewable_id: @doctor.id }.to_json %>"
-                   data-action="click->analytics#track"
-                   class="inline-flex items-center px-5 py-2.5 rounded-full text-white font-medium transition-all shadow-md hover:shadow-lg transform hover:scale-105 bg-green-500 hover:bg-green-600">
-                  <%= icon(:whatsapp, class: "w-5 h-5 mr-2", fill: "currentColor", "stroke-width": "0") %>
-                  WhatsApp
-                </a>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
+        </div>
       </div>
     </div>
   </div>
