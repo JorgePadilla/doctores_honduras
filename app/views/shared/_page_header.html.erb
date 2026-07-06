@@ -1,0 +1,21 @@
+<%# Header de página canónico. Locals:
+    title:    (requerido)
+    subtitle: (opcional)
+    actions:  (opcional, HTML capturado con `capture` — botones a la derecha)
+    back:     (opcional, { label:, path: } — enlace de volver en páginas de detalle) %>
+<header class="mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+  <div class="min-w-0">
+    <% if local_assigns[:back].present? %>
+      <%= link_to back[:path], class: "mb-2 inline-flex items-center gap-1 text-sm font-medium text-muted hover:text-ink dark:text-slate-400 dark:hover:text-white" do %>
+        <%= icon(:arrow_left, class: "w-4 h-4") %><span><%= back[:label] %></span>
+      <% end %>
+    <% end %>
+    <h1 class="page-title"><%= title %></h1>
+    <% if local_assigns[:subtitle].present? %>
+      <p class="mt-1 text-muted dark:text-slate-400"><%= subtitle %></p>
+    <% end %>
+  </div>
+  <% if local_assigns[:actions].present? %>
+    <div class="flex shrink-0 items-center gap-2"><%= actions %></div>
+  <% end %>
+</header>

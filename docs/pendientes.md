@@ -38,6 +38,16 @@ Hoy: PDF/imágenes hasta 10 MB, validado en `Agenda::AttachmentsController`. Rev
 
 ---
 
+## 🟡 Notificaciones (inbox) — pendientes
+
+### 6. Las preferencias de notificación no se respetan
+En **Mi cuenta → Preferencias** hay 4 switches (`email_notifications`, `marketing_emails`, `new_features_notifications`, `security_alerts`). Se **guardan** en `notification_preference` pero **nadie los consulta** antes de enviar: ni `AppointmentNotifier`, ni los mailers, ni `Notification.notify`. Resultado: apagar un switch **no hace nada** (el ajuste le miente al usuario). Falta mapear cada tipo de evento → su switch y checarlo antes de enviar (in-app y email). Es lo más valioso de esta área (feature, no cosmético).
+
+### 7. El inbox está topado en 20, sin paginación
+El scope `Notification.recent` es `order(created_at: :desc).limit(20)`, y `NotificationsController#index` lo usa tal cual → **no se pueden ver notificaciones más viejas que las últimas 20** (no hay "ver más"/paginación). Menor. (Cosméticos aún más chicos, no listados: filtros no-leídas/por-tipo, descartar/borrar individual.)
+
+---
+
 ## 🟢 Backlog de producto (priorizar con el socio)
 
 - Ninguna épica pendiente del 1º ni 2º audio. Ver `docs/backlog-feedback-medico.md` para el detalle e ideas futuras (p. ej. expediente **compartido/longitudinal** entre médicos, hoy es **por-médico**).

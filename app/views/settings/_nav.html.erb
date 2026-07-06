@@ -1,0 +1,8 @@
+<%# Mi cuenta section tabs. render "settings/nav", active: :resumen %>
+<% tabs = [
+     { key: :resumen,      label: "Resumen",      path: settings_path,              icon: :squares_2x2 },
+     { key: :subscription, label: "Suscripción",  path: settings_subscription_path, icon: :credit_card },
+     { key: :security,     label: "Seguridad",    path: settings_security_path,     icon: :lock_closed },
+     { key: :preferences,  label: "Preferencias", path: settings_preferences_path,  icon: :bell }
+   ] %>
+<%= render "shared/section_tabs", tabs: tabs, active: active %>

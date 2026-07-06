@@ -1,0 +1,14 @@
+<%# Tabs de sección (patrón único: admin, agenda, mi cuenta). Locals:
+    tabs:   array de { key:, label:, path:, icon: (opcional) }
+    active: symbol de la pestaña activa %>
+<nav class="mb-6 flex flex-wrap gap-1 border-b border-line dark:border-slate-700" aria-label="Secciones">
+  <% tabs.each do |tab| %>
+    <% current = tab[:key] == active %>
+    <%= link_to tab[:path],
+          class: "-mb-px inline-flex items-center gap-1.5 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors #{current ? 'border-primary text-primary-hover dark:text-sky-400' : 'border-transparent text-muted hover:border-line hover:text-ink dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200'}",
+          "aria-current": (current ? "page" : nil) do %>
+      <%= icon(tab[:icon], class: "w-4 h-4") if tab[:icon] %>
+      <span><%= tab[:label] %></span>
+    <% end %>
+  <% end %>
+</nav>

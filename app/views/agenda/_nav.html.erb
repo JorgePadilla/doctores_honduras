@@ -1,16 +1,6 @@
-<%#
-  Agenda section tabs. Pass the active key:
-    render "agenda/nav", active: :citas   # :citas | :pacientes | :secretarias | :ajustes
-%>
-<% tabs = [ [ :citas, "Citas", agenda_appointments_path ], [ :pacientes, "Pacientes", agenda_patients_path ] ] %>
-<% tabs << [ :secretarias, "Secretarias", agenda_secretaries_path ] unless acting_as_secretary? %>
-<% tabs << [ :ajustes, "Ajustes", agenda_settings_path ] %>
-<nav class="flex flex-wrap gap-1 border-b border-gray-200 dark:border-slate-700 mb-6">
-  <% tabs.each do |key, label, path| %>
-    <% if key == active %>
-      <%= link_to label, path, class: "px-4 py-2.5 -mb-px text-sm font-medium text-sky-600 dark:text-sky-400 border-b-2 border-sky-500" %>
-    <% else %>
-      <%= link_to label, path, class: "px-4 py-2.5 -mb-px text-sm font-medium text-gray-500 dark:text-slate-400 border-b-2 border-transparent hover:text-gray-700 dark:hover:text-slate-200 hover:border-gray-300 dark:hover:border-slate-600 transition-colors" %>
-    <% end %>
-  <% end %>
-</nav>
+<%# Agenda section tabs. render "agenda/nav", active: :citas %>
+<% tabs = [ { key: :citas, label: "Citas", path: agenda_appointments_path, icon: :calendar_days },
+            { key: :pacientes, label: "Pacientes", path: agenda_patients_path, icon: :user } ] %>
+<% tabs << { key: :secretarias, label: "Secretarias", path: agenda_secretaries_path, icon: :user_circle } unless acting_as_secretary? %>
+<% tabs << { key: :ajustes, label: "Ajustes", path: agenda_settings_path, icon: :cog_6_tooth } %>
+<%= render "shared/section_tabs", tabs: tabs, active: active %>

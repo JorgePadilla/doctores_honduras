@@ -1,0 +1,10 @@
+<%# Bloque de errores de formulario. Local: model: (un AR con .errors).
+    Es un <p>, no <h2>, para esquivar la regla global sin capa de h2. %>
+<% if model.errors.any? %>
+  <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20" role="alert">
+    <p class="mb-1 text-sm font-semibold text-red-800 dark:text-red-300">No se pudo guardar:</p>
+    <ul class="list-inside list-disc text-sm text-red-700 dark:text-red-400">
+      <% model.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+    </ul>
+  </div>
+<% end %>

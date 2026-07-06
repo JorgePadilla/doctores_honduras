@@ -12,6 +12,9 @@
   --color-ink:           #0B1220;  /* texto principal */
   --color-muted:         #8B95A5;  /* labels, metadata, stats */
   --color-line:          #E4E9F0;  /* bordes, divisores */
+  --color-success:       #1A9E6C;  /* estado: disponible / ok */
+  --color-warning:       #C77D0A;  /* estado: advertencia */
+  --color-error:         #C43D3D;  /* estado: destructivo / error */
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-sans:    "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -92,7 +95,7 @@ h3 {
   min-height: 2.5rem;              /* min-height (not fixed) so text never clips */
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-input-border);
-  border-radius: 0.375rem;
+  border-radius: 0.75rem;              /* DESIGN.md: inputs rounded-xl */
   font-size: 1rem;
   line-height: 1.5;
   background-color: var(--color-surface);
@@ -449,4 +452,84 @@ turbo-frame[busy] { opacity: 0.6; transition: opacity .15s; }
 @keyframes sheet-in { from { transform: translateY(100%); } to { transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .filter-unit.is-open .popover-panel { animation: none; }
+}
+
+/* ── Sistema de diseño compartido: botones · cards · forms ───────────────
+   Fuente única de verdad (DESIGN.md prohíbe estilos copy-pasteados entre
+   vistas). Ver plan de unificación fuerte. */
+
+/* Botones — primary: relleno primary-hover → primary-deep, lift 1px, sin scale. */
+.btn-primary, .btn-secondary, .btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 250ms cubic-bezier(0.22,1,0.36,1), border-color 250ms cubic-bezier(0.22,1,0.36,1),
+              color 250ms cubic-bezier(0.22,1,0.36,1), box-shadow 250ms cubic-bezier(0.22,1,0.36,1),
+              transform 250ms cubic-bezier(0.22,1,0.36,1);
+}
+.btn-primary:focus-visible, .btn-secondary:focus-visible, .btn-danger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(14 165 233 / 0.35);
+}
+.btn-primary:disabled, .btn-secondary:disabled, .btn-danger:disabled { opacity: 0.55; pointer-events: none; }
+
+.btn-primary { background: var(--color-primary-hover); color: #fff; box-shadow: 0 1px 3px rgb(11 18 32 / 0.06); }
+.btn-primary:hover { background: var(--color-primary-deep); transform: translateY(-1px); box-shadow: 0 12px 32px -8px rgb(11 18 32 / 0.14); }
+
+.btn-secondary { background: #fff; border-color: var(--color-line); color: var(--color-ink); }
+.btn-secondary:hover { background: var(--color-primary-soft); border-color: #bae6fd; transform: translateY(-1px); }
+.dark .btn-secondary { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+.dark .btn-secondary:hover { background: #334155; border-color: #475569; }
+
+.btn-danger { background: var(--color-error); color: #fff; }
+.btn-danger:hover { background: #a32f2f; transform: translateY(-1px); }
+.btn-danger:focus-visible { box-shadow: 0 0 0 3px rgb(196 61 61 / 0.35); }
+
+.btn-sm { padding: 0.375rem 0.875rem; font-size: 0.8125rem; }
+.btn-lg { padding: 0.75rem 1.5rem; font-size: 1rem; }
+
+/* Card — el borde 1px line hace el trabajo; sombra nivel reposo; rounded-2xl. */
+.card {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgb(11 18 32 / 0.06);
+}
+.dark .card { background: #1e293b; border-color: #334155; box-shadow: 0 1px 3px rgb(0 0 0 / 0.3); }
+.card-hover { transition: box-shadow 250ms cubic-bezier(0.22,1,0.36,1), transform 250ms cubic-bezier(0.22,1,0.36,1); }
+.card-hover:hover { transform: translateY(-2px); box-shadow: 0 12px 32px -8px rgb(11 18 32 / 0.14); }
+/* SOLO semántico: color de estado en el borde izquierdo. Nunca decorativo. */
+.card-accent { border-left-width: 4px; }
+/* Título de sección dentro de un card (clase: las reglas globales h2/h3 sin capa ganarían a las utilities). */
+.card-title { font-size: 1.125rem; font-weight: 600; color: var(--color-ink); margin-bottom: 1rem; }
+.dark .card-title { color: #f1f5f9; }
+
+/* Select nativo estilizado: usar con .form-input → class="form-input form-select". */
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B95A5' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+/* Checkbox / radio nativos con accent-color (sin plugin de forms). */
+.form-check { width: 1rem; height: 1rem; accent-color: var(--color-primary-hover); cursor: pointer; }
+
+/* Texto de ayuda bajo un campo. */
+.form-hint { margin-top: 0.375rem; font-size: 0.8125rem; color: var(--color-muted); }
+.dark .form-hint { color: #94a3b8; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary:hover, .btn-secondary:hover, .btn-danger:hover, .card-hover:hover { transform: none; }
 }
