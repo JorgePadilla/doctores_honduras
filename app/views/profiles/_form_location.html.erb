@@ -1,15 +1,19 @@
-<div class="card p-6 mb-6">
-  <div class="flex items-center gap-3 mb-5 pb-4 border-b border-line dark:border-slate-700">
-    <div class="w-10 h-10 rounded-lg bg-primary-soft dark:bg-sky-900/30 flex items-center justify-center text-primary dark:text-sky-400">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
+<div class="card p-6 mb-6" data-controller="location-copy">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-line dark:border-slate-700">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-primary-soft dark:bg-sky-900/30 flex items-center justify-center text-primary dark:text-sky-400">
+        <%= icon(:map_pin, class: "w-5 h-5") %>
+      </div>
+      <div>
+        <h2 class="card-title mb-0">Ubicación Principal</h2>
+        <p class="text-sm text-muted dark:text-slate-400">Es la que usan los filtros de búsqueda del directorio</p>
+      </div>
     </div>
-    <div>
-      <h2 class="card-title mb-0">Ubicación Principal</h2>
-      <p class="text-sm text-muted dark:text-slate-400">Departamento y ciudad donde ejerces</p>
-    </div>
+    <% if @doctor_profile.doctor_branches.any?(&:persisted?) %>
+      <button type="button" data-action="location-copy#copyFromBranch" class="btn-secondary btn-sm">
+        Usar la de mi primera ubicación
+      </button>
+    <% end %>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
@@ -17,7 +21,8 @@
       <%= form.select :department_id,
                       options_for_select(@departments.map { |d| [d.name, d.id] }, @doctor_profile.department_id),
                       { include_blank: "Selecciona un departamento" },
-                      { class: "form-input form-select", required: true } %>
+                      { class: "form-input form-select", required: true,
+                        data: { location_copy_target: "department" } } %>
     </div>
 
     <div>
@@ -25,7 +30,9 @@
       <%= form.select :city_id,
                       options_for_select(@cities.map { |c| [c.name, c.id] }, @doctor_profile.city_id),
                       { include_blank: "Selecciona una ciudad" },
-                      { class: "form-input form-select", required: true } %>
+                      { class: "form-input form-select", required: true,
+                        data: { location_copy_target: "city" } } %>
     </div>
   </div>
+  <p class="form-hint mt-4">Los pacientes te encontrarán al filtrar por este departamento y ciudad, aunque tus consultorios (abajo) estén en otros lugares.</p>
 </div>

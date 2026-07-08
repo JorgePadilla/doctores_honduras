@@ -12,6 +12,18 @@ export default class extends Controller {
 
   connect() {
     this.enforceLimit()
+
+    // Accordion entries (<details>) can hide invalid required fields from the
+    // browser's validation UI — open the entry before the message is shown.
+    this._onInvalid = (event) => {
+      const details = event.target.closest("details")
+      if (details && !details.open) details.open = true
+    }
+    this.element.addEventListener("invalid", this._onInvalid, true)
+  }
+
+  disconnect() {
+    this.element.removeEventListener("invalid", this._onInvalid, true)
   }
 
   add(event) {

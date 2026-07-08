@@ -29,6 +29,21 @@
     </div>
 
     <div>
+      <% if current_subscription_tier == "elite" %>
+        <%= form.label :video_consultation_url, "Enlace de video consulta", class: "form-label" %>
+        <%= form.url_field :video_consultation_url, class: "form-input", placeholder: "https://zoom.us/j/… o https://meet.google.com/…" %>
+        <p class="form-hint">Tu sala de Zoom/Meet — activa el botón "Video consulta" en tu perfil público.</p>
+      <% else %>
+        <label class="form-label flex items-center gap-2">
+          Enlace de video consulta
+          <span class="badge badge-warning">Elite</span>
+        </label>
+        <input type="url" class="form-input opacity-60" disabled placeholder="Disponible con el plan Elite">
+        <p class="form-hint"><%= link_to "Mejora a Elite", settings_subscription_path, class: "text-primary-hover dark:text-sky-400 hover:underline" %> para ofrecer video consulta desde tu perfil.</p>
+      <% end %>
+    </div>
+
+    <div>
       <%= form.label :facebook_url, "Facebook", class: "form-label" %>
       <%= form.url_field :facebook_url, class: "form-input", placeholder: "https://facebook.com/tu-perfil" %>
     </div>

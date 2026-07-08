@@ -6,19 +6,36 @@
   <% end %>
   <%= render "shared/page_header", title: "Editar perfil de doctor", subtitle: "Actualiza la información de tu perfil", actions: actions %>
 
-  <%= form_with model: @doctor_profile, url: profile_path, method: :patch, multipart: true do |form| %>
+  <%= render "shared/section_tabs",
+      tabs: [
+        { key: :perfil,      label: "Perfil",      path: edit_profile_path(section: "perfil"),      icon: :user },
+        { key: :contacto,    label: "Contacto",    path: edit_profile_path(section: "contacto"),    icon: :phone },
+        { key: :servicios,   label: "Servicios",   path: edit_profile_path(section: "servicios"),   icon: :sparkles },
+        { key: :ubicaciones, label: "Ubicaciones", path: edit_profile_path(section: "ubicaciones"), icon: :map_pin },
+        { key: :formacion,   label: "Formación",   path: edit_profile_path(section: "formacion"),   icon: :academic_cap }
+      ],
+      active: @section.to_sym %>
+
+  <%= form_with model: @doctor_profile, url: profile_path(section: @section), method: :patch, multipart: true do |form| %>
     <%= render "shared/form_errors", model: @doctor_profile %>
 
-    <%= render "profiles/form_personal_info", form: form %>
-    <%= render "profiles/form_professional_info", form: form %>
-    <%= render "profiles/form_location", form: form %>
-    <%= render "profiles/form_contact_social", form: form %>
-    <%= render "profiles/form_languages", form: form %>
-    <%= render "profiles/form_services", form: form %>
-    <%= render "profiles/form_education", form: form %>
-    <%= render "profiles/form_certifications", form: form %>
-    <%= render "profiles/form_branches", form: form %>
-    <%= render "profiles/form_image", form: form %>
+    <% case @section %>
+    <% when "perfil" %>
+      <%= render "profiles/form_image", form: form %>
+      <%= render "profiles/form_personal_info", form: form %>
+      <%= render "profiles/form_professional_info", form: form %>
+      <%= render "profiles/form_languages", form: form %>
+    <% when "contacto" %>
+      <%= render "profiles/form_contact_social", form: form %>
+    <% when "servicios" %>
+      <%= render "profiles/form_services", form: form %>
+    <% when "ubicaciones" %>
+      <%= render "profiles/form_location", form: form %>
+      <%= render "profiles/form_branches", form: form %>
+    <% when "formacion" %>
+      <%= render "profiles/form_education", form: form %>
+      <%= render "profiles/form_certifications", form: form %>
+    <% end %>
 
     <div class="mt-6 flex items-center justify-end gap-3">
       <%= link_to "Cancelar", profile_path, class: "btn-secondary" %>

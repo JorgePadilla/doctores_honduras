@@ -4,71 +4,58 @@
 
   <div class="flex items-center gap-3 mb-5 pb-4 border-b border-line dark:border-slate-700">
     <div class="w-10 h-10 rounded-lg bg-primary-soft dark:bg-sky-900/30 flex items-center justify-center text-primary dark:text-sky-400">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-      </svg>
+      <%= icon(:sparkles, class: "w-5 h-5") %>
     </div>
     <div>
       <h2 class="card-title mb-0">Servicios</h2>
-      <p class="text-sm text-muted dark:text-slate-400">Selecciona los servicios que ofreces</p>
+      <p class="text-sm text-muted dark:text-slate-400">Busca y agrega los servicios que ofreces</p>
     </div>
   </div>
 
-  <%# Selected service tags %>
-  <div class="mb-4">
-    <label class="form-label">Servicios seleccionados</label>
-    <div data-service-tags-target="selected" class="flex flex-wrap">
-      <%# Pills below intentionally mirror the markup emitted by service_tags_controller.js
-          (bg-sky-500 text-white) so pre-rendered and dynamically-added tags look identical. %>
-      <% @doctor_profile.services.each do |service| %>
-        <span class="inline-flex items-center px-3 py-1 text-sm rounded-full bg-sky-500 text-white mr-2 mb-2" data-service-id="<%= service.id %>">
-          <%= service.name %>
-          <button type="button" class="ml-1.5 hover:text-sky-200"
-                  data-action="service-tags#removeTag"
-                  data-service-id="<%= service.id %>"
-                  data-service-name="<%= service.name %>">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </span>
-      <% end %>
-    </div>
-    <% if @doctor_profile.services.empty? %>
-      <p class="text-sm text-muted dark:text-slate-500 italic" data-service-tags-target="emptyMessage">Aún no has seleccionado servicios</p>
+  <%# Selected chips %>
+  <div data-service-tags-target="selected" class="flex flex-wrap gap-2 mb-3 empty:hidden">
+    <%# Chips below mirror the markup emitted by service_tags_controller.js so
+        pre-rendered and dynamically-added tags look identical. %>
+    <% @doctor_profile.services.each do |service| %>
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-soft dark:bg-sky-900/30 px-3 py-1 text-sm font-medium text-primary-hover dark:text-sky-400" data-service-id="<%= service.id %>">
+        <%= service.name %>
+        <button type="button" class="hover:text-primary-deep dark:hover:text-sky-200" aria-label="Quitar <%= service.name %>"
+                data-action="service-tags#removeTag"
+                data-service-id="<%= service.id %>">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </span>
     <% end %>
   </div>
+  <p data-service-tags-target="emptyMessage"
+     class="text-sm text-muted dark:text-slate-500 italic mb-3 <%= 'hidden' if @doctor_profile.services.any? %>">
+    Aún no has agregado servicios.
+  </p>
 
-  <%# Hidden field to ensure empty array is sent when no services selected %>
+  <%# Hidden field to ensure an empty array is sent when no services remain %>
   <input type="hidden" name="doctor_profile[service_ids][]" value="">
-
-  <%# Hidden fields for selected service IDs %>
   <div data-service-tags-target="hiddenFields">
     <% @doctor_profile.services.each do |service| %>
       <input type="hidden" name="doctor_profile[service_ids][]" value="<%= service.id %>" data-service-id="<%= service.id %>">
     <% end %>
   </div>
 
-  <%# Suggestions based on specialty %>
-  <div class="mb-4">
-    <label class="form-label">Sugerencias para tu especialidad</label>
-    <div data-service-tags-target="suggestions" class="flex flex-wrap">
-      <%# Loaded dynamically via Stimulus %>
-    </div>
-  </div>
-
-  <%# Custom service input %>
-  <div class="flex gap-2">
+  <%# Combobox: one input that filters suggestions and creates custom services %>
+  <div class="relative">
     <input type="text"
-           data-service-tags-target="customInput"
-           data-action="keydown->service-tags#handleCustomKeydown"
-           class="form-input flex-1"
-           placeholder="Agregar un servicio personalizado...">
-    <button type="button"
-            data-action="service-tags#addCustom"
-            class="btn-secondary btn-sm shrink-0">
-      <%= icon(:plus, class: "w-4 h-4") %>
-      Agregar
-    </button>
+           data-service-tags-target="input"
+           data-action="input->service-tags#filter keydown->service-tags#keydown"
+           class="form-input"
+           placeholder="Busca un servicio o escribe uno nuevo…"
+           autocomplete="off">
+    <div data-service-tags-target="dropdown"
+         class="hidden absolute z-20 mt-1 w-full rounded-xl border border-line dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg max-h-56 overflow-y-auto p-1"></div>
+  </div>
+  <p class="form-hint">Escribe para buscar y presiona Enter. Si el servicio no existe, se agrega como personalizado.</p>
+
+  <%# Capped suggestion chips for the doctor's specialty %>
+  <div class="mt-4 hidden" data-service-tags-target="suggestionsWrap">
+    <p class="text-xs font-semibold uppercase tracking-wider text-muted dark:text-slate-500 mb-2">Sugerencias para tu especialidad</p>
+    <div data-service-tags-target="suggestions" class="flex flex-wrap gap-2"></div>
   </div>
 </div>

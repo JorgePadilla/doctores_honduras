@@ -43,6 +43,16 @@ class DoctorProfile < ApplicationRecord
     prefix.present? ? "#{prefix} #{name}" : name
   end
 
+  # Dashboard "perfil completo" % — core fields plus having services and at least
+  # one location (what patients actually need to find and contact the doctor).
+  def completeness_pct
+    items = [ name, specialty_id, department_id, city_id, description, image_url, medical_license ]
+    score = items.count(&:present?)
+    score += 1 if services.any?
+    score += 1 if doctor_branches.any?
+    (score * 100.0 / (items.size + 2)).round
+  end
+
   def general_specialty?
     specialty&.name == GENERAL_SPECIALTY_NAME
   end

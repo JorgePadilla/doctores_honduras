@@ -1,6 +1,9 @@
 class ProfilesController < ApplicationController
   include SubscriptionGating
 
+  # Edit-page tabs: each renders (and saves) only its own sections.
+  EDIT_SECTIONS = %w[perfil contacto servicios ubicaciones formacion].freeze
+
   before_action :require_authentication
   before_action :set_user
 
@@ -62,34 +65,24 @@ class ProfilesController < ApplicationController
 
     redirect_to new_profile_path and return unless @doctor_profile
 
-    @specialties = Specialty.order(:name)
-    @subspecialties = @doctor_profile.specialty&.subspecialties || []
-    @departments = Department.order(:name)
-    @cities = City.order(:name)
-
-    # Build empty nested records for the form if none exist
-    @doctor_profile.doctor_branches.build if @doctor_profile.doctor_branches.empty?
-    @doctor_profile.doctor_educations.build if @doctor_profile.doctor_educations.empty?
-    @doctor_profile.doctor_certifications.build if @doctor_profile.doctor_certifications.empty?
+    @section = edit_section
+    load_edit_collections
   end
 
   def update
     @doctor_profile = @user.doctor_profile
+    @section = edit_section
 
     filtered_params = doctor_profile_params
     filtered_params = strip_paid_branch_fields(filtered_params) unless paid_plan?
+    # Video consultation link is an Elite feature (shown on the public profile).
+    filtered_params.delete(:video_consultation_url) unless current_subscription_tier == "elite"
 
     if @doctor_profile.update(filtered_params)
       flash[:success] = "Perfil actualizado exitosamente."
-      redirect_to profile_path
+      redirect_to edit_profile_path(section: @section)
     else
-      @specialties = Specialty.order(:name)
-      @subspecialties = @doctor_profile.specialty&.subspecialties || []
-      @departments = Department.order(:name)
-      @cities = City.order(:name)
-      @doctor_profile.doctor_branches.build if @doctor_profile.doctor_branches.empty?
-      @doctor_profile.doctor_educations.build if @doctor_profile.doctor_educations.empty?
-      @doctor_profile.doctor_certifications.build if @doctor_profile.doctor_certifications.empty?
+      load_edit_collections
       flash.now[:alert] = "Error al actualizar el perfil. Por favor verifica los campos."
       render :edit, status: :unprocessable_entity
     end
@@ -101,10 +94,27 @@ class ProfilesController < ApplicationController
     @user = Current.user
   end
 
+  def edit_section
+    EDIT_SECTIONS.include?(params[:section]) ? params[:section] : "perfil"
+  end
+
+  def load_edit_collections
+    @specialties = Specialty.order(:name)
+    @subspecialties = @doctor_profile.specialty&.subspecialties || []
+    @departments = Department.order(:name)
+    @cities = City.order(:name)
+
+    # Build empty nested records for the form if none exist
+    @doctor_profile.doctor_branches.build if @doctor_profile.doctor_branches.empty?
+    @doctor_profile.doctor_educations.build if @doctor_profile.doctor_educations.empty?
+    @doctor_profile.doctor_certifications.build if @doctor_profile.doctor_certifications.empty?
+  end
+
   def doctor_profile_params
     params.require(:doctor_profile).permit(
       :prefix, :name, :specialty_id, :subspecialty_id, :description, :website,
       :medical_license, :image_url, :department_id, :city_id, :image_file,
+      :video_consultation_url,
       :fecha_de_nacimiento, :numero_de_identidad, :correo_personal, :phone, :whatsapp,
       :facebook_url, :instagram_url, :twitter_url, :linkedin_url,
       :tiktok_url, :youtube_url,

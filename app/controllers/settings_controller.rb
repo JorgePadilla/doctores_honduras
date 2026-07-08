@@ -231,13 +231,9 @@ class SettingsController < ApplicationController
     params.require(:notification_preference).permit(:email_notifications, :marketing_emails, :new_features_notifications, :security_alerts)
   end
 
-  # Completitud del perfil para el Resumen (movido del antiguo DashboardController).
+  # Completitud del perfil para el Resumen (incluye servicios y ubicaciones).
   def compute_doctor_completeness
-    return 0 unless @doctor_profile
-    fields = [ @doctor_profile.name, @doctor_profile.specialty_id, @doctor_profile.department_id,
-               @doctor_profile.city_id, @doctor_profile.description, @doctor_profile.image_url,
-               @doctor_profile.medical_license ]
-    (fields.count(&:present?).to_f / fields.size * 100).round
+    @doctor_profile ? @doctor_profile.completeness_pct : 0
   end
 
   def compute_establishment_completeness
