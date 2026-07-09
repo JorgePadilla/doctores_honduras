@@ -1,10 +1,4 @@
-# production:
-#   periodic_cleanup:
-#     class: CleanSoftDeletedRecordsJob
-#     queue: background
-#     args: [ 1000, { batch_size: 500 } ]
-#     schedule: every hour
-#   periodic_command:
-#     command: "SoftDeletedRecord.due.delete_all"
-#     priority: 2
-#     schedule: at 5am every day
+production:
+  weekly_doctor_reports:
+    class: WeeklyDoctorReportsJob
+    schedule: "0 7 * * 1 America/Tegucigalpa" # lunes 7:00am hora de Honduras

@@ -4,7 +4,7 @@ class AppointmentNotifier
     notify_staff(appointment, type: "nueva_cita", title: "Nueva cita", message: message)
     notify_patient(appointment, type: "nueva_cita", title: "Cita agendada", message: message)
 
-    AppointmentMailer.confirmation(appointment).deliver_later if appointment.patient_email.present?
+    AppointmentMailer.confirmation(appointment).deliver_later if email_patient?(appointment)
   end
 
   def self.notify_status_change(appointment)
@@ -12,8 +12,16 @@ class AppointmentNotifier
     notify_staff(appointment, type: "cambio_estado", title: "Cambio de cita", message: message, except: appointment.created_by)
     notify_patient(appointment, type: "cambio_estado", title: "Cambio en tu cita", message: message)
 
-    AppointmentMailer.status_changed(appointment).deliver_later if appointment.patient_email.present?
+    AppointmentMailer.status_changed(appointment).deliver_later if email_patient?(appointment)
   end
+
+  # Email the patient when there's an address; registered patients can opt out
+  # via notification preferences (guests always get their confirmations).
+  def self.email_patient?(appointment)
+    return false if appointment.patient_email.blank?
+    appointment.patient_user.nil? || appointment.patient_user.wants_email?
+  end
+  private_class_method :email_patient?
 
   def self.new_appointment_message(appointment)
     "Nueva cita con #{appointment.patient_name} el #{I18n.l(appointment.appointment_date, format: :long)} a las #{appointment.start_time.strftime('%H:%M')}"

@@ -66,4 +66,12 @@ class User < ApplicationRecord
   def unread_notifications_count
     notifications.unread.count
   end
+
+  # Whether the user accepts a given kind of email (Ajustes → Notificaciones).
+  # Users without a preferences record are opted in by default. Transactional
+  # security email (password reset) is NOT gated by this.
+  def wants_email?(kind = :email_notifications)
+    # Only an explicit false opts out; no record or a NULL value means opted in.
+    notification_preference.nil? || notification_preference.public_send(kind) != false
+  end
 end

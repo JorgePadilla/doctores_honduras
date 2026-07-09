@@ -1,0 +1,38 @@
+Hola <%= @doctor.display_name %>,
+
+Tu semana en Doctores Honduras (últimos 7 días):
+
+Visitas a tu perfil: <%= @views %><% if @trend %> (<%= @trend >= 0 ? "+" : "" %><%= @trend %>% vs. la semana anterior)<% end %>
+
+<% sources = @analytics.sources_breakdown -%>
+<% if sources.values.sum > 0 -%>
+Cómo te encuentran:
+<% sources.each do |label, count| -%>
+  - <%= label %>: <%= count %>
+<% end -%>
+<% end -%>
+<% devices = @analytics.by_device -%>
+<% if devices.any? -%>
+Dispositivos:
+<% devices.each do |label, count| -%>
+  - <%= label %>: <%= count %>
+<% end -%>
+<% end -%>
+<% if @tier == "elite" -%>
+<% clicks = @analytics.contact_clicks -%>
+<% if clicks.any? -%>
+Clicks de contacto:
+<% clicks.each do |kind, count| -%>
+  - <%= kind %>: <%= count %>
+<% end -%>
+<% end -%>
+<% if @analytics.bookings_completed > 0 -%>
+Reservas completadas: <%= @analytics.bookings_completed %>
+<% end -%>
+<% end -%>
+
+Ver estadísticas completas: <%= estadisticas_url %>
+
+--
+Recibes este correo por tu plan <%= @tier.capitalize %>.
+Desactívalo en Ajustes → Notificaciones: <%= settings_notifications_url %>
